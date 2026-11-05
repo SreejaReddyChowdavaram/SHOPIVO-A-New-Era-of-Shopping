@@ -1,0 +1,47 @@
+# ─────────────────────────────────────────────────────────────
+# SHOPIVO — Production Spring Boot Profile Configuration
+# Profile: prod
+# ─────────────────────────────────────────────────────────────
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+
+server:
+  error:
+    include-stacktrace: never
+    include-message: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: INFO
+    com.securecommerce.platform: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: ERROR
+
+app:
+  jwt:
+    # Production strictly requires an externalized JWT_SECRET environment variable
+    secret: ${JWT_SECRET}

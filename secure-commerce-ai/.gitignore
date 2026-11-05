@@ -1,0 +1,155 @@
+# ============================================================
+# SecureCommerce AI — .gitignore
+# ============================================================
+# This file prevents sensitive, generated, and local files
+# from being committed to Git.
+# ============================================================
+
+# ─────────────────────────────────────────
+# SECRETS — NEVER commit these
+# ─────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+application-local.yml
+application-secrets.yml
+secrets/
+credentials.local
+SHOPIVO_ALL_ACCOUNTS_AND_CREDENTIALS.txt
+
+# ─────────────────────────────────────────
+# Node.js / Frontend
+# ─────────────────────────────────────────
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+*.local
+
+# Vite
+frontend/dist/
+frontend/.vite/
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─────────────────────────────────────────
+# Java / Maven / Spring Boot
+# ─────────────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# Maven
+.mvn/timing.properties
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# Spring Boot
+spring.log
+*.log
+
+# ─────────────────────────────────────────
+# Python / AI Service (Semester 2)
+# ─────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+*.pyo
+*.pyd
+dist/
+*.so
+
+# ─────────────────────────────────────────
+# IDEs — IntelliJ IDEA
+# ─────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# ─────────────────────────────────────────
+# IDEs — VS Code
+# ─────────────────────────────────────────
+.vscode/
+*.code-workspace
+.history/
+
+# ─────────────────────────────────────────
+# IDEs — Eclipse / STS
+# ─────────────────────────────────────────
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+bin/
+
+# ─────────────────────────────────────────
+# Operating System
+# ─────────────────────────────────────────
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+
+# ─────────────────────────────────────────
+# Docker
+# ─────────────────────────────────────────
+.docker/
+docker-compose.override.yml
+
+# ─────────────────────────────────────────
+# Database
+# ─────────────────────────────────────────
+*.sql.bak
+*.dump
+
+# ─────────────────────────────────────────
+# Miscellaneous
+# ─────────────────────────────────────────
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+coverage/
+.nyc_output/

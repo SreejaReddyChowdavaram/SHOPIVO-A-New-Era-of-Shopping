@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        PARENT: spring-boot-starter-parent
+        ════════════════════════════════════
+        This is the most important line in the pom.xml.
+        It inherits from Spring Boot's parent POM, which:
+          1. Sets default Java version, encoding, and Maven plugin config
+          2. Manages dependency versions — you don't need to specify versions
+             for most Spring and common libraries. Spring Boot guarantees they
+             are compatible with each other. This is called a "BOM" (Bill of Materials).
+          3. Configures the Spring Boot Maven Plugin automatically
+        Lesson: In real projects, ALWAYS use the parent POM — it prevents
+        version conflict hell.
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.3</version>
+        <relativePath/>
+    </parent>
+
+    <!--
+        PROJECT COORDINATES
+        ════════════════════
+        groupId: reverse domain notation — uniquely identifies your organization
+        artifactId: the name of this specific project/module
+        version: starts at 0.0.1-SNAPSHOT (SNAPSHOT = still in development)
+        packaging: jar = executable JAR. Spring Boot embeds Tomcat inside the JAR.
+    -->
+    <groupId>com.securecommerce</groupId>
+    <artifactId>platform</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>SecureCommerce AI Platform</name>
+    <description>AI-Powered Secure E-Commerce Platform with CSGAD Fraud Detection</description>
+
+    <!--
+        PROPERTIES
+        ══════════
+        java.version: tells the compiler to use Java 21 features.
+        This must match the Java 21 LTS you install on your machine.
+    -->
+    <properties>
+        <java.version>21</java.version>
+        <jjwt.version>0.12.6</jjwt.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- ─────────────────────────────────────────────────────
+             WEB: spring-boot-starter-web
+             ────────────────────────────────────────────────────
+             Includes: Tomcat (embedded server), Spring MVC,
+             Jackson (JSON serializer/deserializer)
+             Why: Everything needed to build REST APIs.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             DATA JPA: spring-boot-starter-data-jpa
+             ────────────────────────────────────────────────────
+             Includes: Hibernate ORM, Spring Data repositories,
+             JPA API, transaction management
+             Why: Instead of writing raw SQL, we write Java entity
+             classes and Spring handles the database queries.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             SECURITY: spring-boot-starter-security
+             ────────────────────────────────────────────────────
+             Includes: Spring Security filter chain, password
+             encoders, authentication/authorization framework
+             Why: Once on the classpath, every request goes through
+             the security filter chain. We configure it in
+             SecurityConfig.java to allow all during initialization.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             VALIDATION: spring-boot-starter-validation
+             ────────────────────────────────────────────────────
+             Includes: Hibernate Validator, Jakarta Bean Validation
+             Why: Annotations like @NotBlank, @Email, @Size on DTOs
+             automatically validate incoming request bodies.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             ACTUATOR: spring-boot-starter-actuator
+             ────────────────────────────────────────────────────
+             Includes: /actuator/health, /actuator/info endpoints
+             Why: Essential for monitoring in production.
+             Health endpoint tells load balancers the app is alive.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             DATABASE: PostgreSQL Driver
+             ────────────────────────────────────────────────────
+             scope=runtime: only needed at runtime, not compile time.
+             Spring Data JPA uses this driver to connect to PostgreSQL.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             MIGRATIONS: Flyway Core
+             ────────────────────────────────────────────────────
+             Runs SQL migration scripts automatically on startup.
+             Ensures the database schema matches what the app expects.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <!-- Flyway requires this for PostgreSQL 10+ -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             LOMBOK: Code generation
+             ────────────────────────────────────────────────────
+             Generates getters, setters, constructors, builders
+             via annotations like @Data, @Builder, @NoArgsConstructor.
+             Reduces boilerplate without hiding logic.
+             scope=annotationProcessor handles compile-time generation.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             JWT: JJWT Library (io.jsonwebtoken)
+             ────────────────────────────────────────────────────
+             Three artifacts needed:
+               jjwt-api      → compile-time API (interfaces)
+               jjwt-impl     → runtime implementation
+               jjwt-jackson  → Jackson integration for JSON parsing
+             Used in Semester 1 authentication phase.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             PDF GENERATION: OpenPDF (com.github.librepdf)
+             ────────────────────────────────────────────────────
+             Lightweight, open-source, robust library for generating
+             customer invoices and receipts with styling and tables.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
+             TESTING: spring-boot-starter-test
+             ────────────────────────────────────────────────────
+             Includes: JUnit 5, Mockito, AssertJ, MockMvc,
+             Spring Boot Test slices (@WebMvcTest, @DataJpaTest)
+             scope=test: only compiled and run during testing.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Security test support (MockMvc + security) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- In-memory H2 database for unit and integration tests -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--
+                SPRING BOOT MAVEN PLUGIN
+                ════════════════════════
+                Enables: mvn spring-boot:run
+                Also packages the app as an executable "fat JAR"
+                containing all dependencies + embedded Tomcat.
+                The excludes block prevents Lombok from being
+                included in the final JAR (it's compile-only).
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

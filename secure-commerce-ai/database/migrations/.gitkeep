@@ -1,0 +1,2 @@
+# placeholder — Flyway migration scripts will go here
+# First migration: V1__create_users_table.sql (added during database phase)

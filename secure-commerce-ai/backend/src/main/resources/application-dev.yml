@@ -1,0 +1,41 @@
+# application-dev.yml
+#
+# Development Profile Overrides
+
+spring:
+  main:
+    banner-mode: "off"      # Disables Spring Boot ASCII banner
+    log-startup-info: false  # Disables verbose startup info
+  jpa:
+    show-sql: false         # Keeps the console clean
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    baseline-on-migrate: true
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Clean and concise logging
+logging:
+  pattern:
+    console: "%clr(%d{HH:mm:ss}){faint} %clr(%-5level) %clr(%logger{20}){cyan} - %msg%n"
+  level:
+    root: WARN
+    com.securecommerce: INFO
+    org.springframework.boot: WARN
+    org.springframework.web: WARN
+    org.springframework.security: ERROR
+    org.flywaydb: WARN
+    org.hibernate: ERROR
+    com.zaxxer: ERROR
+    org.apache: ERROR

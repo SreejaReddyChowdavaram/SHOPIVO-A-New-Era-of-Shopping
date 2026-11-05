@@ -1,0 +1,28 @@
+# application-test.yml
+#
+# PURPOSE:
+#   Configuration for running automated tests.
+#   Activated automatically by @SpringBootTest in test classes.
+#   Uses H2 in-memory database so tests don't need PostgreSQL running.
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop   # OK for tests — creates schema fresh each test run
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false            # Flyway disabled for tests — Hibernate manages the schema
+
+logging:
+  level:
+    com.securecommerce: INFO
+    org.springframework.security: WARN

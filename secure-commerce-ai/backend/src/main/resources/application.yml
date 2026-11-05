@@ -1,0 +1,149 @@
+# application.yml
+#
+# PURPOSE:
+#   This is the main Spring Boot configuration file.
+#   Spring Boot reads this on startup and configures the entire application.
+#
+# HOW ENVIRONMENT VARIABLES WORK HERE:
+#   Syntax: ${ENV_VAR_NAME:default_value}
+#   Example: ${DB_PASSWORD:} means "read DB_PASSWORD env var; default to empty string"
+#   This keeps secrets OUT of Git while still providing working defaults for dev.
+#
+# PROFILES:
+#   Spring Boot supports multiple profiles (dev, test, prod).
+#   Profile-specific files like application-dev.yml override these defaults.
+#   Active profile is set via: SPRING_PROFILES_ACTIVE=dev
+#
+# WHY YAML OVER PROPERTIES?
+#   YAML supports nesting which mirrors the Spring config hierarchy naturally.
+#   application.properties is flat and requires repetitive prefixes.
+
+spring:
+  application:
+    name: secure-commerce-platform
+
+  # ─────────────────────────────────────────
+  # FILE UPLOADS / MULTIPART
+  # ─────────────────────────────────────────
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+  # ─────────────────────────────────────────
+  # DATABASE
+  # ─────────────────────────────────────────
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:postgresql://localhost:5432/securecommerce}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:postgres}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:}}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # HikariCP is the connection pool Spring Boot uses by default.
+      # It maintains a pool of open DB connections for performance.
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # ─────────────────────────────────────────
+  # JPA / HIBERNATE
+  # ─────────────────────────────────────────
+  jpa:
+    hibernate:
+      # IMPORTANT: 'validate' is the production-safe choice.
+      # Hibernate checks that entities match the DB schema, but does NOT modify it.
+      # Flyway owns the schema — Hibernate only validates.
+      # NEVER use 'create', 'create-drop', or 'update' in a real project.
+      ddl-auto: validate
+    show-sql: false        # Set to true in dev profile for debugging
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false    # Disable OSIV — prevents hidden lazy-loading issues
+
+  # ─────────────────────────────────────────
+  # FLYWAY (Database Migrations)
+  # ─────────────────────────────────────────
+  flyway:
+    enabled: true
+    # Location of migration SQL scripts (on the classpath)
+    locations: classpath:db/migration
+    # Flyway creates this table to track which migrations have run
+    table: flyway_schema_history
+    # If true, Flyway runs migrations on startup automatically
+    baseline-on-migrate: false
+
+  # ─────────────────────────────────────────
+  # JACKSON (JSON Serialization)
+  # ─────────────────────────────────────────
+  jackson:
+    # Dates as ISO-8601 strings, not timestamps
+    serialization:
+      write-dates-as-timestamps: false
+    # Ignore unknown fields in incoming JSON (prevents 400 errors on extra fields)
+    deserialization:
+      fail-on-unknown-properties: false
+    # null fields are NOT included in responses (cleaner JSON)
+    default-property-inclusion: non_null
+
+# ─────────────────────────────────────────
+# SERVER
+# ─────────────────────────────────────────
+server:
+  port: ${PORT:${SERVER_PORT:8080}}
+  servlet:
+    context-path: /api
+    # context-path: All endpoints are under /api
+    # So @GetMapping("/products") becomes GET http://localhost:8080/api/products
+
+# ─────────────────────────────────────────
+# ACTUATOR (Health Endpoints)
+# ─────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# ─────────────────────────────────────────
+# JWT CONFIGURATION
+# (Used in the authentication phase — reserved here)
+# ─────────────────────────────────────────
+app:
+  jwt:
+    secret: ${JWT_SECRET:ThisIsAPlaceholderSecretThatMustBeReplacedInProductionWithA256BitKey}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}     # 24 hours in milliseconds
+    refresh-expiration-ms: ${JWT_REFRESH_MS:604800000} # 7 days
+
+  # CORS origins allowed to call this API
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+
+  # Razorpay Configuration (TEST or LIVE mode supported via RAZORPAY_MODE)
+  razorpay:
+    mode: ${RAZORPAY_MODE:TEST}
+    key-id: ${RAZORPAY_KEY_ID:}
+    key-secret: ${RAZORPAY_KEY_SECRET:}
+    webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
+    currency: ${RAZORPAY_CURRENCY:INR}
+
+  # Product Image Upload Configuration
+  upload:
+    dir: ${SHOPIVO_UPLOAD_DIR:./data/uploads/products}
+
+  # Rate Limiting Configuration (Authentication Endpoints)
+  rate-limit:
+    auth:
+      enabled: ${RATE_LIMIT_AUTH_ENABLED:true}
+      max-login-attempts: ${RATE_LIMIT_LOGIN_MAX:10}
+      login-window-seconds: ${RATE_LIMIT_LOGIN_WINDOW_SEC:60}
+      max-register-attempts: ${RATE_LIMIT_REGISTER_MAX:5}
+      register-window-seconds: ${RATE_LIMIT_REGISTER_WINDOW_SEC:60}
+    trusted-proxy-enabled: ${TRUSTED_PROXY_ENABLED:false}

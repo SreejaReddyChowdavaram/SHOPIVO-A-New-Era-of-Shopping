@@ -1,0 +1,109 @@
+# docker-compose.yml
+#
+# PURPOSE: Defines all services for the SecureCommerce AI platform.
+#
+# STATUS: PLACEHOLDER — Docker setup is a later phase.
+#         Services are defined but commented out.
+#         Uncomment progressively as services are production-ready.
+#
+# To start all services (when ready):
+#   docker compose up -d
+#
+# To stop all services:
+#   docker compose down
+
+version: '3.9'
+
+services:
+
+  # ─────────────────────────────────────────
+  # PostgreSQL Database
+  # ─────────────────────────────────────────
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: securecommerce-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: securecommerce
+  #     POSTGRES_USER: ${DB_USERNAME}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d securecommerce"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # ─────────────────────────────────────────
+  # Redis (Session / Cache — later phase)
+  # ─────────────────────────────────────────
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: securecommerce-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --requirepass ${REDIS_PASSWORD}
+
+  # ─────────────────────────────────────────
+  # Spring Boot Backend
+  # ─────────────────────────────────────────
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: securecommerce-backend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   environment:
+  #     DB_URL: jdbc:postgresql://postgres:5432/securecommerce
+  #     DB_USERNAME: ${DB_USERNAME}
+  #     DB_PASSWORD: ${DB_PASSWORD}
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
+  #   ports:
+  #     - "8080:8080"
+
+  # ─────────────────────────────────────────
+  # React Frontend
+  # ─────────────────────────────────────────
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: securecommerce-frontend
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "3000:80"
+
+  # ─────────────────────────────────────────
+  # AI Service — SEMESTER 2
+  # ─────────────────────────────────────────
+  # ai-service:
+  #   build:
+  #     context: ./ai-service
+  #     dockerfile: Dockerfile
+  #   container_name: securecommerce-ai
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     DB_URL: postgresql://postgres:5432/securecommerce
+  #     DB_USERNAME: ${DB_USERNAME}
+  #     DB_PASSWORD: ${DB_PASSWORD}
+  #   ports:
+  #     - "8000:8000"
+
+# ─────────────────────────────────────────
+# Volumes
+# ─────────────────────────────────────────
+# volumes:
+#   postgres_data:
+#     driver: local
