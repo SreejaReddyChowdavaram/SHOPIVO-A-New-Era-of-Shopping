@@ -61,6 +61,33 @@ public class PaymentController {
     }
 
     /**
+     * Customer requests a dynamic Razorpay UPI QR code for an order.
+     * Maps both /create-qr-code and /create-qr for API consistency.
+     */
+    @PostMapping(value = {"/create-qr-code", "/create-qr"})
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResponse<QrPaymentDto>> createQrCode(
+            @Valid @RequestBody CreateGatewayOrderRequest request,
+            @AuthenticationPrincipal User currentUser) {
+        QrPaymentDto response = paymentService.createQrPayment(currentUser.getId(), request.orderId());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Dynamic UPI QR code generated", response));
+    }
+
+    /**
+     * Customer cancels an active dynamic QR payment session.
+     * Maps both /cancel-qr-code and /cancel-qr for API consistency.
+     */
+    @PostMapping(value = {"/cancel-qr-code", "/cancel-qr"})
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> cancelQrCode(
+            @Valid @RequestBody CreateGatewayOrderRequest request,
+            @AuthenticationPrincipal User currentUser) {
+        boolean cancelled = paymentService.cancelQrPayment(currentUser.getId(), request.orderId());
+        return ResponseEntity.ok(ApiResponse.success("QR payment session closed", Map.of("cancelled", cancelled)));
+    }
+
+    /**
      * Customer confirms a Cash on Delivery (COD) payment.
      */
     @PostMapping("/cod")

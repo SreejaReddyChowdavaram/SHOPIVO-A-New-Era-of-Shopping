@@ -36,6 +36,16 @@ export const getPaymentByOrderId = async (orderId) => {
   return res.data.data
 }
 
+export const createQrCode = async (orderId) => {
+  const res = await api.post('/payments/create-qr-code', { orderId })
+  return res.data.data
+}
+
+export const cancelQrCode = async (orderId) => {
+  const res = await api.post('/payments/cancel-qr-code', { orderId })
+  return res.data.data
+}
+
 export const getAdminPayments = async (params) => {
   const res = await api.get('/admin/payments', { params })
   return res.data.data
@@ -44,6 +54,8 @@ export const getAdminPayments = async (params) => {
 export default {
   createGatewayOrder,
   verifyGatewayPayment,
+  createQrCode,
+  cancelQrCode,
   processCodPayment,
   getMyPayments,
   getPaymentByOrderId,

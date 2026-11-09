@@ -5,6 +5,7 @@ import com.securecommerce.platform.payment.dto.GatewayOrderDto;
 import com.securecommerce.platform.payment.dto.PaymentResponse;
 import com.securecommerce.platform.payment.dto.ProcessCodPaymentRequest;
 import com.securecommerce.platform.payment.dto.ProcessPaymentRequest;
+import com.securecommerce.platform.payment.dto.QrPaymentDto;
 import com.securecommerce.platform.payment.dto.VerifyPaymentRequest;
 import com.securecommerce.platform.user.entity.User;
 import org.springframework.data.domain.Page;
@@ -54,4 +55,15 @@ public interface PaymentService {
      * Admin view of all payments with pagination.
      */
     Page<PaymentResponse> getAllPaymentsForAdmin(Pageable pageable);
+
+    /**
+     * Generates a dynamic Razorpay UPI QR code for the customer's order.
+     * Falls back cleanly to Standard Checkout metadata if standalone QR API is inactive.
+     */
+    QrPaymentDto createQrPayment(Long customerId, Long orderId);
+
+    /**
+     * Cancels an active dynamic QR payment session and closes the gateway QR code.
+     */
+    boolean cancelQrPayment(Long customerId, Long orderId);
 }

@@ -3,6 +3,7 @@ package com.securecommerce.platform.payment.gateway;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,10 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * RazorpayPaymentGatewayService — Production-style Razorpay integration locked to TEST MODE.
@@ -36,20 +39,33 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
     private final String keyId;
     private final String keySecret;
     private final String webhookSecret;
+    private final boolean liveEnabled;
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
 
+    public RazorpayPaymentGatewayService(
+            String mode,
+            String keyId,
+            String keySecret,
+            String webhookSecret,
+            ObjectMapper objectMapper) {
+        this(mode, keyId, keySecret, webhookSecret, false, objectMapper);
+    }
+
+    @Autowired
     public RazorpayPaymentGatewayService(
             @Value("${app.razorpay.mode:TEST}") String mode,
             @Value("${app.razorpay.key-id:}") String keyId,
             @Value("${app.razorpay.key-secret:}") String keySecret,
             @Value("${app.razorpay.webhook-secret:}") String webhookSecret,
+            @Value("${app.razorpay.live-enabled:false}") boolean liveEnabled,
             ObjectMapper objectMapper) {
 
         this.mode = mode != null && !mode.isBlank() ? mode.trim().toUpperCase() : "TEST";
         this.keyId = keyId != null ? keyId.trim() : "";
         this.keySecret = keySecret != null ? keySecret.trim() : "";
         this.webhookSecret = webhookSecret != null ? webhookSecret.trim() : "";
+        this.liveEnabled = liveEnabled;
         this.objectMapper = objectMapper;
 
         // Mode and Credential Guard — Fail-fast validation
@@ -79,6 +95,9 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
             }
             if (!this.keyId.startsWith("rzp_live")) {
                 throw new IllegalStateException("RAZORPAY_MODE is configured as LIVE, but key ID does not start with 'rzp_live_'. Key ID: " + maskKey(this.keyId));
+            }
+            if (!this.liveEnabled) {
+                throw new IllegalStateException("RAZORPAY_MODE is configured as LIVE, but RAZORPAY_LIVE_ENABLED is false. Explicit dual-confirmation (RAZORPAY_LIVE_ENABLED=true) is required to activate real-money transactions.");
             }
             if (this.webhookSecret.isEmpty()) {
                 log.warn("RAZORPAY_MODE is LIVE but RAZORPAY_WEBHOOK_SECRET is not configured. Webhook signatures cannot be verified.");
@@ -320,6 +339,121 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
         } catch (Exception e) {
             log.error("Failed to issue Razorpay refund for payment {}: {}", paymentId, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Razorpay Refund API error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GatewayQrCodeResponse createQrCode(Long orderId, BigDecimal amount, String currency, String description, Long closeByEpochSeconds) {
+        ensureConfigured();
+
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order amount for QR code generation");
+        }
+
+        long amountInPaise = amount.multiply(BigDecimal.valueOf(100)).longValue();
+        String desc = description != null ? description : ("SHOPIVO Order #" + orderId);
+        long minSafeCloseBy = (System.currentTimeMillis() / 1000) + 960; // 16 mins (exceeds Razorpay 15-minute floor)
+        long closeBy = (closeByEpochSeconds != null && closeByEpochSeconds >= minSafeCloseBy)
+                ? closeByEpochSeconds
+                : minSafeCloseBy;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("type", "upi_qr");
+        requestBody.put("name", "SHOPIVO Order Payment");
+        requestBody.put("usage", "single_use");
+        requestBody.put("fixed_amount", true);
+        requestBody.put("payment_amount", amountInPaise);
+        requestBody.put("description", desc);
+        requestBody.put("close_by", closeBy);
+        requestBody.put("notes", Map.of(
+                "shopivo_order_id", String.valueOf(orderId),
+                "platform", "SHOPIVO"
+        ));
+
+        try {
+            String responseStr = restClient.post()
+                    .uri("/payments/qr_codes")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(String.class);
+
+            JsonNode root = objectMapper.readTree(responseStr);
+            String qrId = root.path("id").asText();
+            String imageUrl = root.path("image_url").asText();
+            String status = root.path("status").asText("active");
+            long returnedCloseBy = root.path("close_by").asLong(closeBy);
+
+            log.info("Razorpay QR code created successfully for order #{}: qrCodeId={}, imageUrl={}", orderId, qrId, imageUrl);
+
+            return GatewayQrCodeResponse.builder()
+                    .qrCodeId(qrId)
+                    .imageUrl(imageUrl)
+                    .amountInPaise(amountInPaise)
+                    .currency(currency != null ? currency : "INR")
+                    .status(status)
+                    .closeBy(returnedCloseBy)
+                    .build();
+
+        } catch (org.springframework.web.client.RestClientResponseException rce) {
+            int statusCode = rce.getStatusCode().value();
+            String safeError = parseRazorpayError(rce.getResponseBodyAsString(), rce.getMessage());
+            log.warn("Razorpay QR Code API returned HTTP {} for order #{}: {}. Triggering Standard Checkout fallback.",
+                    statusCode, orderId, safeError);
+
+            return GatewayQrCodeResponse.builder()
+                    .fallbackMode("STANDARD_CHECKOUT_FALLBACK")
+                    .fallbackReason("Razorpay QR Code API rejected creation (HTTP " + statusCode + "): " + safeError)
+                    .amountInPaise(amountInPaise)
+                    .currency(currency != null ? currency : "INR")
+                    .build();
+        } catch (Exception e) {
+            log.warn("Standalone Razorpay QR Code API error for order #{}: {}. Triggering Standard Checkout dynamic UPI QR fallback.",
+                    orderId, e.getMessage());
+
+            return GatewayQrCodeResponse.builder()
+                    .fallbackMode("STANDARD_CHECKOUT_FALLBACK")
+                    .fallbackReason("Razorpay QR Code API unavailable or error: " + e.getMessage())
+                    .amountInPaise(amountInPaise)
+                    .currency(currency != null ? currency : "INR")
+                    .build();
+        }
+    }
+
+    private String parseRazorpayError(String responseBody, String defaultMessage) {
+        if (responseBody != null && !responseBody.isBlank()) {
+            try {
+                JsonNode root = objectMapper.readTree(responseBody);
+                JsonNode errorNode = root.path("error");
+                String description = errorNode.path("description").asText(null);
+                String code = errorNode.path("code").asText(null);
+                if (description != null && !description.isBlank()) {
+                    return (code != null ? code + ": " : "") + description;
+                }
+            } catch (Exception ignored) {}
+        }
+        return defaultMessage;
+    }
+
+    @Override
+    public boolean closeQrCode(String qrCodeId) {
+        if (qrCodeId == null || qrCodeId.isBlank()) return false;
+
+        if (isDevelopmentPlaceholderKey() || qrCodeId.startsWith("qr_dev_") || qrCodeId.startsWith("qr_test_")) {
+            log.info("[RAZORPAY-DEV-SIMULATION] Closed simulated QR code: {}", qrCodeId);
+            return true;
+        }
+
+        try {
+            restClient.post()
+                    .uri("/payments/qr_codes/{id}/close", qrCodeId)
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("Successfully closed Razorpay QR code: {}", qrCodeId);
+            return true;
+        } catch (Exception e) {
+            log.warn("Failed to close Razorpay QR code {}: {}", qrCodeId, e.getMessage());
+            return false;
         }
     }
 

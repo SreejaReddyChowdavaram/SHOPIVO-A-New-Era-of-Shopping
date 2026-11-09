@@ -11,13 +11,12 @@ import {
   Loader2,
   RefreshCw,
 } from 'lucide-react'
-import AnalyticsDateFilter from '@/components/analytics/AnalyticsDateFilter'
-import AnalyticsSummaryCard from '@/components/analytics/AnalyticsSummaryCard'
-import AnalyticsSecondaryStat from '@/components/analytics/AnalyticsSecondaryStat'
-import AnalyticsLineChart from '@/components/analytics/AnalyticsLineChart'
-import AnalyticsDonutChart from '@/components/analytics/AnalyticsDonutChart'
-import AnalyticsBarChart from '@/components/analytics/AnalyticsBarChart'
-import RecentOrdersTable from '@/components/analytics/RecentOrdersTable'
+import CustomerDateFilter from '@/components/customer/analytics/CustomerDateFilter'
+import CustomerMetricCard from '@/components/customer/analytics/CustomerMetricCard'
+import CustomerTrendChart from '@/components/customer/analytics/CustomerTrendChart'
+import CustomerStatusDonut from '@/components/customer/analytics/CustomerStatusDonut'
+import CustomerRecentPurchases from '@/components/customer/analytics/CustomerRecentPurchases'
+import CustomerAnalyticsSkeleton from '@/components/customer/analytics/CustomerAnalyticsSkeleton'
 import {
   getCustomerOverview,
   getCustomerCharts,
@@ -112,182 +111,177 @@ export default function CustomerAnalytics() {
   }
 
   const formatCurrency = (val) => {
-    return `₹${Number(val || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    return `₹${Number(val || 0).toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
   }
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-7 pb-12 max-w-[1400px] mx-auto">
+    <div className="flex flex-col gap-6 sm:gap-7 pb-6 max-w-[1440px] mx-auto w-full">
       {/* ── Page Header & Quick Controls ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-1 border-b border-slate-200/60 dark:border-[#1e293b]">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <span>Customer Analytics</span>
-            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-blue-500" />}
+            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Track your shopping activity, purchases, spending, and returns.
+            Track your shopping activity, purchases, spending and returns.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 self-start sm:self-auto flex-wrap sm:flex-nowrap">
+          <CustomerDateFilter
+            currentRange={range}
+            currentLabel={overview.dateRangeLabel}
+            onRangeChange={handleRangeChange}
+          />
           <button
             onClick={() => loadData(true)}
             disabled={loading || refreshing}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-[#25334A] bg-white dark:bg-[#111C30] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-xs cursor-pointer disabled:opacity-60"
+            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#101726] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#1a2438] transition-colors shadow-xs cursor-pointer disabled:opacity-60 shrink-0"
+            aria-label="Refresh Data"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-blue-500' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-blue-600 dark:text-blue-400' : ''}`} />
             <span>Refresh Data</span>
           </button>
         </div>
       </div>
 
-      {/* ── Date Filter Bar ── */}
-      <AnalyticsDateFilter
-        currentRange={range}
-        currentLabel={overview.dateRangeLabel}
-        onRangeChange={handleRangeChange}
-      />
-
+      {/* ── Error Banner with Retry ── */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2.5 shadow-xs">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={() => loadData(false)}
+            type="button"
+            className="px-3 py-1 font-semibold rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition-colors shrink-0 cursor-pointer shadow-xs"
+          >
+            Retry
+          </button>
         </div>
       )}
 
+      {/* ── Loading Skeleton vs Content ── */}
       {loading ? (
-        <div className="py-28 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-          <p className="text-xs font-medium text-slate-500">Loading your shopping analytics...</p>
-        </div>
+        <CustomerAnalyticsSkeleton />
       ) : (
         <div className="flex flex-col gap-6 sm:gap-7">
-          {/* ── 1. Top Section: 4 Main Summary Cards ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <AnalyticsSummaryCard
+          {/* ── 1. Unified 8-KPI Metric Grid ── */}
+          {/* Desktop >= 1280px: 4 columns (2 rows of 4) */}
+          {/* Tablet/Laptop: 2 columns */}
+          {/* Narrow Mobile < 480px: 1 column */}
+          <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {/* Metric 1: Orders Placed */}
+            <CustomerMetricCard
               title="Orders Placed"
               value={overview.totalOrders.toLocaleString()}
               subLabel="Completed Orders"
               subValue={`${overview.deliveredOrders} Delivered`}
               icon={ShoppingBag}
-              gradientColor="blue"
+              color="blue"
             />
 
-            <AnalyticsSummaryCard
+            {/* Metric 2: Total Spent */}
+            <CustomerMetricCard
               title="Total Spent"
               value={formatCurrency(overview.totalAmountSpent)}
               subLabel="Purchase Value"
               subValue={overview.dateRangeLabel}
               icon={DollarSign}
-              gradientColor="emerald"
+              color="emerald"
             />
 
-            <AnalyticsSummaryCard
+            {/* Metric 3: Pending Orders */}
+            <CustomerMetricCard
               title="Pending Orders"
               value={overview.pendingOrders.toLocaleString()}
               subLabel="Awaiting Delivery"
               subValue={overview.pendingOrders > 0 ? `${overview.pendingOrders} In Transit` : 'None active'}
               icon={Clock}
-              gradientColor="amber"
+              color="amber"
             />
 
-            <AnalyticsSummaryCard
+            {/* Metric 4: Total Returns */}
+            <CustomerMetricCard
               title="Total Returns"
               value={overview.returnedOrders.toLocaleString()}
               subLabel="Return Requests"
               subValue={`${overview.returnedOrders} Processed`}
               icon={RotateCcw}
-              gradientColor="rose"
+              color="rose"
             />
-          </div>
 
-          {/* ── 2. Secondary Metrics (4-stat row) ── */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <AnalyticsSecondaryStat
+            {/* Metric 5: Delivered Orders */}
+            <CustomerMetricCard
               title="Delivered Orders"
               value={overview.deliveredOrders.toLocaleString()}
+              subLabel="Fulfillment Status"
+              subValue="Fulfilled & Received"
               icon={PackageCheck}
               color="emerald"
-              subText="Fulfilled & Received"
             />
 
-            <AnalyticsSecondaryStat
+            {/* Metric 6: Cancelled Orders */}
+            <CustomerMetricCard
               title="Cancelled Orders"
               value={overview.cancelledOrders.toLocaleString()}
+              subLabel="Order Status"
+              subValue="Cancelled before shipping"
               icon={XCircle}
-              color="rose"
-              subText="Cancelled before shipping"
+              color="red"
             />
 
-            <AnalyticsSecondaryStat
+            {/* Metric 7: Refunded Amount */}
+            <CustomerMetricCard
               title="Refunded Amount"
               value={formatCurrency(overview.totalRefundAmount)}
-              icon={DollarSign}
-              color="blue"
-              subText="Processed to source"
+              subLabel="Reversal Status"
+              subValue="Processed to source"
+              icon={RotateCcw}
+              color="purple"
             />
 
-            <AnalyticsSecondaryStat
+            {/* Metric 8: Wishlist Products */}
+            <CustomerMetricCard
               title="Wishlist Products"
               value={overview.wishlistCount.toLocaleString()}
+              subLabel="Saved Items"
+              subValue="Watching for deals"
               icon={Heart}
-              color="pink"
-              subText="Saved items watching"
+              color="violet"
             />
           </div>
 
-          {/* ── 3. Middle Section: Charts ── */}
-          {/* Row 1: Line Chart (60%) + Donut Chart (40%) on Desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
-            {/* Chart A: Purchase Activity Trend (~60% on desktop) */}
-            <div className="lg:col-span-7">
-              <AnalyticsLineChart
-                title="Purchase Activity Trend"
-                subtitle="Monthly orders placed over time"
-                data={charts.monthlyPurchases}
-                series={[
-                  { key: 'orderCount', name: 'Orders Placed', color: '#3b82f6' }
-                ]}
-                height={320}
-                type="area"
-              />
-            </div>
+          {/* ── 2. Charts Section (Balanced 2-Column Grid) ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            <CustomerTrendChart
+              title="Purchase Activity Trend"
+              subtitle="Monthly orders placed over time"
+              data={charts.monthlyPurchases}
+              height={280}
+            />
 
-            {/* Chart B: Order Status Distribution (~40% on desktop) */}
-            <div className="lg:col-span-5">
-              <AnalyticsDonutChart
-                title="Order Status Distribution"
-                subtitle="Delivered / Pending / Shipped / Cancelled / Returned"
-                data={charts.orderStatusDistribution}
-                totalLabel="Orders"
-                height={320}
-              />
-            </div>
-          </div>
-
-          {/* Row 2: Monthly Spending Breakdown (Full Width) */}
-          <div>
-            <AnalyticsBarChart
-              title="Monthly Spending Breakdown"
-              subtitle="Total money spent per month on fulfilled orders (in ₹)"
-              data={charts.spendingAnalysis}
-              series={[
-                { key: 'amountSpent', name: 'Amount Spent (₹)', color: '#10b981' }
-              ]}
-              isCurrency={true}
-              xKey="month"
-              height={320}
+            <CustomerStatusDonut
+              title="Order Status Distribution"
+              subtitle="Delivered / Pending / Shipped / Cancelled / Returned"
+              data={charts.orderStatusDistribution}
+              totalLabel="Orders"
+              height={280}
             />
           </div>
 
-          {/* ── 4. Bottom Section: Recently Purchased Products (Full Width) ── */}
+          {/* ── 3. Bottom Section: Recently Purchased Products ── */}
           <div>
-            <RecentOrdersTable
+            <CustomerRecentPurchases
               title="Recently Purchased Products"
               subtitle="Your latest order items and fulfillment status"
               orders={activity.recentPurchases}
-              role="customer"
               viewAllLink={ROUTES.CUSTOMER_ORDERS}
             />
           </div>

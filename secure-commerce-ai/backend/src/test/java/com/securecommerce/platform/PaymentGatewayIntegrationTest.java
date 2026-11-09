@@ -945,4 +945,348 @@ public class PaymentGatewayIntegrationTest {
         assertThat(secondApproval.refund()).isNotNull();
         assertThat(secondApproval.refund().refundTransactionId()).isEqualTo(firstRefundTxnId);
     }
+
+    // =========================================================================
+    // SCENARIO 30: Webhook order.paid Handler
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 30: Webhook order.paid updates payment to SUCCESS and confirms order")
+    void scenario30_webhook_OrderPaid_Success() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+
+        GatewayOrderDto gwDto = paymentService.createGatewayOrder(
+                customerA.getId(),
+                new CreateGatewayOrderRequest(order.getId())
+        );
+
+        String rawPayload = String.format("""
+                {
+                  "event": "order.paid",
+                  "payload": {
+                    "order": {
+                      "entity": {
+                        "id": "%s",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "paid"
+                      }
+                    },
+                    "payment": {
+                      "entity": {
+                        "id": "pay_webhook_ordpaid_1",
+                        "order_id": "%s",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "captured",
+                        "method": "upi"
+                      }
+                    }
+                  }
+                }
+                """, gwDto.gatewayOrderId(), gwDto.gatewayOrderId());
+
+        paymentService.processWebhook(rawPayload, "valid_test_webhook_sig", "evt_test_ordpaid_101");
+
+        Payment p = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(p.getPaymentStatus()).isEqualTo(PaymentStatus.SUCCESS);
+        assertThat(p.getProviderPaymentId()).isEqualTo("pay_webhook_ordpaid_1");
+
+        Order confirmed = orderRepository.findById(order.getId()).orElseThrow();
+        assertThat(confirmed.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
+    }
+
+    // =========================================================================
+    // SCENARIO 31: Webhook refund.failed Does Not Mark Original Payment as FAILED
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 31: Webhook refund.failed records failure reason and preserves payment SUCCESS")
+    void scenario31_webhook_RefundFailed_DoesNotDowngradePayment() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+
+        GatewayOrderDto gwDto = paymentService.createGatewayOrder(
+                customerA.getId(),
+                new CreateGatewayOrderRequest(order.getId())
+        );
+
+        String paymentId = "pay_test_refund_fail_1";
+        paymentService.verifyGatewayPayment(
+                customerA.getId(),
+                new VerifyPaymentRequest(order.getId(), gwDto.gatewayOrderId(), paymentId, "valid_test_signature")
+        );
+
+        // Put payment into REFUND_PROCESSING
+        Payment p = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        p.setPaymentStatus(PaymentStatus.REFUND_PROCESSING);
+        paymentRepository.save(p);
+
+        String refundFailedPayload = String.format("""
+                {
+                  "event": "refund.failed",
+                  "payload": {
+                    "refund": {
+                      "entity": {
+                        "id": "rfnd_fail_999",
+                        "payment_id": "%s",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "failed",
+                        "error_description": "Beneficiary account inactive"
+                      }
+                    }
+                  }
+                }
+                """, paymentId);
+
+        paymentService.processWebhook(refundFailedPayload, "valid_test_webhook_sig", "evt_rfnd_failed_999");
+
+        Payment verifiedPayment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        // Payment MUST NOT be marked FAILED! The customer payment was successful; the refund failed.
+        assertThat(verifiedPayment.getPaymentStatus()).isEqualTo(PaymentStatus.SUCCESS);
+        assertThat(verifiedPayment.getFailureReason()).contains("Refund failed at gateway: Beneficiary account inactive");
+    }
+
+    // =========================================================================
+    // SCENARIO 32: Webhook payment.authorized Does Not Confirm Order Prior to Capture
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 32: Webhook payment.authorized does not prematurely advance order to CONFIRMED")
+    void scenario32_webhook_PaymentAuthorized_DoesNotConfirmOrder() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+
+        GatewayOrderDto gwDto = paymentService.createGatewayOrder(
+                customerA.getId(),
+                new CreateGatewayOrderRequest(order.getId())
+        );
+
+        String rawPayload = String.format("""
+                {
+                  "event": "payment.authorized",
+                  "payload": {
+                    "payment": {
+                      "entity": {
+                        "id": "pay_auth_only_1",
+                        "order_id": "%s",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "authorized"
+                      }
+                    }
+                  }
+                }
+                """, gwDto.gatewayOrderId());
+
+        paymentService.processWebhook(rawPayload, "valid_test_webhook_sig", "evt_auth_only_1");
+
+        Order unconfirmed = orderRepository.findById(order.getId()).orElseThrow();
+        // Order remains PENDING until captured or confirmed
+        assertThat(unconfirmed.getStatus()).isEqualTo(OrderStatus.PENDING);
+
+        Payment payment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.INITIATED);
+    }
+
+    // =========================================================================
+    // SCENARIO 33: Customer creates dynamic UPI QR payment successfully
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 33: Customer initiates dynamic UPI QR payment and receives QR details")
+    void scenario33_createDynamicQrPayment_success() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+
+        QrPaymentDto qrDto = paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        assertThat(qrDto).isNotNull();
+        assertThat(qrDto.mode()).isEqualTo("RAZORPAY_QR_CODE");
+        assertThat(qrDto.qrCodeId()).startsWith("qr_test_");
+        assertThat(qrDto.imageUrl()).contains(qrDto.qrCodeId());
+        assertThat(qrDto.amountInPaise()).isEqualTo(299900L);
+        assertThat(qrDto.currency()).isEqualTo("INR");
+        assertThat(qrDto.closeBy()).isGreaterThan(System.currentTimeMillis() / 1000);
+
+        Payment payment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.INITIATED);
+        assertThat(payment.getGatewayMethod()).isEqualTo("upi_qr");
+        assertThat(payment.getProviderOrderId()).isEqualTo(qrDto.qrCodeId());
+    }
+
+    // =========================================================================
+    // SCENARIO 34: Standalone QR API fallback triggers Standard Checkout
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 34: When standalone QR API is unavailable, fallback cleanly to Standard Checkout")
+    void scenario34_createDynamicQrPayment_fallbackTriggered() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+        mockGatewayService.setForceQrFallback(true);
+
+        QrPaymentDto qrDto = paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        assertThat(qrDto).isNotNull();
+        assertThat(qrDto.mode()).isEqualTo("STANDARD_CHECKOUT_FALLBACK");
+        assertThat(qrDto.gatewayOrderId()).startsWith("order_test_");
+        assertThat(qrDto.amountInPaise()).isEqualTo(299900L);
+        assertThat(qrDto.fallbackReason()).contains("Simulated QR API unavailable");
+    }
+
+    // =========================================================================
+    // SCENARIO 35: Webhook qr_code.credited confirms order and records UPI details
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 35: Webhook qr_code.credited confirms order and records customer VPA snapshot")
+    void scenario35_webhook_QrCodeCredited_confirmsOrder() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+        QrPaymentDto qrDto = paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        String rawPayload = String.format("""
+                {
+                  "event": "qr_code.credited",
+                  "payload": {
+                    "qr_code": {
+                      "entity": {
+                        "id": "%s",
+                        "status": "active",
+                        "notes": {
+                          "shopivo_order_id": "%d"
+                        }
+                      }
+                    },
+                    "payment": {
+                      "entity": {
+                        "id": "pay_qr_credit_999",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "captured",
+                        "method": "upi",
+                        "vpa": "customer_gpay@okaxis",
+                        "notes": {
+                          "shopivo_order_id": "%d"
+                        }
+                      }
+                    }
+                  }
+                }
+                """, qrDto.qrCodeId(), order.getId(), order.getId());
+
+        paymentService.processWebhook(rawPayload, "valid_test_webhook_sig", "evt_qr_credit_1");
+
+        Payment payment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.SUCCESS);
+        assertThat(payment.getGatewayMethod()).isEqualTo("upi_qr");
+        assertThat(payment.getProviderPaymentId()).isEqualTo("pay_qr_credit_999");
+        assertThat(payment.getUpiIdSnapshot()).isEqualTo("customer_gpay@okaxis");
+        assertThat(payment.getProviderSignatureVerified()).isTrue();
+
+        Order confirmed = orderRepository.findById(order.getId()).orElseThrow();
+        assertThat(confirmed.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
+    }
+
+    // =========================================================================
+    // SCENARIO 36: Webhook qr_code.credited underpayment is detected and rejected
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 36: Webhook qr_code.credited rejects underpayment and protects order")
+    void scenario36_webhook_QrCodeCredited_underpaymentRejected() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+        QrPaymentDto qrDto = paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        // Credited only 100 paise instead of 299900 paise
+        String rawPayload = String.format("""
+                {
+                  "event": "qr_code.credited",
+                  "payload": {
+                    "qr_code": {
+                      "entity": {
+                        "id": "%s",
+                        "status": "active"
+                      }
+                    },
+                    "payment": {
+                      "entity": {
+                        "id": "pay_qr_underpaid_1",
+                        "amount": 100,
+                        "currency": "INR",
+                        "status": "captured",
+                        "method": "upi",
+                        "vpa": "scammer@upi"
+                      }
+                    }
+                  }
+                }
+                """, qrDto.qrCodeId());
+
+        paymentService.processWebhook(rawPayload, "valid_test_webhook_sig", "evt_qr_underpaid_1");
+
+        Payment payment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.INITIATED);
+        assertThat(payment.getFailureReason()).contains("Underpayment detected");
+
+        Order unconfirmed = orderRepository.findById(order.getId()).orElseThrow();
+        assertThat(unconfirmed.getStatus()).isEqualTo(OrderStatus.PENDING);
+    }
+
+    // =========================================================================
+    // SCENARIO 37: Customer cancels QR payment session
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 37: Customer cancels QR payment session, closing gateway QR and marking payment FAILED")
+    void scenario37_cancelQrPayment_closesQrAndFailsPayment() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+        paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        boolean cancelled = paymentService.cancelQrPayment(customerA.getId(), order.getId());
+        assertThat(cancelled).isTrue();
+
+        Payment payment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(payment.getPaymentStatus()).isEqualTo(PaymentStatus.FAILED);
+        assertThat(payment.getFailureReason()).contains("Customer cancelled QR payment session");
+    }
+
+    // =========================================================================
+    // SCENARIO 38: Late payment reconciliation when webhook arrives after cancellation
+    // =========================================================================
+    @Test
+    @DisplayName("Scenario 38: Webhook qr_code.credited reconciles previously cancelled payment to SUCCESS")
+    void scenario38_webhook_QrCodeCredited_reconcilesLatePayment() {
+        Order order = createTestOrderForCustomer(customerA, addressA, 1);
+        QrPaymentDto qrDto = paymentService.createQrPayment(customerA.getId(), order.getId());
+
+        // Customer cancelled session
+        paymentService.cancelQrPayment(customerA.getId(), order.getId());
+        Payment cancelledPayment = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(cancelledPayment.getPaymentStatus()).isEqualTo(PaymentStatus.FAILED);
+
+        // Late payment credit arrives from bank
+        String rawPayload = String.format("""
+                {
+                  "event": "qr_code.credited",
+                  "payload": {
+                    "qr_code": {
+                      "entity": {
+                        "id": "%s",
+                        "status": "closed"
+                      }
+                    },
+                    "payment": {
+                      "entity": {
+                        "id": "pay_qr_late_credit_777",
+                        "amount": 299900,
+                        "currency": "INR",
+                        "status": "captured",
+                        "method": "upi",
+                        "vpa": "customer_late@okaxis"
+                      }
+                    }
+                  }
+                }
+                """, qrDto.qrCodeId());
+
+        paymentService.processWebhook(rawPayload, "valid_test_webhook_sig", "evt_qr_late_credit_1");
+
+        Payment reconciled = paymentRepository.findByOrderId(order.getId()).orElseThrow();
+        assertThat(reconciled.getPaymentStatus()).isEqualTo(PaymentStatus.SUCCESS);
+        assertThat(reconciled.getProviderPaymentId()).isEqualTo("pay_qr_late_credit_777");
+        assertThat(reconciled.getUpiIdSnapshot()).isEqualTo("customer_late@okaxis");
+
+        Order confirmed = orderRepository.findById(order.getId()).orElseThrow();
+        assertThat(confirmed.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
+    }
 }

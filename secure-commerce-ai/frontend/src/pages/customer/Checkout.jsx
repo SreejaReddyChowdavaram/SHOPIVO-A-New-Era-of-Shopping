@@ -34,7 +34,7 @@ import {
 import { getCart } from '@/services/cartService'
 import { getAddresses } from '@/services/addressService'
 import { placeOrder } from '@/services/orderService'
-import { createGatewayOrder, verifyGatewayPayment, processCodPayment, getPaymentByOrderId } from '@/services/paymentService'
+import { createGatewayOrder, verifyGatewayPayment, processCodPayment, getPaymentByOrderId, createQrCode, cancelQrCode } from '@/services/paymentService'
 import { validateCoupon, getAvailableCoupons } from '@/services/couponService'
 import { clearCartSummary } from '@/store/cartSlice'
 import { ROUTES } from '@/constants/routes'
@@ -177,19 +177,18 @@ const Checkout = () => {
     })
   }
 
-  // Opens Razorpay modal for an existing pending order
-  const triggerRazorpayModal = async (orderId) => {
+  // Opens Razorpay Standard Checkout SDK modal (with UPI, Card, NetBanking, etc.)
+  const launchRazorpayStandardCheckout = async (orderId, fallbackData = null) => {
     setSubmitting(true)
     setError(null)
     try {
-      const gwOrder = await createGatewayOrder(orderId)
+      const gwOrder = fallbackData?.gatewayOrderId ? fallbackData : await createGatewayOrder(orderId)
 
       // Detect if the gateway returned a local developer placeholder key
       const isDevKey = !gwOrder.keyId || gwOrder.keyId.includes('shopivo_dev') || gwOrder.keyId.includes('placeholder') || gwOrder.gatewayOrderId?.startsWith('order_dev_')
 
       if (isDevKey) {
-        // Render verified Developer Test Mode Simulation dialog to prevent external Razorpay SDK cloud authentication rejection
-        setDevModalOrder({ orderId, gwOrder })
+        setDevModalOrder({ orderId, qrData: { ...gwOrder, mode: 'RAZORPAY_QR_CODE' } })
         setSubmitting(false)
         return
       }
@@ -202,7 +201,7 @@ const Checkout = () => {
       }
 
       const options = {
-        key: gwOrder.keyId,
+        key: gwOrder.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: gwOrder.amountInPaise,
         currency: gwOrder.currency || 'INR',
         name: 'SHOPIVO',
@@ -283,6 +282,32 @@ const Checkout = () => {
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to initiate Razorpay session')
       setSubmitting(false)
+    }
+  }
+
+  // Initiates dynamic UPI QR code flow by default, with automatic fallback
+  const triggerRazorpayModal = async (orderId) => {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const qrData = await createQrCode(orderId)
+
+      if (qrData.mode === 'RAZORPAY_QR_CODE') {
+        setDevModalOrder({ orderId, qrData })
+        setSubmitting(false)
+        return
+      }
+
+      // If merchant account standalone QR is inactive, fallback cleanly to Standard Checkout with UPI block
+      await launchRazorpayStandardCheckout(orderId, qrData)
+    } catch (err) {
+      // Fallback to Standard Checkout if QR initiation encounters issue
+      try {
+        await launchRazorpayStandardCheckout(orderId)
+      } catch (fallbackErr) {
+        setError(fallbackErr.response?.data?.message || fallbackErr.message || 'Failed to initiate payment')
+        setSubmitting(false)
+      }
     }
   }
 
@@ -414,28 +439,6 @@ const Checkout = () => {
         >
           <ArrowLeft size={15} /> Back to Cart
         </Link>
-      </div>
-
-      {/* Gateway Test Mode Banner */}
-      <div
-        style={{
-          backgroundColor: 'rgba(37, 99, 235, 0.08)',
-          border: '1px solid rgba(37, 99, 235, 0.25)',
-          borderRadius: 'var(--radius-md)',
-          padding: '0.85rem 1.25rem',
-          marginBottom: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          fontSize: '0.8125rem',
-          color: 'var(--color-primary)',
-          lineHeight: '1.45',
-        }}
-      >
-        <ShieldCheck size={20} style={{ flexShrink: 0 }} />
-        <div>
-          <strong style={{ fontWeight: '700' }}>Razorpay Test Mode Active:</strong> All transactions run in sandbox mode with test credentials. No real-money charges occur.
-        </div>
       </div>
 
       {/* Error alert */}
@@ -586,11 +589,32 @@ const Checkout = () => {
 
           {/* ── 2. Payment Method Card ── */}
           <div className="card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
-              <ShieldCheck size={18} color="var(--color-primary)" />
-              <h2 style={{ fontSize: '1rem', fontWeight: '700', margin: 0, color: 'var(--color-text-primary)' }}>
-                Select Payment Method
-              </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <ShieldCheck size={18} color="var(--color-primary)" />
+                <h2 style={{ fontSize: '1rem', fontWeight: '700', margin: 0, color: 'var(--color-text-primary)' }}>
+                  Select Payment Method
+                </h2>
+              </div>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.2rem 0.65rem',
+                  borderRadius: '9999px',
+                  backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                  border: '1px solid rgba(245, 158, 11, 0.25)',
+                  color: '#d97706',
+                  fontSize: '0.6875rem',
+                  fontWeight: '700',
+                  letterSpacing: '0.025em',
+                  textTransform: 'uppercase'
+                }}
+              >
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#d97706', display: 'inline-block' }} />
+                <span>Test Mode · No Real Charges</span>
+              </div>
             </div>
 
             {/* Selection Grid: Exactly Razorpay or COD */}
@@ -865,24 +889,35 @@ const Checkout = () => {
       {devModalOrder && (
         <DynamicUpiQrModal
           orderId={devModalOrder.orderId}
-          amount={devModalOrder.gwOrder.amount}
-          amountInPaise={devModalOrder.gwOrder.amountInPaise}
-          gatewayOrderId={devModalOrder.gwOrder.gatewayOrderId}
-          keyId={devModalOrder.gwOrder.keyId}
-          customerName={devModalOrder.gwOrder.customerName}
+          amount={devModalOrder.qrData?.amount || devModalOrder.gwOrder?.amount}
+          amountInPaise={devModalOrder.qrData?.amountInPaise || devModalOrder.gwOrder?.amountInPaise}
+          imageUrl={devModalOrder.qrData?.imageUrl}
+          qrCodeId={devModalOrder.qrData?.qrCodeId}
+          closeBy={devModalOrder.qrData?.closeBy}
+          gatewayOrderId={devModalOrder.qrData?.gatewayOrderId || devModalOrder.gwOrder?.gatewayOrderId}
+          keyId={devModalOrder.qrData?.keyId || devModalOrder.gwOrder?.keyId}
+          customerName={devModalOrder.qrData?.customerName || devModalOrder.gwOrder?.customerName}
           onPaymentSuccess={handleCompletePaymentFromModal}
           onPaymentFailed={(msg) => {
             setError(msg)
             setDevModalOrder(null)
           }}
           onDismiss={() => {
+            const oid = devModalOrder.orderId
+            cancelQrCode(oid).catch(() => {})
             setDevModalOrder(null)
             setError('Payment window was closed. You can retry payment now or switch to Cash on Delivery.')
           }}
           onSwitchToCod={() => {
             const oid = devModalOrder.orderId
+            cancelQrCode(oid).catch(() => {})
             setDevModalOrder(null)
             handleSwitchToCod(oid)
+          }}
+          onOpenStandardCheckout={() => {
+            const oid = devModalOrder.orderId
+            setDevModalOrder(null)
+            launchRazorpayStandardCheckout(oid)
           }}
           checkStatusApi={getPaymentByOrderId}
         />

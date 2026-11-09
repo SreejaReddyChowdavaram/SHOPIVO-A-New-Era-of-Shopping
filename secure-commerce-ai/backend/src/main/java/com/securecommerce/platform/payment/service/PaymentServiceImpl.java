@@ -13,10 +13,13 @@ import com.securecommerce.platform.payment.dto.*;
 import com.securecommerce.platform.payment.entity.*;
 import com.securecommerce.platform.payment.gateway.GatewayOrderResponse;
 import com.securecommerce.platform.payment.gateway.GatewayPaymentDetails;
+import com.securecommerce.platform.payment.gateway.GatewayQrCodeResponse;
 import com.securecommerce.platform.payment.gateway.PaymentGatewayService;
 import com.securecommerce.platform.payment.repository.PaymentRepository;
 import com.securecommerce.platform.payment.repository.PaymentWebhookEventRepository;
+import com.securecommerce.platform.returns.entity.Refund;
 import com.securecommerce.platform.returns.entity.RefundStatus;
+import com.securecommerce.platform.returns.repository.RefundRepository;
 import com.securecommerce.platform.user.entity.User;
 import com.securecommerce.platform.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentGatewayService paymentGatewayService;
     private final ObjectMapper objectMapper;
     private final EventLoggingService eventLoggingService;
+    private final RefundRepository refundRepository;
 
     @Value("${app.razorpay.key-id:}")
     private String razorpayKeyId;
@@ -457,6 +461,11 @@ public class PaymentServiceImpl implements PaymentService {
             String providerOrderId = paymentEntity.path("order_id").asText(null);
             String gatewayMethod = paymentEntity.path("method").asText(null);
 
+            // In order.paid events, order_id can also be found directly in payload.order.entity.id
+            if (providerOrderId == null || providerOrderId.isBlank()) {
+                providerOrderId = root.path("payload").path("order").path("entity").path("id").asText(null);
+            }
+
             // Audit record stored internally
             PaymentWebhookEvent webhookEvent = PaymentWebhookEvent.builder()
                     .provider("RAZORPAY")
@@ -473,13 +482,17 @@ public class PaymentServiceImpl implements PaymentService {
                     eventType, providerEventId, providerOrderId, providerPaymentId);
 
             // 4. Handle event lifecycle
-            if ("payment.captured".equalsIgnoreCase(eventType) && providerOrderId != null) {
+            if (("payment.captured".equalsIgnoreCase(eventType) || "order.paid".equalsIgnoreCase(eventType)) && providerOrderId != null) {
                 Optional<Payment> paymentOpt = paymentRepository.findByProviderOrderId(providerOrderId);
                 paymentOpt.ifPresent(payment -> {
                     if (payment.getPaymentStatus() == PaymentStatus.INITIATED) {
                         payment.setPaymentStatus(PaymentStatus.SUCCESS);
-                        payment.setProviderPaymentId(providerPaymentId);
-                        payment.setGatewayMethod(gatewayMethod);
+                        if (providerPaymentId != null && !providerPaymentId.isBlank()) {
+                            payment.setProviderPaymentId(providerPaymentId);
+                        }
+                        if (gatewayMethod != null && !gatewayMethod.isBlank()) {
+                            payment.setGatewayMethod(gatewayMethod);
+                        }
                         payment.setProviderSignatureVerified(true);
                         paymentRepository.save(payment);
 
@@ -488,7 +501,7 @@ public class PaymentServiceImpl implements PaymentService {
                             order.setStatus(OrderStatus.CONFIRMED);
                             orderRepository.save(order);
                         }
-                        log.info("Webhook updated order #{} to CONFIRMED via payment.captured", order.getId());
+                        log.info("Webhook updated order #{} to CONFIRMED via {}", order.getId(), eventType);
                     }
                 });
             } else if ("payment.failed".equalsIgnoreCase(eventType) && providerOrderId != null) {
@@ -540,18 +553,139 @@ public class PaymentServiceImpl implements PaymentService {
             } else if ("refund.failed".equalsIgnoreCase(eventType)) {
                 JsonNode refundEntity = root.path("payload").path("refund").path("entity");
                 String refundPaymentId = refundEntity.path("payment_id").asText(null);
+                String errorDescription = refundEntity.path("error_description").asText("Refund failed at gateway");
 
                 if (refundPaymentId != null) {
                     Optional<Payment> paymentOpt = paymentRepository.findByProviderPaymentId(refundPaymentId);
                     paymentOpt.ifPresent(payment -> {
-                        if (payment.getPaymentStatus().canTransitionTo(PaymentStatus.FAILED)) {
-                            payment.setPaymentStatus(PaymentStatus.FAILED);
-                            payment.setFailureReason(refundEntity.path("error_description").asText("Refund failed at gateway"));
-                            paymentRepository.save(payment);
-                            log.warn("Webhook marked refund as FAILED for payment {}", payment.getId());
+                        // The original payment was captured successfully; do NOT mark the payment as FAILED!
+                        payment.setFailureReason("Refund failed at gateway: " + errorDescription);
+                        // If it was in REFUND_PROCESSING, restore SUCCESS status because money was not refunded
+                        if (payment.getPaymentStatus() == PaymentStatus.REFUND_PROCESSING) {
+                            payment.setPaymentStatus(PaymentStatus.SUCCESS);
+                        }
+                        paymentRepository.save(payment);
+                        log.warn("Webhook recorded refund failure for payment #{} without downgrading payment status: {}",
+                                payment.getId(), errorDescription);
+
+                        // If a corresponding Refund entity exists, update its status to REFUND_FAILED
+                        if (payment.getOrder() != null) {
+                            Optional<Refund> refundOpt = refundRepository.findByOrderId(payment.getOrder().getId());
+                            refundOpt.ifPresent(refund -> {
+                                refund.setRefundStatus(RefundStatus.REFUND_FAILED);
+                                refundRepository.save(refund);
+                                log.info("Updated Refund record #{} to REFUND_FAILED", refund.getId());
+                            });
                         }
                     });
                 }
+            } else if ("payment.authorized".equalsIgnoreCase(eventType) && providerOrderId != null) {
+                log.info("Payment authorized for orderId={}. Awaiting payment.captured before order fulfillment.", providerOrderId);
+            } else if ("qr_code.credited".equalsIgnoreCase(eventType)) {
+                JsonNode qrEntity = root.path("payload").path("qr_code").path("entity");
+                String qrId = qrEntity.path("id").asText(null);
+                long qrCreditedAmount = paymentEntity.path("amount").asLong(0L);
+                String upiVpa = paymentEntity.path("vpa").asText(null);
+
+                // Find payment record by providerOrderId matching qrId
+                Optional<Payment> paymentOpt = Optional.empty();
+                if (qrId != null && !qrId.isBlank()) {
+                    paymentOpt = paymentRepository.findByProviderOrderId(qrId);
+                }
+
+                // If not found by qrId, check shopivo_order_id in notes
+                if (paymentOpt.isEmpty()) {
+                    String shopivoOrderId = qrEntity.path("notes").path("shopivo_order_id").asText(
+                            paymentEntity.path("notes").path("shopivo_order_id").asText(null));
+                    if (shopivoOrderId != null && !shopivoOrderId.isBlank()) {
+                        try {
+                            Long ordId = Long.parseLong(shopivoOrderId);
+                            paymentOpt = paymentRepository.findFirstByOrderIdAndProviderOrderByCreatedAtDesc(ordId, "RAZORPAY");
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
+
+                paymentOpt.ifPresent(payment -> {
+                    String paymentCurrency = paymentEntity.path("currency").asText("INR");
+                    if (!"INR".equalsIgnoreCase(paymentCurrency)) {
+                        log.error("Currency mismatch detected for QR {}: received {}, expected INR", qrId, paymentCurrency);
+                        payment.setFailureReason("Currency mismatch: received " + paymentCurrency + ", expected INR");
+                        paymentRepository.save(payment);
+                        return;
+                    }
+
+                    // Strict amount guard: ensure credited amount matches exact order amount in paise
+                    long expectedPaise = payment.getAmount().multiply(BigDecimal.valueOf(100)).longValue();
+                    if (qrCreditedAmount <= 0 || qrCreditedAmount != expectedPaise) {
+                        log.error("Amount mismatch detected for QR {}: received {} paise, expected {} paise",
+                                qrId, qrCreditedAmount, expectedPaise);
+                        payment.setFailureReason("Amount mismatch / Underpayment detected: received " + qrCreditedAmount + " paise, expected " + expectedPaise);
+                        paymentRepository.save(payment);
+                        return;
+                    }
+
+                    if (payment.getPaymentStatus() == PaymentStatus.INITIATED) {
+                        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+                        if (providerPaymentId != null && !providerPaymentId.isBlank()) {
+                            payment.setProviderPaymentId(providerPaymentId);
+                        }
+                        payment.setGatewayMethod("upi_qr");
+                        if (upiVpa != null && !upiVpa.isBlank()) {
+                            payment.setUpiIdSnapshot(upiVpa);
+                        }
+                        payment.setProviderSignatureVerified(true);
+                        paymentRepository.save(payment);
+
+                        Order order = payment.getOrder();
+                        if (order.getStatus() == OrderStatus.PENDING) {
+                            order.setStatus(OrderStatus.CONFIRMED);
+                            orderRepository.save(order);
+                        }
+                        log.info("Webhook qr_code.credited successfully confirmed order #{} for QR {}", order.getId(), qrId);
+                    } else if (payment.getPaymentStatus() == PaymentStatus.FAILED) {
+                        // Late Payment Reconciliation: Customer session had cancelled or timed out, but funds were credited
+                        log.warn("Late payment received for previously cancelled/failed QR payment #{}. Reconciling to SUCCESS.", payment.getId());
+                        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+                        payment.setFailureReason("Reconciled from late QR credit");
+                        if (providerPaymentId != null && !providerPaymentId.isBlank()) {
+                            payment.setProviderPaymentId(providerPaymentId);
+                        }
+                        payment.setGatewayMethod("upi_qr");
+                        if (upiVpa != null && !upiVpa.isBlank()) {
+                            payment.setUpiIdSnapshot(upiVpa);
+                        }
+                        payment.setProviderSignatureVerified(true);
+                        paymentRepository.save(payment);
+
+                        Order order = payment.getOrder();
+                        if (order.getStatus() == OrderStatus.PENDING) {
+                            order.setStatus(OrderStatus.CONFIRMED);
+                            orderRepository.save(order);
+                            log.info("Reconciled order #{} to CONFIRMED following late webhook arrival", order.getId());
+                        } else {
+                            log.warn("Order #{} is in status {}. Payment #{} recorded as SUCCESS for merchant audit.",
+                                    order.getId(), order.getStatus(), payment.getId());
+                        }
+                    }
+                });
+            } else if ("qr_code.created".equalsIgnoreCase(eventType)) {
+                log.info("Webhook qr_code.created received and acknowledged for eventId={}", providerEventId);
+            } else if ("qr_code.closed".equalsIgnoreCase(eventType)) {
+                JsonNode qrEntity = root.path("payload").path("qr_code").path("entity");
+                String qrId = qrEntity.path("id").asText(null);
+                log.info("Webhook qr_code.closed received for qrId={}, eventId={}", qrId, providerEventId);
+                if (qrId != null && !qrId.isBlank()) {
+                    paymentRepository.findByProviderOrderId(qrId).ifPresent(payment -> {
+                        if (payment.getPaymentStatus() == PaymentStatus.INITIATED) {
+                            payment.setPaymentStatus(PaymentStatus.FAILED);
+                            payment.setFailureReason("QR code closed or expired at gateway");
+                            paymentRepository.save(payment);
+                            log.info("Payment #{} updated to FAILED following qr_code.closed", payment.getId());
+                        }
+                    });
+                }
+            } else if (eventType.startsWith("payment.dispute.")) {
+                log.info("Dispute webhook event received: type={}, eventId={}. Logged for compliance audit.", eventType, providerEventId);
             }
 
         } catch (ResponseStatusException rse) {
@@ -607,5 +741,132 @@ public class PaymentServiceImpl implements PaymentService {
     public Page<PaymentResponse> getAllPaymentsForAdmin(Pageable pageable) {
         return paymentRepository.findAllPagedForAdmin(pageable)
                 .map(PaymentResponse::from);
+    }
+
+    @Override
+    @Transactional
+    public QrPaymentDto createQrPayment(Long customerId, Long orderId) {
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        // 1. Authorization: Only the ordering customer can initiate payment
+        if (!order.getCustomer().getId().equals(customerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to pay for this order");
+        }
+
+        // 2. Order status validations
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot pay for a cancelled order");
+        }
+
+        // 3. Check payment expiry window
+        if (order.getPaymentExpiresAt() != null && order.getPaymentExpiresAt().isBefore(Instant.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment window for this order has expired. Please place a new order.");
+        }
+
+        // 4. Prevent duplicate payment for already successful orders
+        if (paymentRepository.existsByOrderIdAndPaymentStatus(order.getId(), PaymentStatus.SUCCESS)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This order has already been paid successfully");
+        }
+
+        long amountInPaise = order.getTotalAmount().multiply(BigDecimal.valueOf(100)).longValue();
+        String customerFullName = customer.getFirstName() + (customer.getLastName() != null ? " " + customer.getLastName() : "");
+
+        // 5. Generate Dynamic QR via Gateway abstraction
+        GatewayQrCodeResponse gwQr = paymentGatewayService.createQrCode(
+                order.getId(),
+                order.getTotalAmount(),
+                "INR",
+                "Payment for Order #" + order.getId(),
+                order.getPaymentExpiresAt() != null ? order.getPaymentExpiresAt().getEpochSecond() : (Instant.now().getEpochSecond() + 900)
+        );
+
+        // 6. Handle Seamless Fallback if standalone QR API is inactive on merchant account
+        if (gwQr.fallbackMode() != null && "STANDARD_CHECKOUT_FALLBACK".equalsIgnoreCase(gwQr.fallbackMode())) {
+            log.info("QR standalone API inactive or error. Generating standard gateway order fallback for Shopivo order #{}", order.getId());
+            GatewayOrderDto gwOrder = createGatewayOrder(customerId, new CreateGatewayOrderRequest(order.getId()));
+
+            return QrPaymentDto.builder()
+                    .orderId(order.getId())
+                    .mode("STANDARD_CHECKOUT_FALLBACK")
+                    .gatewayOrderId(gwOrder.gatewayOrderId())
+                    .amount(order.getTotalAmount())
+                    .amountInPaise(amountInPaise)
+                    .currency("INR")
+                    .keyId(gwOrder.keyId())
+                    .customerName(customerFullName)
+                    .customerEmail(customer.getEmail())
+                    .customerPhone(order.getShippingPhone())
+                    .fallbackReason(gwQr.fallbackReason())
+                    .build();
+        }
+
+        // 7. Persist / update Payment record for standalone QR session
+        Optional<Payment> existingPaymentOpt = paymentRepository.findFirstByOrderIdAndProviderOrderByCreatedAtDesc(order.getId(), "RAZORPAY");
+        Payment payment;
+        if (existingPaymentOpt.isPresent() && existingPaymentOpt.get().getPaymentStatus() == PaymentStatus.INITIATED) {
+            payment = existingPaymentOpt.get();
+            payment.setProviderOrderId(gwQr.qrCodeId());
+            payment.setGatewayMethod("upi_qr");
+            payment.setTransactionId("QR-" + gwQr.qrCodeId());
+        } else {
+            payment = Payment.builder()
+                    .order(order)
+                    .customer(customer)
+                    .provider("RAZORPAY")
+                    .paymentGateway("RAZORPAY")
+                    .paymentMethod(PaymentMethod.RAZORPAY)
+                    .gatewayMethod("upi_qr")
+                    .paymentStatus(PaymentStatus.INITIATED)
+                    .providerOrderId(gwQr.qrCodeId())
+                    .amount(order.getTotalAmount())
+                    .transactionId("QR-" + gwQr.qrCodeId())
+                    .providerSignatureVerified(false)
+                    .build();
+        }
+        paymentRepository.save(payment);
+
+        return QrPaymentDto.builder()
+                .orderId(order.getId())
+                .mode("RAZORPAY_QR_CODE")
+                .qrCodeId(gwQr.qrCodeId())
+                .imageUrl(gwQr.imageUrl())
+                .amount(order.getTotalAmount())
+                .amountInPaise(amountInPaise)
+                .currency("INR")
+                .closeBy(gwQr.closeBy())
+                .keyId(paymentGatewayService.getPublicKeyId())
+                .customerName(customerFullName)
+                .customerEmail(customer.getEmail())
+                .customerPhone(order.getShippingPhone())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public boolean cancelQrPayment(Long customerId, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        if (!order.getCustomer().getId().equals(customerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        Optional<Payment> paymentOpt = paymentRepository.findFirstByOrderIdAndProviderOrderByCreatedAtDesc(order.getId(), "RAZORPAY");
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            if (payment.getPaymentStatus() == PaymentStatus.INITIATED && payment.getProviderOrderId() != null && payment.getProviderOrderId().startsWith("qr_")) {
+                paymentGatewayService.closeQrCode(payment.getProviderOrderId());
+                payment.setPaymentStatus(PaymentStatus.FAILED);
+                payment.setFailureReason("Customer cancelled QR payment session");
+                paymentRepository.save(payment);
+                log.info("Cancelled QR payment session for order #{}", orderId);
+                return true;
+            }
+        }
+        return false;
     }
 }

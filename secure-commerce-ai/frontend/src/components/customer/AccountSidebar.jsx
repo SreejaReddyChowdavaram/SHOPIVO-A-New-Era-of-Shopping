@@ -1,117 +1,177 @@
 /**
- * AccountSidebar.jsx — Minimal Fixed Customer Sidebar
- * Pinned on desktop under the top navbar (top: 64px, height: calc(100vh - 64px)).
- * Continuous navigation list without section headings or user profile block.
+ * AccountSidebar.jsx — Desktop Customer Sidebar Navigation Area
+ * Pinned below top navbar (position: fixed; top: var(--customer-header-height); height: calc(100vh - var(--customer-header-height))).
+ * Supports Expanded (250px) and Collapsed (68px) states.
+ * Brand header and toggle button are permanently located in the fixed brand row above.
+ * Displays only grouped navigation links, icons, and badge counters with clean independent scroll.
+ * Customer identity and Sign Out are located in the top navbar.
  */
 
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { LogOut } from 'lucide-react'
-import { logout } from '@/store/authSlice'
-import { CUSTOMER_NAV_ITEMS } from './AccountNavigation'
+import { NavLink, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCartItemCount } from '@/store/cartSlice'
+import { CUSTOMER_NAV_SECTIONS, CUSTOMER_NAV_ITEMS } from './AccountNavigation'
 import { ROUTES } from '@/constants/routes'
 import { isNavItemActive } from '@/utils/navigation'
 
 const allCustomerPaths = CUSTOMER_NAV_ITEMS.map((i) => i.path)
 
-const AccountSidebar = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
   const location = useLocation()
-
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate(ROUTES.LOGIN)
-  }
+  const cartCount = useSelector(selectCartItemCount) || 0
 
   return (
     <aside
-      className="customer-global-sidebar"
-      style={{
-        position: 'fixed',
-        top: 'var(--header-height, 64px)',
-        left: 0,
-        width: 'var(--sidebar-width, 250px)',
-        height: 'calc(100vh - var(--header-height, 64px))',
-        backgroundColor: 'var(--color-surface)',
-        borderRight: '1px solid var(--color-border)',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'auto',
-        zIndex: 50,
-        transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
-      }}
+      className={`customer-global-sidebar ${isCollapsed ? 'is-collapsed' : ''}`}
+      aria-label="Customer account navigation"
     >
-      {/* ── Continuous Navigation List ── */}
-      <nav style={{ padding: '0.75rem 0', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {CUSTOMER_NAV_ITEMS.map((item) => {
-          const Icon = item.icon
-          const isActive = isNavItemActive(item.path, location.pathname, allCustomerPaths)
+      {/* ── Sectioned Navigation Links with Independent Internal Scroll ── */}
+      <nav
+        className="customer-sidebar-nav"
+        style={{
+          padding: isCollapsed ? '0.75rem 0.35rem 2rem' : '0.75rem 0.65rem 2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: isCollapsed ? '0.65rem' : '1rem',
+        }}
+      >
+        {CUSTOMER_NAV_SECTIONS.map((section, idx) => (
+          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            {/* Section Header or Divider */}
+            {isCollapsed ? (
+              idx > 0 && (
+                <div
+                  style={{
+                    height: '1px',
+                    backgroundColor: 'var(--color-border-subtle)',
+                    margin: '0.35rem 0.4rem',
+                  }}
+                  aria-hidden="true"
+                />
+              )
+            ) : (
+              <div
+                style={{
+                  padding: '0.35rem 0.65rem',
+                  fontSize: '0.6875rem',
+                  fontWeight: '700',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: 'var(--color-text-muted)',
+                }}
+              >
+                {section.title}
+              </div>
+            )}
 
-          return (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.7rem 1.25rem',
-                minHeight: '44px',
-                fontSize: '0.84rem',
-                fontWeight: isActive ? '700' : '500',
-                color: isActive ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                backgroundColor: isActive ? 'var(--color-primary-subtle)' : 'transparent',
-                borderLeft: `3px solid ${isActive ? 'var(--color-primary)' : 'transparent'}`,
-                textDecoration: 'none',
-                transition: 'all var(--transition-fast)',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = 'var(--color-surface-raised)'
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'
-              }}
-            >
-              <Icon size={17} color={isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'} />
-              <span style={{ flex: 1 }}>{item.label}</span>
-            </NavLink>
-          )
-        })}
+            {section.items.map((item) => {
+              const Icon = item.icon
+              const isActive = isNavItemActive(item.path, location.pathname, allCustomerPaths)
 
-        <div style={{ margin: 'auto 0 0.5rem', borderTop: '1px solid var(--color-border)' }} />
+              let badgeCount = 0
+              if (item.badgeKey === 'cart') badgeCount = cartCount
+              if (item.badgeKey === 'notifications') badgeCount = unreadNotifications
 
-        {/* ── Logout Section ── */}
-        <button
-          onClick={handleLogout}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            padding: '0.75rem 1.25rem',
-            minHeight: '44px',
-            fontSize: '0.84rem',
-            fontWeight: '600',
-            color: 'var(--color-danger)',
-            backgroundColor: 'transparent',
-            border: 'none',
-            borderLeft: '3px solid transparent',
-            cursor: 'pointer',
-            textAlign: 'left',
-            width: '100%',
-            transition: 'all var(--transition-fast)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-danger-subtle)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent'
-          }}
-        >
-          <LogOut size={17} color="var(--color-danger)" />
-          <span>Logout</span>
-        </button>
+              return (
+                <NavLink
+                  key={item.label}
+                  to={item.path}
+                  end={item.path === ROUTES.CUSTOMER_DASHBOARD}
+                  title={isCollapsed ? item.label : undefined}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: isCollapsed ? 'center' : 'flex-start',
+                    gap: isCollapsed ? 0 : '0.75rem',
+                    padding: isCollapsed ? '0.6rem 0' : '0.55rem 0.75rem',
+                    borderRadius: 'var(--radius-md)',
+                    minHeight: '40px',
+                    fontSize: '0.84rem',
+                    fontWeight: isActive ? '700' : '500',
+                    color: isActive ? 'var(--color-primary)' : 'var(--color-text-primary)',
+                    backgroundColor: isActive ? 'var(--color-primary-subtle)' : 'transparent',
+                    borderLeft: isCollapsed ? 'none' : `3px solid ${isActive ? 'var(--color-primary)' : 'transparent'}`,
+                    borderRight: isCollapsed && isActive ? '3px solid var(--color-primary)' : 'none',
+                    textDecoration: 'none',
+                    position: 'relative',
+                    transition: 'all var(--transition-fast)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'var(--color-surface-raised)'
+                      e.currentTarget.style.color = 'var(--color-primary)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                      e.currentTarget.style.color = 'var(--color-text-primary)'
+                    }
+                  }}
+                >
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon
+                      size={18}
+                      strokeWidth={isActive ? 2.25 : 1.75}
+                      color={isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}
+                      style={{ flexShrink: 0, transition: 'color var(--transition-fast)' }}
+                    />
+                    {isCollapsed && badgeCount > 0 && (
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '-4px',
+                          right: '-6px',
+                          backgroundColor: 'var(--color-primary)',
+                          color: '#ffffff',
+                          fontSize: '0.575rem',
+                          fontWeight: '800',
+                          borderRadius: 'var(--radius-full)',
+                          padding: '0 3px',
+                          minWidth: '14px',
+                          height: '14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {badgeCount > 9 ? '9+' : badgeCount}
+                      </span>
+                    )}
+                  </div>
+
+                  {!isCollapsed && (
+                    <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {item.label}
+                    </span>
+                  )}
+
+                  {!isCollapsed && badgeCount > 0 && (
+                    <span
+                      style={{
+                        backgroundColor: 'var(--color-primary)',
+                        color: '#ffffff',
+                        fontSize: '0.65rem',
+                        fontWeight: '800',
+                        borderRadius: 'var(--radius-full)',
+                        padding: '0.1rem 0.45rem',
+                        minWidth: '18px',
+                        height: '18px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {badgeCount > 99 ? '99+' : badgeCount}
+                    </span>
+                  )}
+                </NavLink>
+              )
+            })}
+          </div>
+        ))}
       </nav>
     </aside>
   )

@@ -124,11 +124,12 @@ app:
 
   # CORS origins allowed to call this API
   cors:
-    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:${CORS_ORIGINS:http://localhost:5173}}
 
   # Razorpay Configuration (TEST or LIVE mode supported via RAZORPAY_MODE)
   razorpay:
     mode: ${RAZORPAY_MODE:TEST}
+    live-enabled: ${RAZORPAY_LIVE_ENABLED:false}
     key-id: ${RAZORPAY_KEY_ID:}
     key-secret: ${RAZORPAY_KEY_SECRET:}
     webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}

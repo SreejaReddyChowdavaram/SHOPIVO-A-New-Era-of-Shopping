@@ -26,6 +26,12 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
 
     private final Map<String, GatewayPaymentDetails> customPayments = new ConcurrentHashMap<>();
     private final Map<String, Long> orderAmounts = new ConcurrentHashMap<>();
+    private final Map<String, GatewayQrCodeResponse> customQrCodes = new ConcurrentHashMap<>();
+    private boolean forceQrFallback = false;
+
+    public void setForceQrFallback(boolean forceQrFallback) {
+        this.forceQrFallback = forceQrFallback;
+    }
 
     public void registerPaymentDetails(String paymentId, GatewayPaymentDetails details) {
         customPayments.put(paymentId, details);
@@ -34,6 +40,8 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
     public void clearMockData() {
         customPayments.clear();
         orderAmounts.clear();
+        customQrCodes.clear();
+        forceQrFallback = false;
     }
 
     @Override
@@ -154,6 +162,42 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
                 .currency("INR")
                 .status("processed")
                 .build();
+    }
+
+    @Override
+    public GatewayQrCodeResponse createQrCode(Long orderId, BigDecimal amount, String currency, String description, Long closeByEpochSeconds) {
+        if (forceQrFallback || (orderId != null && orderId == 8888L)) {
+            return GatewayQrCodeResponse.builder()
+                    .fallbackMode("STANDARD_CHECKOUT_FALLBACK")
+                    .fallbackReason("Simulated QR API unavailable for merchant")
+                    .amountInPaise(amount.multiply(BigDecimal.valueOf(100)).longValue())
+                    .currency(currency != null ? currency : "INR")
+                    .build();
+        }
+
+        long amountInPaise = amount.multiply(BigDecimal.valueOf(100)).longValue();
+        String qrId = "qr_test_" + UUID.randomUUID().toString().replace("-", "").substring(0, 14);
+        String imageUrl = "https://api.razorpay.com/v1/payments/qr_codes/" + qrId + "/image";
+        long closeBy = closeByEpochSeconds != null ? closeByEpochSeconds : (System.currentTimeMillis() / 1000 + 900);
+
+        GatewayQrCodeResponse response = GatewayQrCodeResponse.builder()
+                .qrCodeId(qrId)
+                .imageUrl(imageUrl)
+                .amountInPaise(amountInPaise)
+                .currency(currency != null ? currency : "INR")
+                .status("active")
+                .closeBy(closeBy)
+                .build();
+
+        customQrCodes.put(qrId, response);
+        return response;
+    }
+
+    @Override
+    public boolean closeQrCode(String qrCodeId) {
+        if (qrCodeId == null) return false;
+        customQrCodes.remove(qrCodeId);
+        return true;
     }
 
     @Override

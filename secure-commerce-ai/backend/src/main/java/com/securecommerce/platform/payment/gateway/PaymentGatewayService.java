@@ -19,6 +19,10 @@ public interface PaymentGatewayService {
 
     GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason);
 
+    GatewayQrCodeResponse createQrCode(Long orderId, BigDecimal amount, String currency, String description, Long closeByEpochSeconds);
+
+    boolean closeQrCode(String qrCodeId);
+
     String getPublicKeyId();
 
     default String getMode() {
