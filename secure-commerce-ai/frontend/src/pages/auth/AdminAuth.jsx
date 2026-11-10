@@ -320,18 +320,36 @@ export default function AdminAuth() {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label
-                htmlFor="admin-password"
+              <div
                 style={{
-                  display: 'block',
-                  fontSize: '0.8125rem',
-                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                   marginBottom: '0.4rem',
-                  color: 'var(--color-text-primary)',
                 }}
               >
-                Password
-              </label>
+                <label
+                  htmlFor="admin-password"
+                  style={{
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                  }}
+                >
+                  Password
+                </label>
+                <Link
+                  to={`${ROUTES.FORGOT_PASSWORD}?portal=ADMIN`}
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#04DB7E',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div style={{ position: 'relative' }}>
                 <Lock
                   size={16}

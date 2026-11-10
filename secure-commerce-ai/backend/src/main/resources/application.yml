@@ -32,6 +32,25 @@ spring:
       max-request-size: 6MB
 
   # ─────────────────────────────────────────
+  # EMAIL DELIVERY (SMTP)
+  # ─────────────────────────────────────────
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_PROPERTIES_MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE:true}
+            required: ${MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE:true}
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  # ─────────────────────────────────────────
   # DATABASE
   # ─────────────────────────────────────────
   datasource:
@@ -111,6 +130,9 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+  health:
+    mail:
+      enabled: false
 
 # ─────────────────────────────────────────
 # JWT CONFIGURATION
@@ -146,6 +168,13 @@ app:
   # Product Image Upload Configuration
   upload:
     dir: ${SHOPIVO_UPLOAD_DIR:./data/uploads/products}
+
+  # Email Delivery & Password Reset OTP Configuration
+  mail:
+    from: ${MAIL_FROM:no-reply@shopivo.com}
+    otp-expiry-minutes: ${OTP_EXPIRY_MINUTES:10}
+    resend-cooldown-seconds: ${OTP_RESEND_COOLDOWN_SECONDS:60}
+    max-attempts: ${OTP_MAX_ATTEMPTS:5}
 
   # Rate Limiting Configuration (Authentication Endpoints)
   rate-limit:

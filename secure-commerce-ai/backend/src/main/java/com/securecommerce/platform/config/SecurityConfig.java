@@ -122,6 +122,8 @@ public class SecurityConfig {
         java.util.Set<String> allowedOrigins = new java.util.LinkedHashSet<>();
         allowedOrigins.add("http://localhost:5173");
         allowedOrigins.add("http://localhost:3000");
+        allowedOrigins.add("http://127.0.0.1:5173");
+        allowedOrigins.add("http://127.0.0.1:3000");
 
         if (configuredCorsOrigins != null && !configuredCorsOrigins.isBlank()) {
             for (String origin : configuredCorsOrigins.split(",")) {

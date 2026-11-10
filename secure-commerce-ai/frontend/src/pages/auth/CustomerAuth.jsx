@@ -509,7 +509,7 @@ export default function CustomerAuth() {
                     Password
                   </label>
                   <Link
-                    to={ROUTES.FORGOT_PASSWORD}
+                    to={`${ROUTES.FORGOT_PASSWORD}?portal=CUSTOMER`}
                     style={{
                       fontSize: '0.75rem',
                       color: '#04DB7E',

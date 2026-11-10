@@ -52,6 +52,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final com.securecommerce.platform.auth.service.GoogleAuthService googleAuthService;
+    private final com.securecommerce.platform.auth.service.PasswordResetService passwordResetService;
     private final EventLoggingService eventLoggingService;
 
     /**
@@ -133,5 +134,47 @@ public class AuthController {
             );
         }
         return ResponseEntity.ok(ApiResponse.success("Logout successful", null));
+    }
+
+    /**
+     * POST /api/auth/forgot-password/request-otp
+     * Dispatches a 6-digit OTP code to the user's registered email address.
+     */
+    @PostMapping("/forgot-password/request-otp")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> requestPasswordResetOtp(
+            @Valid @RequestBody com.securecommerce.platform.auth.dto.ForgotPasswordRequestOtpRequest request) {
+
+        java.util.Map<String, Object> result = passwordResetService.requestOtp(request);
+        return ResponseEntity.ok(ApiResponse.success(
+                (String) result.getOrDefault("message", "Verification code sent"),
+                result
+        ));
+    }
+
+    /**
+     * POST /api/auth/forgot-password/verify-otp
+     * Verifies the 6-digit OTP code and returns a single-use reset token.
+     */
+    @PostMapping("/forgot-password/verify-otp")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> verifyPasswordResetOtp(
+            @Valid @RequestBody com.securecommerce.platform.auth.dto.VerifyOtpRequest request) {
+
+        java.util.Map<String, Object> result = passwordResetService.verifyOtp(request);
+        return ResponseEntity.ok(ApiResponse.success("Verification code confirmed", result));
+    }
+
+    /**
+     * POST /api/auth/forgot-password/reset
+     * Updates the password with verification and destroys the OTP record.
+     */
+    @PostMapping("/forgot-password/reset")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> resetPassword(
+            @Valid @RequestBody com.securecommerce.platform.auth.dto.ResetPasswordRequest request) {
+
+        java.util.Map<String, Object> result = passwordResetService.resetPassword(request);
+        return ResponseEntity.ok(ApiResponse.success(
+                (String) result.getOrDefault("message", "Password updated successfully"),
+                result
+        ));
     }
 }

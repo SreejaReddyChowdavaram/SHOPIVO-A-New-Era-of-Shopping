@@ -77,6 +77,39 @@ const authService = {
   },
 
   /**
+   * Request 6-digit password reset OTP.
+   *
+   * @param {Object} payload - { email, portalRole }
+   * @returns {Object} - ApiResponse data
+   */
+  requestPasswordResetOtp: async (payload) => {
+    const response = await api.post('/auth/forgot-password/request-otp', payload)
+    return response.data.data
+  },
+
+  /**
+   * Verify 6-digit password reset OTP.
+   *
+   * @param {Object} payload - { email, portalRole, otp }
+   * @returns {Object} - { verified, resetToken, message }
+   */
+  verifyPasswordResetOtp: async (payload) => {
+    const response = await api.post('/auth/forgot-password/verify-otp', payload)
+    return response.data.data
+  },
+
+  /**
+   * Reset password with verification code or reset token.
+   *
+   * @param {Object} payload - { email, portalRole, otp, resetToken, newPassword, confirmPassword }
+   * @returns {Object} - ApiResponse data
+   */
+  resetPassword: async (payload) => {
+    const response = await api.post('/auth/forgot-password/reset', payload)
+    return response.data.data
+  },
+
+  /**
    * Log out.
    * Sends LOGOUT event to the backend for audit & session analytics,
    * then removes the JWT from localStorage.

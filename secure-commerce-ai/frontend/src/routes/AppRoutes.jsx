@@ -167,20 +167,16 @@ const AppRoutes = () => {
       <Route path="/auth/customer"         element={<CustomerAuth />} />
       <Route path="/auth/seller"           element={<SellerAuth />} />
       <Route path="/auth/admin"            element={<AdminAuth />} />
+      <Route path="/forgot-password"       element={<ForgotPassword />} />
 
       {/* Aliases & Direct Redirects for Portals */}
-      <Route path="/login"        element={<Navigate to="/auth/portal-selection" replace />} />
-      <Route path="/register"     element={<Navigate to="/auth/portal-selection" replace />} />
-      <Route path="/signup"       element={<Navigate to="/auth/portal-selection" replace />} />
-      <Route path="/admin/login"  element={<Navigate to="/auth/admin" replace />} />
-      <Route path="/seller/login" element={<Navigate to="/auth/seller" replace />} />
-
-      {/* ── Password Recovery & Verification (AuthLayout) ─── */}
-      <Route element={<AuthLayout />}>
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-otp"      element={<VerifyOtp />} />
-        <Route path="/reset-password"  element={<ResetPassword />} />
-      </Route>
+      <Route path="/login"          element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/register"       element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/signup"         element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/admin/login"    element={<Navigate to="/auth/admin" replace />} />
+      <Route path="/seller/login"   element={<Navigate to="/auth/seller" replace />} />
+      <Route path="/verify-otp"     element={<Navigate to="/forgot-password" replace />} />
+      <Route path="/reset-password" element={<Navigate to="/forgot-password" replace />} />
 
       {/* Forbidden — standalone, no layout */}
       <Route path="/forbidden" element={<Forbidden />} />

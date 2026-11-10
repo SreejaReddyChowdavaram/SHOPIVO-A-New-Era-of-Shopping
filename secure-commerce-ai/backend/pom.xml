@@ -119,6 +119,17 @@
         </dependency>
 
         <!-- ─────────────────────────────────────────────────────
+             MAIL: spring-boot-starter-mail
+             ────────────────────────────────────────────────────
+             Includes: JavaMailSender, Jakarta Mail, Angus Mail implementation
+             Why: Production SMTP email delivery for OTP verification & notifications.
+             ───────────────────────────────────────────────── -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- ─────────────────────────────────────────────────────
              DATABASE: PostgreSQL Driver
              ────────────────────────────────────────────────────
              scope=runtime: only needed at runtime, not compile time.

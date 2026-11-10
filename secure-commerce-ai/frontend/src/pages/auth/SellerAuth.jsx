@@ -513,7 +513,7 @@ export default function SellerAuth() {
                     Password
                   </label>
                   <Link
-                    to={ROUTES.FORGOT_PASSWORD}
+                    to={`${ROUTES.FORGOT_PASSWORD}?portal=SELLER`}
                     style={{
                       fontSize: '0.75rem',
                       color: '#04DB7E',
