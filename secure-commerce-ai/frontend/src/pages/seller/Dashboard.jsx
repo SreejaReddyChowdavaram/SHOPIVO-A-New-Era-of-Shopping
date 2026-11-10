@@ -99,7 +99,7 @@ const Dashboard = () => {
       label: 'Total Listings',
       value: metrics.total,
       icon: Boxes,
-      iconBg: 'rgba(99, 102, 241, 0.12)',
+      iconBg: 'rgba(4, 219, 126, 0.12)',
       iconColor: 'var(--color-primary)',
       valueColor: 'var(--color-text-primary)',
     },
@@ -355,7 +355,7 @@ const Dashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -366,7 +366,7 @@ const Dashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                    backgroundColor: 'rgba(4, 219, 126, 0.12)',
                     color: 'var(--color-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
@@ -406,7 +406,7 @@ const Dashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -457,7 +457,7 @@ const Dashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -512,7 +512,7 @@ const Dashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -523,7 +523,7 @@ const Dashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                    backgroundColor: 'rgba(4, 219, 126, 0.12)',
                     color: 'var(--color-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>

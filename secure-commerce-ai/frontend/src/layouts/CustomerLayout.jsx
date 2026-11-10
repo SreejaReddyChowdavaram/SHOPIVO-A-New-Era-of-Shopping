@@ -58,7 +58,7 @@ const DEFAULT_CATEGORIES = [
  * - 3 horizontal lines
  * - Collapse indicator on middle line for expanded state
  * - Expand indicator on middle line for collapsed state
- * - Clean geometric proportions & dark navy/blue-compatible stroke
+ * - Clean geometric proportions & dark black/green-compatible stroke
  */
 const SidebarCollapseIcon = ({ size = 18, className = '' }) => (
   <svg

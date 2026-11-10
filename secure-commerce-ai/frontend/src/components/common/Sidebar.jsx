@@ -52,9 +52,9 @@ const SidebarItem = ({ item, allPaths = [] }) => {
         borderRadius: 'var(--radius-md)',
         fontSize: '0.875rem',
         fontWeight: isActive ? '600' : '400',
-        color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-        backgroundColor: isActive ? 'var(--color-primary-subtle)' : 'transparent',
-        borderLeft: `3px solid ${isActive ? 'var(--color-primary)' : 'transparent'}`,
+        color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)',
+        backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
+        borderLeft: `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
         textDecoration: 'none',
         transition: 'all var(--transition-fast)',
         cursor: 'pointer',
@@ -62,8 +62,8 @@ const SidebarItem = ({ item, allPaths = [] }) => {
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
-          e.currentTarget.style.backgroundColor = 'var(--color-surface-raised)'
-          e.currentTarget.style.color = 'var(--color-text-primary)'
+          e.currentTarget.style.backgroundColor = 'var(--color-nav-hover-bg, var(--color-surface-raised))'
+          e.currentTarget.style.color = 'var(--color-nav-active-text, var(--color-text-primary))'
         }
       }}
       onMouseLeave={(e) => {
@@ -85,7 +85,7 @@ const SidebarItem = ({ item, allPaths = [] }) => {
         <span
           style={{
             background: 'var(--color-primary)',
-            color: '#fff',
+            color: 'var(--color-primary-contrast, #050505)',
             fontSize: '0.65rem',
             fontWeight: '700',
             borderRadius: 'var(--radius-full)',
@@ -136,7 +136,7 @@ const Sidebar = ({ title, navItems = [], width = 260 }) => {
       style={{
         width: `${width}px`,
         minWidth: `${width}px`,
-        background: 'var(--color-surface)',
+        background: 'var(--color-sidebar, var(--color-surface))',
         borderRight: '1px solid var(--color-border)',
         height: 'calc(100vh - 64px)',  // Full height minus navbar
         overflowY: 'auto',

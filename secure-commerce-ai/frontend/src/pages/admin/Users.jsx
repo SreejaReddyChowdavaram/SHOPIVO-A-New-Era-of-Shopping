@@ -51,9 +51,9 @@ const STATUS_FILTERS = [
 ]
 
 const ROLE_BADGE = {
-  CUSTOMER: { label: 'Customer', color: '#0ea5e9', bg: 'rgba(14, 165, 233, 0.12)', border: 'rgba(14, 165, 233, 0.3)' },
-  SELLER:   { label: 'Seller',   color: '#a855f7', bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)' },
-  ADMIN:    { label: 'Admin',    color: 'var(--color-primary)', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.3)' },
+  CUSTOMER: { label: 'Customer', color: '#087847', bg: '#E7FFF3', border: '#DFE9E2' },
+  SELLER:   { label: 'Seller',   color: '#00C77A', bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  ADMIN:    { label: 'Admin',    color: 'var(--color-primary)', bg: 'rgba(4, 219, 126, 0.12)', border: 'rgba(4, 219, 126, 0.3)' },
 }
 
 const Users = () => {
@@ -190,8 +190,8 @@ const Users = () => {
                   borderRadius: 'var(--radius-full)',
                   border: '1px solid',
                   borderColor: selectedRole === tab.id ? 'var(--color-primary)' : 'var(--color-border)',
-                  backgroundColor: selectedRole === tab.id ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
-                  color: selectedRole === tab.id ? 'var(--color-primary-light)' : 'var(--color-text-secondary)',
+                  backgroundColor: selectedRole === tab.id ? 'rgba(4, 219, 126, 0.15)' : 'transparent',
+                  color: selectedRole === tab.id ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
@@ -340,7 +340,7 @@ const Users = () => {
                           <div style={{
                             width: '36px', height: '36px',
                             borderRadius: '50%',
-                            backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                            backgroundColor: 'rgba(4, 219, 126, 0.12)',
                             color: 'var(--color-primary)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontWeight: '700', fontSize: '0.875rem'
@@ -558,7 +558,7 @@ const Users = () => {
                   {inspectUser.customerInfo && (
                     <div style={{ backgroundColor: 'var(--color-bg-secondary)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', marginTop: '0.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: '700', color: 'var(--color-text-primary)', marginBottom: '0.35rem' }}>
-                        <ShoppingBag size={15} color="#0ea5e9" />
+                        <ShoppingBag size={15} color="var(--color-primary)" />
                         <span>Customer Overview</span>
                       </div>
                       <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>

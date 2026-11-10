@@ -77,9 +77,9 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-[#1e293b] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-[#1a2438] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#DFE9E2] dark:border-[#242424] bg-white dark:bg-[#101010] text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-[#1C1C1C] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#04DB7E]/30"
       >
-        <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+        <Calendar className="w-4 h-4 text-[#087847] dark:text-[#04DB7E] shrink-0" />
         <span className="text-slate-500 dark:text-slate-400 font-normal hidden min-[400px]:inline">
           Period:
         </span>
@@ -88,7 +88,7 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
         </span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180 text-blue-600 dark:text-blue-400' : ''
+            isOpen ? 'rotate-180 text-[#087847] dark:text-[#04DB7E]' : ''
           }`}
         />
       </button>
@@ -98,9 +98,9 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
         <div
           role="menu"
           aria-orientation="vertical"
-          className="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-white dark:bg-[#101726] border border-slate-200 dark:border-[#1e293b] shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
         >
-          <div className="px-2.5 py-1.5 mb-1 border-b border-slate-100 dark:border-[#1e293b]">
+          <div className="px-2.5 py-1.5 mb-1 border-b border-slate-100 dark:border-[#242424]">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               Select Timeframe
             </span>
@@ -117,12 +117,12 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
                   onClick={() => handleSelectPreset(opt.value)}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl font-medium transition-colors cursor-pointer ${
                     isActive
-                      ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a2438]'
+                      ? 'bg-[#E5FFF2] dark:bg-[#09291B] text-[#087847] dark:text-[#04DB7E] font-bold'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C]'
                   }`}
                 >
                   <span>{opt.label}</span>
-                  {isActive && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />}
+                  {isActive && <Check className="w-4 h-4 text-[#087847] dark:text-[#04DB7E] shrink-0" />}
                 </button>
               )
             })}
@@ -132,10 +132,10 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
           {showCustomInputs && (
             <form
               onSubmit={handleCustomApply}
-              className="mt-2 pt-2 border-t border-slate-100 dark:border-[#1e293b] px-1 space-y-2 animate-fadeIn"
+              className="mt-2 pt-2 border-t border-[#DFE9E2] dark:border-[#242424] px-1 space-y-2 animate-fadeIn"
             >
               <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                <SlidersHorizontal className="w-3 h-3 text-blue-500" />
+                <SlidersHorizontal className="w-3 h-3 text-[#04DB7E]" />
                 <span>Custom Range</span>
               </div>
 
@@ -146,7 +146,7 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#1a2438] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#DFE9E2] dark:border-[#242424] bg-slate-50 dark:bg-[#171717] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#04DB7E]"
                     required
                   />
                 </div>
@@ -156,7 +156,7 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#1a2438] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#DFE9E2] dark:border-[#242424] bg-slate-50 dark:bg-[#171717] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#04DB7E]"
                     required
                   />
                 </div>
@@ -164,7 +164,7 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
 
               <button
                 type="submit"
-                className="w-full mt-2 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
+                className="w-full mt-2 py-1.5 text-xs font-semibold rounded-lg bg-[#04DB7E] text-[#050505] hover:bg-[#00C77A] transition-colors shadow-xs cursor-pointer"
               >
                 Apply Range
               </button>

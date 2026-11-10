@@ -28,9 +28,9 @@ const STATUS_TABS = ['ALL', 'PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DE
 
 const STATUS_BADGE = {
   PENDING:    { label: 'Pending',    color: 'var(--color-warning)', bg: 'rgba(234, 179, 8, 0.12)', border: 'rgba(234, 179, 8, 0.3)' },
-  CONFIRMED:  { label: 'Confirmed',  color: 'var(--color-info)',    bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)' },
-  PROCESSING: { label: 'Processing', color: 'var(--color-primary-light)', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.3)' },
-  SHIPPED:    { label: 'Shipped',    color: '#38bdf8',              bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+  CONFIRMED:  { label: 'Confirmed',  color: '#087847',              bg: '#E5FFF2',                  border: '#DFE9E2' },
+  PROCESSING: { label: 'Processing', color: '#00C77A',              bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  SHIPPED:    { label: 'Shipped',    color: '#0d9488',              bg: 'rgba(13, 148, 136, 0.12)', border: 'rgba(13, 148, 136, 0.3)' },
   DELIVERED:  { label: 'Delivered',  color: 'var(--color-success)', bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.3)' },
   CANCELLED:  { label: 'Cancelled',  color: 'var(--color-danger)',  bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)' },
 }
@@ -236,8 +236,8 @@ const SellerOrders = () => {
                 borderRadius: 'var(--radius-full)',
                 border: '1px solid',
                 borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
-                background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'var(--color-surface)',
-                color: isActive ? 'var(--color-primary-light)' : 'var(--color-text-secondary)',
+                background: isActive ? 'rgba(4, 219, 126, 0.15)' : 'var(--color-surface)',
+                color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)',
                 fontSize: '0.8125rem',
                 fontWeight: '600',
                 cursor: 'pointer',

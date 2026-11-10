@@ -171,7 +171,7 @@ const Payments = () => {
         )
       case 'REFUND_PROCESSING':
         return (
-          <span className="badge badge-info" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(14, 165, 233, 0.15)', color: '#0284c7' }}>
+          <span className="badge badge-info" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(0, 199, 122, 0.15)', color: '#00C77A' }}>
             <RotateCcw size={12} /> PROCESSING
           </span>
         )
@@ -298,9 +298,9 @@ const Payments = () => {
             <span style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--color-text-secondary)' }}>
               REFUNDS / CHARGEBACKS
             </span>
-            <RotateCcw size={18} style={{ color: '#0ea5e9' }} />
+            <RotateCcw size={18} style={{ color: 'var(--color-primary)' }} />
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#0ea5e9' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--color-primary)' }}>
             {refundCount}
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--color-text-disabled)' }}>Processed or pending refunds</span>

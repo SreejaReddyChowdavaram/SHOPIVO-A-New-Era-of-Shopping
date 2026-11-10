@@ -17,7 +17,7 @@ export default function AnalyticsBarChart({
   subtitle,
   data = [],
   series = [
-    { key: 'value', name: 'Value', color: '#10b981' }
+    { key: 'value', name: 'Value', color: '#04DB7E' }
   ],
   isCurrency = false,
   height = 320,
@@ -42,8 +42,8 @@ export default function AnalyticsBarChart({
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white dark:bg-[#0B1120] border border-slate-200 dark:border-[#25334A] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
-          <p className="font-bold text-slate-600 dark:text-slate-300 mb-1.5 border-b border-slate-100 dark:border-[#25334A] pb-1">
+        <div className="bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
+          <p className="font-bold text-slate-600 dark:text-slate-300 mb-1.5 border-b border-[#DFE9E2] dark:border-[#242424] pb-1">
             {label}
           </p>
           <div className="space-y-1 pt-0.5">
@@ -81,7 +81,7 @@ export default function AnalyticsBarChart({
   const isHorizontalLayout = layout === 'vertical' // in recharts layout="vertical" produces horizontal bars
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
@@ -110,7 +110,7 @@ export default function AnalyticsBarChart({
                 strokeDasharray="3 3"
                 vertical={isHorizontalLayout}
                 horizontal={!isHorizontalLayout}
-                stroke={isDark ? '#25334A' : '#E2E8F0'}
+                stroke={isDark ? '#242424' : '#EBF2ED'}
               />
               {isHorizontalLayout ? (
                 <>
@@ -120,7 +120,7 @@ export default function AnalyticsBarChart({
                     tickLine={false}
                     axisLine={false}
                     stroke="none"
-                    tick={{ fill: isDark ? '#94A3B8' : '#64748B', fontSize: 11 }}
+                    tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
                   />
                   <YAxis
                     dataKey={xKey}
@@ -128,7 +128,7 @@ export default function AnalyticsBarChart({
                     tickLine={false}
                     axisLine={false}
                     stroke="none"
-                    tick={{ fill: isDark ? '#94A3B8' : '#64748B', fontSize: 11 }}
+                    tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
                   />
                 </>
               ) : (
@@ -138,14 +138,14 @@ export default function AnalyticsBarChart({
                     tickLine={false}
                     axisLine={false}
                     stroke="none"
-                    tick={{ fill: isDark ? '#94A3B8' : '#64748B', fontSize: 11 }}
+                    tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
                   />
                   <YAxis
                     tickFormatter={formatValue}
                     tickLine={false}
                     axisLine={false}
                     stroke="none"
-                    tick={{ fill: isDark ? '#94A3B8' : '#64748B', fontSize: 11 }}
+                    tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
                   />
                 </>
               )}

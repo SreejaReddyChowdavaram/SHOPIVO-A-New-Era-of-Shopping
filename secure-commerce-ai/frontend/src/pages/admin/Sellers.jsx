@@ -151,8 +151,8 @@ const Sellers = () => {
                   borderRadius: 'var(--radius-full)',
                   border: '1px solid',
                   borderColor: selectedStatus === tab.id ? 'var(--color-primary)' : 'var(--color-border)',
-                  backgroundColor: selectedStatus === tab.id ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
-                  color: selectedStatus === tab.id ? 'var(--color-primary-light)' : 'var(--color-text-secondary)',
+                  backgroundColor: selectedStatus === tab.id ? 'rgba(4, 219, 126, 0.15)' : 'transparent',
+                  color: selectedStatus === tab.id ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
@@ -279,8 +279,8 @@ const Sellers = () => {
                           <div style={{
                             width: '36px', height: '36px',
                             borderRadius: 'var(--radius-sm)',
-                            backgroundColor: 'rgba(168, 85, 247, 0.12)',
-                            color: '#a855f7',
+                            backgroundColor: 'rgba(0, 199, 122, 0.12)',
+                            color: '#00C77A',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontWeight: '700', fontSize: '0.875rem'
                           }}>

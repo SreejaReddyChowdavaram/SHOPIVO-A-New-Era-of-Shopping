@@ -79,7 +79,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
         position: 'fixed',
         inset: 0,
         zIndex: 1000,
-        backgroundColor: 'rgba(15, 23, 42, 0.6)',
+        backgroundColor: 'rgba(11, 16, 14, 0.7)',
         backdropFilter: 'blur(3px)',
         display: 'flex',
         animation: 'fadeIn 0.2s ease-out',
@@ -164,8 +164,8 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                 justifyContent: 'center',
                 fontSize: '1rem',
                 fontWeight: '700',
-                color: '#ffffff',
-                boxShadow: '0 2px 6px rgba(37, 99, 235, 0.3)',
+                color: 'var(--color-primary-contrast, #050505)',
+                boxShadow: '0 2px 6px rgba(4, 219, 126, 0.35)',
                 flexShrink: 0,
               }}
             >
@@ -240,7 +240,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                     top: '-4px',
                     right: '-4px',
                     backgroundColor: 'var(--color-primary)',
-                    color: '#ffffff',
+                    color: 'var(--color-primary-contrast, #050505)',
                     fontSize: '0.625rem',
                     fontWeight: '800',
                     borderRadius: 'var(--radius-full)',
@@ -313,7 +313,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                     top: '-4px',
                     right: '-4px',
                     backgroundColor: 'var(--color-primary)',
-                    color: '#ffffff',
+                    color: 'var(--color-primary-contrast, #050505)',
                     fontSize: '0.625rem',
                     fontWeight: '800',
                     borderRadius: 'var(--radius-full)',
@@ -372,9 +372,9 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                       minHeight: '44px',
                       fontSize: '0.875rem',
                       fontWeight: isActive ? '700' : '500',
-                      color: isActive ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                      backgroundColor: isActive ? 'var(--color-primary-subtle)' : 'transparent',
-                      borderLeft: `3px solid ${isActive ? 'var(--color-primary)' : 'transparent'}`,
+                      color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-primary)',
+                      backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
+                      borderLeft: `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
                       textDecoration: 'none',
                       transition: 'all var(--transition-fast)',
                     }}
@@ -382,7 +382,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2.25 : 1.75}
-                      color={isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}
+                      color={isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)'}
                       style={{ flexShrink: 0 }}
                     />
                     <span style={{ flex: 1 }}>{item.label}</span>
@@ -391,7 +391,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                       <span
                         style={{
                           backgroundColor: 'var(--color-primary)',
-                          color: '#ffffff',
+                          color: 'var(--color-primary-contrast, #172117)',
                           fontSize: '0.65rem',
                           fontWeight: '800',
                           borderRadius: 'var(--radius-full)',

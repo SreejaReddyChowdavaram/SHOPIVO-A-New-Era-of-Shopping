@@ -10,13 +10,13 @@ import { PieChart as PieIcon } from 'lucide-react'
 import { useTheme } from '@/context/ThemeContext'
 
 const FALLBACK_COLORS = {
-  Delivered: '#10b981',
+  Delivered: '#04DB7E',
   Pending: '#f59e0b',
-  Confirmed: '#3b82f6',
-  Processing: '#6366f1',
-  Shipped: '#06b6d4',
+  Confirmed: '#04DB7E',
+  Processing: '#00C77A',
+  Shipped: '#00C77A',
   Cancelled: '#ef4444',
-  Returned: '#ec4899',
+  Returned: '#B3B3B3',
 }
 
 export default function AnalyticsDonutChart({
@@ -37,11 +37,11 @@ export default function AnalyticsDonutChart({
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload
-      const itemColor = item.color || FALLBACK_COLORS[item.status] || '#3b82f6'
+      const itemColor = item.color || FALLBACK_COLORS[item.status] || '#04DB7E'
 
       return (
-        <div className="bg-white dark:bg-[#0B1120] border border-slate-200 dark:border-[#25334A] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
-          <div className="flex items-center gap-2 mb-1.5 border-b border-slate-100 dark:border-[#25334A] pb-1">
+        <div className="bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2 mb-1.5 border-b border-[#DFE9E2] dark:border-[#242424] pb-1">
             <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: itemColor }} />
             <span className="font-bold text-slate-900 dark:text-white">{item.status || item.method || item.name}</span>
           </div>
@@ -51,7 +51,7 @@ export default function AnalyticsDonutChart({
           </div>
           <div className="flex items-center justify-between gap-5 text-slate-600 dark:text-slate-300">
             <span>Share:</span>
-            <span className="font-semibold text-blue-600 dark:text-blue-400">{item.percentage || item.share || 0}%</span>
+            <span className="font-semibold text-[#087847] dark:text-[#04DB7E]">{item.percentage || item.share || 0}%</span>
           </div>
         </div>
       )
@@ -60,7 +60,7 @@ export default function AnalyticsDonutChart({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div>
         <div className="flex items-center justify-between">
@@ -93,11 +93,11 @@ export default function AnalyticsDonutChart({
                   outerRadius={outerRadius}
                   paddingAngle={3}
                   dataKey="count"
-                  stroke={isDark ? '#111C30' : '#FFFFFF'}
+                  stroke={isDark ? '#101010' : '#FFFFFF'}
                   strokeWidth={2}
                 >
                   {data.map((entry, index) => {
-                    const color = entry.color || FALLBACK_COLORS[entry.status] || '#3b82f6'
+                    const color = entry.color || FALLBACK_COLORS[entry.status] || '#04DB7E'
                     return <Cell key={`cell-${index}`} fill={color} />
                   })}
                 </Pie>
@@ -123,9 +123,9 @@ export default function AnalyticsDonutChart({
       </div>
 
       {/* Refined Bottom Legend */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-3 border-t border-slate-100 dark:border-[#25334A]/80">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-3 border-t border-[#DFE9E2] dark:border-[#242424]">
         {data.map((item, idx) => {
-          const color = item.color || FALLBACK_COLORS[item.status] || '#3b82f6'
+          const color = item.color || FALLBACK_COLORS[item.status] || '#04DB7E'
           return (
             <div key={`legend-${idx}`} className="flex items-center gap-2 min-w-0">
               <span

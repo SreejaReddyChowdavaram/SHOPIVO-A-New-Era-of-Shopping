@@ -118,7 +118,7 @@ export default function SellerAnalyticsDashboard() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <span>Seller Analytics</span>
-            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-blue-500" />}
+            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[#04DB7E]" />}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
             Track your storefront revenue, order velocity, catalog reach, and product performance.
@@ -130,9 +130,9 @@ export default function SellerAnalyticsDashboard() {
             onClick={() => loadData(true)}
             disabled={loading || refreshing}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-[#25334A] bg-white dark:bg-[#111C30] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-xs cursor-pointer disabled:opacity-60"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#DFE9E2] dark:border-[#242424] bg-white dark:bg-[#101010] text-slate-700 dark:text-slate-200 hover:bg-[#F5F8F5] dark:hover:bg-[#1C1C1C] transition-colors shadow-xs cursor-pointer disabled:opacity-60"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-blue-500' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[#04DB7E]' : ''}`} />
             <span>Refresh Data</span>
           </button>
         </div>
@@ -154,7 +154,7 @@ export default function SellerAnalyticsDashboard() {
 
       {loading ? (
         <div className="py-28 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#04DB7E]" />
           <p className="text-xs font-medium text-slate-500">Aggregating seller sales and orders data...</p>
         </div>
       ) : (
@@ -257,7 +257,7 @@ export default function SellerAnalyticsDashboard() {
               subtitle="Monthly gross revenue generated across non-cancelled orders"
               data={charts.monthlySales}
               series={[
-                { key: 'grossSales', name: 'Gross Sales (₹)', color: '#3b82f6' }
+                { key: 'grossSales', name: 'Gross Sales (₹)', color: '#04DB7E' }
               ]}
               isCurrency={true}
               height={320}
@@ -279,8 +279,8 @@ export default function SellerAnalyticsDashboard() {
               subtitle="Distinct orders and units sold"
               data={charts.ordersReceived}
               series={[
-                { key: 'ordersReceived', name: 'Orders Received', color: '#10b981' },
-                { key: 'unitsSold', name: 'Units Sold', color: '#06b6d4' },
+                { key: 'ordersReceived', name: 'Orders Received', color: '#04DB7E' },
+                { key: 'unitsSold', name: 'Units Sold', color: '#00C77A' },
               ]}
               xKey="month"
               height={320}
@@ -292,8 +292,8 @@ export default function SellerAnalyticsDashboard() {
               subtitle="Comparison of units sold against returned items"
               data={charts.salesVsReturns}
               series={[
-                { key: 'unitsSold', name: 'Units Sold', color: '#3b82f6' },
-                { key: 'unitsReturned', name: 'Units Returned', color: '#ec4899' },
+                { key: 'unitsSold', name: 'Units Sold', color: '#04DB7E' },
+                { key: 'unitsReturned', name: 'Units Returned', color: '#f87171' },
               ]}
               xKey="month"
               height={320}

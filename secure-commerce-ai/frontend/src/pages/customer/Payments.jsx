@@ -102,7 +102,7 @@ const CustomerPayments = () => {
         )
       case 'REFUND_PROCESSING':
         return (
-          <span className="badge badge-info" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(14, 165, 233, 0.15)', color: '#0284c7' }}>
+          <span className="badge badge-info" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'rgba(0, 199, 122, 0.15)', color: '#00C77A' }}>
             <RotateCcw size={12} /> REFUND PROCESSING
           </span>
         )

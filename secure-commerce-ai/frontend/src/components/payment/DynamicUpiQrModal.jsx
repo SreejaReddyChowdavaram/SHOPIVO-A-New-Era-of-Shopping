@@ -48,7 +48,61 @@ export const DynamicUpiQrModal = ({
   const [checkingStatus, setCheckingStatus] = useState(false)
   const [imageLoadError, setImageLoadError] = useState(false)
   const [showAltOptions, setShowAltOptions] = useState(false)
+  const [qrLayout, setQrLayout] = useState({
+    loaded: false,
+    isStandee: false,
+    style: { opacity: 0 },
+  })
+  const qrImgRef = useRef(null)
   const pollTimerRef = useRef(null)
+
+  const isLiveMode = keyId ? keyId.startsWith('rzp_live_') : false
+
+  const handleQrImageLoad = (e) => {
+    const img = e?.target || qrImgRef.current
+    if (!img) return
+    const nw = img.naturalWidth
+    const nh = img.naturalHeight
+    if (!nw || !nh) return
+
+    const ar = nw / nh
+    if (ar < 0.65) {
+      // Standee image crop (mathematically centered on QR code, 100% inside white card)
+      const ratioHW = nh / nw
+      const topPct = ((0.330 - 0.5155 * ratioHW) / 0.67) * 100
+      setQrLayout({
+        loaded: true,
+        isStandee: true,
+        style: {
+          position: 'absolute',
+          width: '149.25%',
+          left: '-24.63%',
+          top: `${topPct}%`,
+          maxWidth: 'none',
+          opacity: 1,
+        },
+      })
+    } else {
+      // Square / standard QR code (complete genuine image, zero distortion)
+      setQrLayout({
+        loaded: true,
+        isStandee: false,
+        style: {
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          padding: '10px',
+          opacity: 1,
+        },
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (qrImgRef.current && qrImgRef.current.complete && qrImgRef.current.naturalWidth) {
+      handleQrImageLoad({ target: qrImgRef.current })
+    }
+  }, [imageUrl])
 
   // Payable amount formatting
   const displayAmount = amount || (amountInPaise ? amountInPaise / 100 : 0)
@@ -150,7 +204,7 @@ export const DynamicUpiQrModal = ({
       aria-modal="true"
       aria-labelledby="qr-modal-title"
     >
-      <div className="relative w-full max-w-[420px] max-h-[94vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#101726] border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-6 text-slate-900 dark:text-white transition-all">
+      <div className="relative w-full max-w-[420px] max-h-[94vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] shadow-2xl p-5 sm:p-6 text-slate-900 dark:text-white transition-all">
         {/* Top-Right Close Button: safely triggers onDismiss / cancellation */}
         <button
           type="button"
@@ -161,19 +215,26 @@ export const DynamicUpiQrModal = ({
           <X size={16} />
         </button>
 
-        {/* Modal Brand Header with Test Mode Indicator */}
+        {/* Modal Brand Header with Dynamic Mode Indicator */}
         <div className="flex items-center justify-between pr-8 mb-4">
           <h2 id="qr-modal-title" className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             SHOPIVO PAYMENT
           </h2>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/25">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-            Test Mode
-          </span>
+          {isLiveMode ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Live
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/25">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              Test Mode
+            </span>
+          )}
         </div>
 
         {/* Order Reference & Payable Amount Row */}
-        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0b1120] border border-slate-200/80 dark:border-slate-800/80 mb-4">
+        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] mb-4">
           <div>
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Order Reference
@@ -212,28 +273,24 @@ export const DynamicUpiQrModal = ({
             </div>
           ) : imageUrl && !imageLoadError ? (
             <div className="flex flex-col items-center">
-              {/* Clean White QR Container with Mathematically Verified 20px Quiet Zone */}
+              {/* Clean White QR Container with Measured Quiet Zone & Zero Distortion */}
               <div
-                className="bg-white rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/60"
-                style={{
-                  position: 'relative',
-                  width: '250px',
-                  height: '250px',
-                  overflow: 'hidden',
-                }}
+                className="relative bg-white rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/60 flex items-center justify-center overflow-hidden w-[250px] h-[250px] sm:w-[270px] sm:h-[270px]"
               >
+                {!qrLayout.loaded && (
+                  <div className="flex flex-col items-center justify-center gap-2 text-slate-400">
+                    <Loader2 size={28} className="animate-spin text-[#04DB7E]" />
+                    <span className="text-[11px] font-medium">Loading QR...</span>
+                  </div>
+                )}
                 <img
+                  ref={qrImgRef}
                   src={imageUrl}
                   alt={`Razorpay Dynamic UPI QR for Order #${orderId}`}
+                  onLoad={handleQrImageLoad}
                   onError={() => setImageLoadError(true)}
-                  className="absolute max-w-none select-none pointer-events-none"
-                  style={{
-                    position: 'absolute',
-                    width: '372px',
-                    height: '908px',
-                    top: '-344px',
-                    left: '-61px',
-                  }}
+                  className="select-none pointer-events-none transition-opacity duration-200"
+                  style={qrLayout.style}
                 />
               </div>
 
@@ -272,9 +329,9 @@ export const DynamicUpiQrModal = ({
         </div>
 
         {/* Live Status & Check Status Row */}
-        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0b1120] border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3 text-xs mb-3">
+        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] flex items-center justify-between gap-3 text-xs mb-3">
           <div className="flex items-center gap-2">
-            {status === 'WAITING' && <Loader2 size={15} className="animate-spin text-blue-600 dark:text-blue-400 shrink-0" />}
+            {status === 'WAITING' && <Loader2 size={15} className="animate-spin text-[#04DB7E] shrink-0" />}
             {status === 'VERIFYING' && <Loader2 size={15} className="animate-spin text-emerald-600 shrink-0" />}
             {status === 'SUCCESS' && <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />}
             {status === 'FAILED' && <AlertCircle size={15} className="text-rose-600 shrink-0" />}
@@ -293,7 +350,7 @@ export const DynamicUpiQrModal = ({
             type="button"
             onClick={handleManualCheckStatus}
             disabled={checkingStatus || status === 'SUCCESS'}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-[#087847] dark:text-[#04DB7E] hover:bg-[#E5FFF2] dark:hover:bg-[#09291B] transition-colors cursor-pointer disabled:opacity-50 shrink-0"
           >
             <RotateCcw size={12} className={checkingStatus ? 'animate-spin' : ''} />
             <span>Check Status</span>

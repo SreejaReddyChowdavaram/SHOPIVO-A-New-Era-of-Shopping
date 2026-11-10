@@ -128,9 +128,27 @@ public class AuthService {
             throw new InvalidCredentialsException("Account is disabled. Please contact support.");
         }
 
+        // 4. Validate portal role compatibility if portalRole was specified
+        if (request.getPortalRole() != null && user.getRole() != request.getPortalRole()) {
+            eventLoggingService.logEvent(
+                    EventType.LOGIN_FAILURE,
+                    user,
+                    "USER",
+                    String.valueOf(user.getId()),
+                    Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "ROLE_MISMATCH",
+                            "registeredRole", user.getRole().name(), "targetPortal", request.getPortalRole().name())
+            );
+            if (request.getPortalRole() == User.Role.ADMIN) {
+                throw new InvalidCredentialsException("Access denied. Administrator privileges required.");
+            }
+            throw new InvalidCredentialsException(
+                    "This account is registered as " + user.getRole() + ". Please sign in through the " + user.getRole() + " Portal."
+            );
+        }
+
         log.info("User logged in: id={}, role={}", user.getId(), user.getRole());
 
-        // 4. Log successful login
+        // 5. Log successful login
         eventLoggingService.logEvent(
                 EventType.LOGIN_SUCCESS,
                 user,

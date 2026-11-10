@@ -32,9 +32,9 @@ const STEPS = [
 
 const STATUS_BADGE = {
   PENDING:    { label: 'Pending',    color: 'var(--color-warning)', bg: 'rgba(234, 179, 8, 0.12)', border: 'rgba(234, 179, 8, 0.3)' },
-  CONFIRMED:  { label: 'Confirmed',  color: 'var(--color-info)',    bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)' },
-  PROCESSING: { label: 'Processing', color: 'var(--color-primary-light)', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.3)' },
-  SHIPPED:    { label: 'Shipped',    color: '#38bdf8',              bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+  CONFIRMED:  { label: 'Confirmed',  color: '#087847',              bg: '#E5FFF2',                  border: '#DFE9E2' },
+  PROCESSING: { label: 'Processing', color: '#00C77A',              bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  SHIPPED:    { label: 'Shipped',    color: '#0d9488',              bg: 'rgba(13, 148, 136, 0.12)', border: 'rgba(13, 148, 136, 0.3)' },
   DELIVERED:  { label: 'Delivered',  color: 'var(--color-success)', bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.3)' },
   CANCELLED:  { label: 'Cancelled',  color: 'var(--color-danger)',  bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)' },
 }
@@ -253,12 +253,12 @@ const SellerOrderDetails = () => {
                     height: '40px',
                     borderRadius: '50%',
                     background: isDone ? 'var(--color-primary)' : 'var(--color-surface-raised)',
-                    border: `2px solid ${isDone ? 'var(--color-primary-light)' : 'var(--color-border)'}`,
+                    border: `2px solid ${isDone ? 'var(--color-primary)' : 'var(--color-border)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isDone ? '#fff' : 'var(--color-text-disabled)',
-                    boxShadow: isCurrent ? '0 0 12px rgba(99, 102, 241, 0.5)' : 'none',
+                    color: isDone ? 'var(--color-primary-contrast, #050505)' : 'var(--color-text-disabled)',
+                    boxShadow: isCurrent ? '0 0 12px rgba(4, 219, 126, 0.4)' : 'none',
                     transition: 'all 0.3s ease'
                   }}>
                     <Icon size={18} />
@@ -266,7 +266,7 @@ const SellerOrderDetails = () => {
                   <span style={{
                     fontSize: '0.75rem',
                     fontWeight: isCurrent ? '700' : '500',
-                    color: isCurrent ? 'var(--color-primary-light)' : isDone ? 'var(--color-text-primary)' : 'var(--color-text-disabled)'
+                    color: isCurrent ? 'var(--color-primary)' : isDone ? 'var(--color-text-primary)' : 'var(--color-text-disabled)'
                   }}>
                     {step.label}
                   </span>
@@ -282,8 +282,8 @@ const SellerOrderDetails = () => {
         <div className="card" style={{
           marginBottom: '2rem',
           padding: '1.5rem',
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%)',
-          borderColor: 'rgba(99, 102, 241, 0.3)'
+          background: 'linear-gradient(135deg, rgba(4, 219, 126, 0.1) 0%, rgba(0, 199, 122, 0.08) 100%)',
+          borderColor: 'rgba(4, 219, 126, 0.3)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div>

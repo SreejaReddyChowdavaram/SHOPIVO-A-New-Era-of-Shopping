@@ -259,7 +259,7 @@ const SellerProducts = () => {
               width: '44px',
               height: '44px',
               borderRadius: 'var(--radius-sm)',
-              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              backgroundColor: 'rgba(4, 219, 126, 0.12)',
               color: 'var(--color-primary)',
               display: 'flex',
               alignItems: 'center',

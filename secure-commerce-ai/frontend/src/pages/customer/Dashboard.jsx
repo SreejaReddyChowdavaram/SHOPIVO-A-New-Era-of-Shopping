@@ -399,7 +399,7 @@ const CustomerDashboard = () => {
               to={ROUTES.CUSTOMER_PRODUCTS}
               style={{
                 backgroundColor: '#ffffff',
-                color: '#1e40af',
+                color: '#087847',
                 border: 'none',
                 fontWeight: '700',
                 fontSize: '0.84rem',
@@ -439,7 +439,7 @@ const CustomerDashboard = () => {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)')}
             >
-              <TrendingUp size={15} color="#93c5fd" />
+              <TrendingUp size={15} color="#04DB7E" />
               <span>Spending Insights</span>
             </Link>
           </div>
@@ -1092,11 +1092,11 @@ const CustomerDashboard = () => {
                     }}
                   >
                     <img
-                      src={item.imageUrl || `https://placehold.co/200x200/ffffff/2563eb?text=${encodeURIComponent(item.name ? item.name.slice(0, 10) : 'Product')}`}
+                      src={item.imageUrl || `https://placehold.co/200x200/ffffff/087847?text=${encodeURIComponent(item.name ? item.name.slice(0, 10) : 'Product')}`}
                       alt={item.name || 'Product'}
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       onError={(e) => {
-                        e.target.src = `https://placehold.co/200x200/ffffff/2563eb?text=${encodeURIComponent(item.name ? item.name.slice(0, 8) : 'Item')}`
+                        e.target.src = `https://placehold.co/200x200/ffffff/087847?text=${encodeURIComponent(item.name ? item.name.slice(0, 8) : 'Item')}`
                       }}
                     />
                   </div>

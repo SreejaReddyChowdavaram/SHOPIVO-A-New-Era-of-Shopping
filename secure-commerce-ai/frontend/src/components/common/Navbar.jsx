@@ -7,7 +7,7 @@ const Navbar = ({ logo, location, center, actions, borderless = false }) => {
     <header
       style={{
         height: 'var(--header-height, 64px)',
-        backgroundColor: 'var(--color-surface)',
+        backgroundColor: 'var(--color-header, var(--color-surface))',
         borderBottom: borderless ? 'none' : '1px solid var(--color-border)',
         display: 'flex',
         alignItems: 'center',

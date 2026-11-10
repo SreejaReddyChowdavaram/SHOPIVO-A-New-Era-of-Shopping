@@ -1,4 +1,5 @@
 # run.ps1 — Helper script to load .env and start Spring Boot locally
+Set-Location $PSScriptRoot
 $envFile = Join-Path $PSScriptRoot ".env"
 
 if (Test-Path $envFile) {

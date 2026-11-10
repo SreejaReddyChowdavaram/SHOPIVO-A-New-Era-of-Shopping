@@ -2,8 +2,8 @@ import React from 'react'
 
 const ACCENT_STYLES = {
   blue: {
-    iconBg: 'bg-blue-500/10 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/20',
-    topBar: 'bg-blue-500',
+    iconBg: 'bg-[#E5FFF2] dark:bg-[#09291B] text-[#087847] dark:text-[#04DB7E] border border-[#04DB7E]/30',
+    topBar: 'bg-[#04DB7E]',
   },
   emerald: {
     iconBg: 'bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
@@ -18,12 +18,12 @@ const ACCENT_STYLES = {
     topBar: 'bg-rose-500',
   },
   indigo: {
-    iconBg: 'bg-indigo-500/10 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20',
-    topBar: 'bg-indigo-500',
+    iconBg: 'bg-[#00C77A]/10 text-[#00C77A] border border-[#00C77A]/20',
+    topBar: 'bg-[#00C77A]',
   },
   cyan: {
-    iconBg: 'bg-cyan-500/10 dark:bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20',
-    topBar: 'bg-cyan-500',
+    iconBg: 'bg-[#04DB7E]/10 text-[#04DB7E] border border-[#04DB7E]/20',
+    topBar: 'bg-[#04DB7E]',
   },
 }
 
@@ -43,7 +43,7 @@ export default function AnalyticsSummaryCard({
 
   return (
     <div
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5 h-[150px] shadow-xs hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600/80 transition-all duration-200 ${className}`}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 h-[150px] shadow-xs hover:shadow-md hover:border-[#04DB7E]/50 dark:hover:border-[#04DB7E]/40 transition-all duration-200 ${className}`}
     >
       {/* Top Subtle Color Accent Bar */}
       <div className={`absolute top-0 left-0 right-0 h-[2.5px] ${accent.topBar} opacity-85 group-hover:opacity-100 transition-opacity`} />
@@ -82,7 +82,7 @@ export default function AnalyticsSummaryCard({
 
       {/* Card Footer: Sublabel & Subvalue */}
       {(subLabel || subValue) && (
-        <div className="pt-2.5 border-t border-slate-100 dark:border-[#25334A]/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
+        <div className="pt-2.5 border-t border-slate-100 dark:border-[#242424] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
           <span className="truncate">{subLabel}</span>
           <span className="font-semibold text-slate-700 dark:text-slate-200 shrink-0">
             {subValue}

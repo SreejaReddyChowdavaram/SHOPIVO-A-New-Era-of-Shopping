@@ -17,9 +17,9 @@ const getReturnStatusBadge = (status) => {
     case 'FAILED':
       return 'bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800/80'
     case 'RETURNED':
-      return 'bg-pink-50 text-pink-700 border-pink-200/80 dark:bg-pink-950/40 dark:text-pink-400 dark:border-pink-800/80'
+      return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-[#171717] dark:text-[#B3B3B3] dark:border-[#242424]'
     case 'REFUNDED':
-      return 'bg-blue-50 text-blue-700 border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800/80'
+      return 'bg-[#E5FFF2] text-[#087847] border-[#DFE9E2] dark:bg-[#09291B] dark:text-[#04DB7E] dark:border-[#242424]'
     default:
       return 'bg-slate-100 text-slate-700 border-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700/80'
   }
@@ -44,7 +44,7 @@ export default function RecentReturnsTable({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -60,7 +60,7 @@ export default function RecentReturnsTable({
         {viewAllLink && (
           <Link
             to={viewAllLink}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-[#087847] dark:text-[#04DB7E] hover:text-[#04DB7E] dark:hover:text-[#00C77A] transition-colors"
           >
             <span>View All</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -73,7 +73,7 @@ export default function RecentReturnsTable({
         {returns && returns.length > 0 ? (
           <table className="w-full text-left border-collapse min-w-[500px]">
             <thead>
-              <tr className="border-b border-slate-100 dark:border-[#25334A]/80 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-[#DFE9E2] dark:border-[#242424] text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 <th className="pb-3 pl-2">Return ID</th>
                 <th className="pb-3">Order ID</th>
                 {role === 'admin' && <th className="pb-3">Customer</th>}
@@ -84,7 +84,7 @@ export default function RecentReturnsTable({
                 <th className="pb-3 pr-2 text-right">Requested</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-[#25334A]/60 text-xs">
+            <tbody className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
               {returns.map((item, idx) => {
                 const retId = item.returnId || item.id || idx + 1
                 const orderId = item.orderId || '-'
@@ -93,7 +93,7 @@ export default function RecentReturnsTable({
                 return (
                   <tr
                     key={`return-row-${retId}-${idx}`}
-                    className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                    className="hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C] transition-colors"
                   >
                     {/* Return ID */}
                     <td className="py-3.5 pl-2 font-bold text-slate-900 dark:text-white whitespace-nowrap">
@@ -101,7 +101,7 @@ export default function RecentReturnsTable({
                     </td>
 
                     {/* Order ID */}
-                    <td className="py-3.5 font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                    <td className="py-3.5 font-semibold text-[#087847] dark:text-[#04DB7E] whitespace-nowrap">
                       #{orderId}
                     </td>
 

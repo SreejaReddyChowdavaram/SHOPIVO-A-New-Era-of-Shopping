@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Package, ExternalLink } from 'lucide-react'
-
 const STATUS_CONFIG = {
   DELIVERED: {
     label: 'Delivered',
@@ -13,15 +12,15 @@ const STATUS_CONFIG = {
   },
   CONFIRMED: {
     label: 'Confirmed',
-    badge: 'bg-blue-50 text-blue-700 border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800/80',
+    badge: 'bg-[#E5FFF2] text-[#087847] border-[#DFE9E2] dark:bg-[#09291B] dark:text-[#04DB7E] dark:border-[#242424]',
   },
   PROCESSING: {
     label: 'Processing',
-    badge: 'bg-indigo-50 text-indigo-700 border-indigo-200/80 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-800/80',
+    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/80',
   },
   SHIPPED: {
     label: 'Shipped',
-    badge: 'bg-cyan-50 text-cyan-700 border-cyan-200/80 dark:bg-cyan-950/40 dark:text-cyan-400 dark:border-cyan-800/80',
+    badge: 'bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-950/40 dark:text-teal-400 dark:border-teal-800/80',
   },
   CANCELLED: {
     label: 'Cancelled',
@@ -29,7 +28,7 @@ const STATUS_CONFIG = {
   },
   RETURNED: {
     label: 'Returned',
-    badge: 'bg-pink-50 text-pink-700 border-pink-200/80 dark:bg-pink-950/40 dark:text-pink-400 dark:border-pink-800/80',
+    badge: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-[#171717] dark:text-[#B3B3B3] dark:border-[#242424]',
   },
 }
 
@@ -52,7 +51,7 @@ export default function RecentOrdersTable({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
@@ -68,7 +67,7 @@ export default function RecentOrdersTable({
         {viewAllLink && (
           <Link
             to={viewAllLink}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#087847] dark:text-[#04DB7E] hover:text-[#04DB7E] dark:hover:text-[#00C77A] transition-colors"
           >
             <span>View All</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -81,7 +80,7 @@ export default function RecentOrdersTable({
         {orders && orders.length > 0 ? (
           <table className="w-full text-left border-collapse min-w-[580px]">
             <thead>
-              <tr className="border-b border-slate-100 dark:border-[#25334A]/80 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-[#DFE9E2] dark:border-[#242424] text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 <th className="pb-3 pl-2">Order</th>
                 {role === 'customer' && <th className="pb-3">Product</th>}
                 {(role === 'seller' || role === 'admin') && <th className="pb-3">Customer</th>}
@@ -92,7 +91,7 @@ export default function RecentOrdersTable({
                 <th className="pb-3 pr-2 text-right">Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-[#25334A]/60 text-xs">
+            <tbody className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
               {orders.map((item, idx) => {
                 const rawStatus = item.orderStatus || item.status || 'PENDING'
                 const statusInfo = STATUS_CONFIG[rawStatus.toUpperCase()] || {
@@ -109,10 +108,10 @@ export default function RecentOrdersTable({
                 return (
                   <tr
                     key={`order-row-${orderId}-${idx}`}
-                    className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+                    className="hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C] transition-colors"
                   >
                     {/* Order ID */}
-                    <td className="py-3.5 pl-2 font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                    <td className="py-3.5 pl-2 font-bold text-[#087847] dark:text-[#04DB7E] whitespace-nowrap">
                       #{orderId}
                     </td>
 

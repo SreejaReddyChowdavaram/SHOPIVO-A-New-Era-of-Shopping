@@ -9,7 +9,7 @@ export default function TopProductsList({
   className = '',
 }) {
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#111C30] border border-slate-200/90 dark:border-[#25334A] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -34,10 +34,10 @@ export default function TopProductsList({
           products.map((item, idx) => (
             <div
               key={`prod-${item.productId || idx}`}
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-50/70 dark:bg-slate-800/30 border border-slate-100 dark:border-[#25334A]/80 hover:bg-slate-100/60 dark:hover:bg-slate-800/60 transition-colors"
+              className="flex items-center justify-between p-3 rounded-xl bg-slate-50/70 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C] transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-extrabold text-xs shrink-0">
+                <span className="w-6 h-6 rounded-lg bg-[#E5FFF2] dark:bg-[#09291B] text-[#087847] dark:text-[#04DB7E] flex items-center justify-center font-extrabold text-xs shrink-0">
                   {idx + 1}
                 </span>
                 <div className="min-w-0">

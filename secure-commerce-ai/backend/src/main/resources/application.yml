@@ -135,6 +135,14 @@ app:
     webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
     currency: ${RAZORPAY_CURRENCY:INR}
 
+  # Google OAuth 2.0 Configuration
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+
+  # Seller Verification / Approval Policy
+  seller:
+    require-approval: ${SELLER_REQUIRE_APPROVAL:false}
+
   # Product Image Upload Configuration
   upload:
     dir: ${SHOPIVO_UPLOAD_DIR:./data/uploads/products}

@@ -77,7 +77,7 @@ const AdminDashboard = () => {
       label: 'Total Listings',
       value: totalProducts,
       icon: Boxes,
-      iconBg: 'rgba(99, 102, 241, 0.12)',
+      iconBg: 'rgba(4, 219, 126, 0.12)',
       iconColor: 'var(--color-primary)',
       valueColor: 'var(--color-text-primary)',
     },
@@ -265,8 +265,8 @@ const AdminDashboard = () => {
                   transition: 'border-color 0.15s, box-shadow 0.15s',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = '#3b82f6'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(59,130,246,0.12)'
+                  e.currentTarget.style.borderColor = 'var(--color-primary)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(126,217,87,0.25)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -277,8 +277,8 @@ const AdminDashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                    color: '#3b82f6',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    color: 'var(--color-nav-active-text, var(--color-primary))',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
                     <TrendingUp size={22} />
@@ -314,7 +314,7 @@ const AdminDashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -325,7 +325,7 @@ const AdminDashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                    backgroundColor: 'rgba(4, 219, 126, 0.12)',
                     color: 'var(--color-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
@@ -410,7 +410,7 @@ const AdminDashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -421,8 +421,8 @@ const AdminDashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                    color: '#38bdf8',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    color: 'var(--color-nav-active-text, var(--color-primary))',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
                     <ShoppingCart size={22} />
@@ -458,7 +458,7 @@ const AdminDashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -469,8 +469,8 @@ const AdminDashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(168, 85, 247, 0.12)',
-                    color: '#a855f7',
+                    backgroundColor: 'rgba(0, 199, 122, 0.12)',
+                    color: '#00C77A',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
                     <Users size={22} />
@@ -506,7 +506,7 @@ const AdminDashboard = () => {
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'var(--color-primary)'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.12)'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(4, 219, 126, 0.2)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--color-border)'
@@ -694,7 +694,7 @@ const AdminDashboard = () => {
                 <span style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>
                   In Fulfillment
                 </span>
-                <p style={{ fontSize: '1.5rem', fontWeight: '800', color: '#38bdf8', margin: '0.35rem 0 0 0' }}>
+                <p style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--color-primary)', margin: '0.35rem 0 0 0' }}>
                   {orderMetrics ? (orderMetrics.processingOrders + orderMetrics.shippedOrders) : '—'}
                 </p>
               </div>

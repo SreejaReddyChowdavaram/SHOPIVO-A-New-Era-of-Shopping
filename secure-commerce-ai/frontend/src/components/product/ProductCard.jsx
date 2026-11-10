@@ -88,7 +88,7 @@ const ProductCard = ({
         }}
       >
         <img
-          src={resolveImageUrl(product.imageUrl) || `https://placehold.co/400x400/ffffff/2563eb?text=${encodeURIComponent(product.name.slice(0, 15))}`}
+          src={resolveImageUrl(product.imageUrl) || `https://placehold.co/400x400/ffffff/087847?text=${encodeURIComponent(product.name.slice(0, 15))}`}
           alt={product.name}
           style={{
             maxWidth: '100%',
@@ -97,7 +97,7 @@ const ProductCard = ({
             transition: 'transform 0.25s ease',
           }}
           onError={(e) => {
-            e.target.src = `https://placehold.co/400x400/ffffff/2563eb?text=${encodeURIComponent(product.name.slice(0, 12))}`
+            e.target.src = `https://placehold.co/400x400/ffffff/087847?text=${encodeURIComponent(product.name.slice(0, 12))}`
           }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}

@@ -213,7 +213,7 @@ const Checkout = () => {
           contact: gwOrder.customerPhone,
         },
         theme: {
-          color: '#2563eb',
+          color: '#04DB7E',
         },
         config: {
           display: {

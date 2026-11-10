@@ -46,11 +46,22 @@ const authService = {
   /**
    * Log in with email + password.
    *
-   * @param {Object} payload - { email, password }
+   * @param {Object} payload - { email, password, portalRole }
    * @returns {Object} - AuthResponse data from backend
    */
   login: async (payload) => {
     const response = await api.post('/auth/login', payload)
+    return response.data.data
+  },
+
+  /**
+   * Authenticate or register with verified Google OAuth/OIDC ID token.
+   *
+   * @param {Object} payload - { credential, portalRole, storeName, phoneNumber }
+   * @returns {Object} - AuthResponse data from backend
+   */
+  googleAuth: async (payload) => {
+    const response = await api.post('/auth/google', payload)
     return response.data.data
   },
 

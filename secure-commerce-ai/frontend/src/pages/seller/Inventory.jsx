@@ -213,7 +213,7 @@ const Inventory = () => {
           {/* ── Summary Cards ── */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
             {[
-              { label: 'Total SKUs',     value: summary.total,      icon: Boxes,        iconBg: 'rgba(99,102,241,0.1)',  iconColor: 'var(--color-primary)',   valueColor: 'var(--color-text-primary)' },
+              { label: 'Total SKUs',     value: summary.total,      icon: Boxes,        iconBg: 'rgba(4, 219, 126, 0.12)', iconColor: 'var(--color-primary)',   valueColor: 'var(--color-text-primary)' },
               { label: 'Healthy Stock',  value: summary.healthy,    icon: CheckCircle2, iconBg: 'rgba(34,197,94,0.1)',   iconColor: 'var(--color-success)',   valueColor: 'var(--color-success)' },
               { label: 'Low Stock',      value: summary.lowStock,   icon: AlertTriangle,iconBg: 'rgba(234,179,8,0.1)',   iconColor: 'var(--color-warning)',   valueColor: 'var(--color-warning)' },
               { label: 'Out of Stock',   value: summary.outOfStock, icon: AlertCircle,  iconBg: 'rgba(239,68,68,0.1)',   iconColor: 'var(--color-danger)',    valueColor: 'var(--color-danger)' },

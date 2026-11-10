@@ -53,16 +53,16 @@ const PAYMENT_FILTERS = [
 
 const STATUS_BADGE = {
   PENDING:    { label: 'Pending',    color: 'var(--color-warning)', bg: 'rgba(234, 179, 8, 0.12)', border: 'rgba(234, 179, 8, 0.3)' },
-  CONFIRMED:  { label: 'Confirmed',  color: '#3b82f6',              bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)' },
-  PROCESSING: { label: 'Processing', color: '#a855f7',              bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)' },
-  SHIPPED:    { label: 'Shipped',    color: '#0ea5e9',              bg: 'rgba(14, 165, 233, 0.12)', border: 'rgba(14, 165, 233, 0.3)' },
+  CONFIRMED:  { label: 'Confirmed',  color: '#087847',              bg: '#E5FFF2',                  border: '#DFE9E2' },
+  PROCESSING: { label: 'Processing', color: '#00C77A',              bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  SHIPPED:    { label: 'Shipped',    color: '#0d9488',              bg: 'rgba(13, 148, 136, 0.12)', border: 'rgba(13, 148, 136, 0.3)' },
   DELIVERED:  { label: 'Delivered',  color: 'var(--color-success)', bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.3)' },
   CANCELLED:  { label: 'Cancelled',  color: 'var(--color-danger)',  bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)' },
 }
 
 const PAYMENT_BADGE = {
   SUCCESS:   { label: 'Paid',       color: 'var(--color-success)', bg: 'rgba(34, 197, 94, 0.1)' },
-  REFUNDED:  { label: 'Refunded',   color: '#a855f7',              bg: 'rgba(168, 85, 247, 0.1)' },
+  REFUNDED:  { label: 'Refunded',   color: '#B3B3B3',              bg: 'rgba(179, 179, 179, 0.15)' },
   FAILED:    { label: 'Failed',     color: 'var(--color-danger)',  bg: 'rgba(239, 68, 68, 0.1)' },
   INITIATED: { label: 'Initiated',  color: 'var(--color-warning)', bg: 'rgba(234, 179, 8, 0.1)' },
 }

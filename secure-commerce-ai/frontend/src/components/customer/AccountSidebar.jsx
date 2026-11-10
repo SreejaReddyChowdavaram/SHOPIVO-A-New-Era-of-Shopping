@@ -88,18 +88,18 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                     minHeight: '40px',
                     fontSize: '0.84rem',
                     fontWeight: isActive ? '700' : '500',
-                    color: isActive ? 'var(--color-primary)' : 'var(--color-text-primary)',
-                    backgroundColor: isActive ? 'var(--color-primary-subtle)' : 'transparent',
-                    borderLeft: isCollapsed ? 'none' : `3px solid ${isActive ? 'var(--color-primary)' : 'transparent'}`,
-                    borderRight: isCollapsed && isActive ? '3px solid var(--color-primary)' : 'none',
+                    color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-primary)',
+                    backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
+                    borderLeft: isCollapsed ? 'none' : `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
+                    borderRight: isCollapsed && isActive ? '3px solid var(--color-nav-active-border, var(--color-primary))' : 'none',
                     textDecoration: 'none',
                     position: 'relative',
                     transition: 'all var(--transition-fast)',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'var(--color-surface-raised)'
-                      e.currentTarget.style.color = 'var(--color-primary)'
+                      e.currentTarget.style.backgroundColor = 'var(--color-nav-hover-bg, var(--color-surface-raised))'
+                      e.currentTarget.style.color = 'var(--color-nav-active-text, var(--color-primary))'
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -113,7 +113,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2.25 : 1.75}
-                      color={isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}
+                      color={isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)'}
                       style={{ flexShrink: 0, transition: 'color var(--transition-fast)' }}
                     />
                     {isCollapsed && badgeCount > 0 && (
@@ -123,7 +123,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                           top: '-4px',
                           right: '-6px',
                           backgroundColor: 'var(--color-primary)',
-                          color: '#ffffff',
+                          color: 'var(--color-primary-contrast, #050505)',
                           fontSize: '0.575rem',
                           fontWeight: '800',
                           borderRadius: 'var(--radius-full)',
@@ -151,7 +151,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                     <span
                       style={{
                         backgroundColor: 'var(--color-primary)',
-                        color: '#ffffff',
+                        color: 'var(--color-primary-contrast, #050505)',
                         fontSize: '0.65rem',
                         fontWeight: '800',
                         borderRadius: 'var(--radius-full)',

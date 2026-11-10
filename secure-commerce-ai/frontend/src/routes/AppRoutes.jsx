@@ -90,6 +90,10 @@ import SellerLayout from '@/layouts/SellerLayout'
 import AdminLayout from '@/layouts/AdminLayout'
 
 // Auth pages
+import PortalSelection from '@/pages/auth/PortalSelection'
+import CustomerAuth from '@/pages/auth/CustomerAuth'
+import SellerAuth from '@/pages/auth/SellerAuth'
+import AdminAuth from '@/pages/auth/AdminAuth'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
@@ -158,10 +162,21 @@ const AppRoutes = () => {
       {/* Public Landing Page */}
       <Route path="/" element={<LandingPage />} />
 
-      {/* ── Auth Routes (no authentication required) ─── */}
+      {/* ── Role-Based Authentication & Portal Selection ─── */}
+      <Route path="/auth/portal-selection" element={<PortalSelection />} />
+      <Route path="/auth/customer"         element={<CustomerAuth />} />
+      <Route path="/auth/seller"           element={<SellerAuth />} />
+      <Route path="/auth/admin"            element={<AdminAuth />} />
+
+      {/* Aliases & Direct Redirects for Portals */}
+      <Route path="/login"        element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/register"     element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/signup"       element={<Navigate to="/auth/portal-selection" replace />} />
+      <Route path="/admin/login"  element={<Navigate to="/auth/admin" replace />} />
+      <Route path="/seller/login" element={<Navigate to="/auth/seller" replace />} />
+
+      {/* ── Password Recovery & Verification (AuthLayout) ─── */}
       <Route element={<AuthLayout />}>
-        <Route path="/login"           element={<Login />} />
-        <Route path="/register"        element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp"      element={<VerifyOtp />} />
         <Route path="/reset-password"  element={<ResetPassword />} />
@@ -169,9 +184,6 @@ const AppRoutes = () => {
 
       {/* Forbidden — standalone, no layout */}
       <Route path="/forbidden" element={<Forbidden />} />
-
-      {/* Aliases & Direct Redirects */}
-      <Route path="/signup" element={<Navigate to="/register" replace />} />
       <Route path="/403" element={<Navigate to="/forbidden" replace />} />
       <Route path="/unauthorized" element={<Navigate to="/forbidden" replace />} />
 

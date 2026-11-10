@@ -15,9 +15,13 @@ export const ROUTES = {
   // Root
   HOME: '/',
 
-  // Auth
-  LOGIN: '/login',
-  REGISTER: '/register',
+  // Auth & Portal Selection
+  PORTAL_SELECTION: '/auth/portal-selection',
+  CUSTOMER_AUTH: '/auth/customer',
+  SELLER_AUTH: '/auth/seller',
+  ADMIN_AUTH: '/auth/admin',
+  LOGIN: '/auth/portal-selection',
+  REGISTER: '/auth/portal-selection',
   FORGOT_PASSWORD: '/forgot-password',
   VERIFY_OTP: '/verify-otp',
   RESET_PASSWORD: '/reset-password',

@@ -43,9 +43,9 @@ const STEPS = [
 
 const STATUS_BADGE = {
   PENDING:    { label: 'Pending',    color: 'var(--color-warning)',       bg: 'rgba(234, 179, 8, 0.12)', border: 'rgba(234, 179, 8, 0.3)' },
-  CONFIRMED:  { label: 'Confirmed',  color: 'var(--color-info)',          bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)' },
-  PROCESSING: { label: 'Processing', color: 'var(--color-primary-light)', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.3)' },
-  SHIPPED:    { label: 'Shipped',    color: '#38bdf8',                    bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+  CONFIRMED:  { label: 'Confirmed',  color: '#087847',                    bg: '#E5FFF2',                  border: '#DFE9E2' },
+  PROCESSING: { label: 'Processing', color: '#00C77A',                    bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  SHIPPED:    { label: 'Shipped',    color: '#0d9488',                    bg: 'rgba(13, 148, 136, 0.12)', border: 'rgba(13, 148, 136, 0.3)' },
   DELIVERED:  { label: 'Delivered',  color: 'var(--color-success)',       bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.3)' },
   CANCELLED:  { label: 'Cancelled',  color: 'var(--color-danger)',        bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)' },
 }
@@ -303,9 +303,9 @@ const AdminOrderDetails = () => {
                     marginBottom: '0.5rem',
                     background: isCompleted || isCurrent ? 'var(--color-primary)' : 'var(--color-card)',
                     border: `2px solid ${isCompleted || isCurrent ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                    color: isCompleted || isCurrent ? '#fff' : 'var(--color-text-muted)',
+                    color: isCompleted || isCurrent ? 'var(--color-primary-contrast, #050505)' : 'var(--color-text-muted)',
                     transition: 'all 0.3s ease',
-                    boxShadow: isCurrent ? '0 0 12px rgba(99, 102, 241, 0.4)' : 'none'
+                    boxShadow: isCurrent ? '0 0 12px rgba(4, 219, 126, 0.4)' : 'none'
                   }}>
                     <Icon size={18} />
                   </div>
@@ -672,7 +672,7 @@ const AdminOrderDetails = () => {
                   padding: '0.75rem 1rem',
                   borderRadius: 'var(--radius-md)',
                   border: `1px solid ${selectedStatus === st ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                  background: selectedStatus === st ? 'rgba(99, 102, 241, 0.08)' : 'var(--color-bg-secondary)',
+                  background: selectedStatus === st ? 'rgba(4, 219, 126, 0.12)' : 'var(--color-bg-secondary)',
                   cursor: 'pointer'
                 }}>
                   <input

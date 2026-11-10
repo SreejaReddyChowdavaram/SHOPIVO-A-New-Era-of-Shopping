@@ -216,11 +216,11 @@ const LandingPage = () => {
           <div className="landing-nav-actions">
             <ThemeToggle />
 
-            <Link to={ROUTES.LOGIN} className="btn btn-ghost landing-auth-btn">
+            <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-ghost landing-auth-btn">
               Sign In
             </Link>
 
-            <Link to={ROUTES.REGISTER} className="btn btn-primary landing-auth-btn">
+            <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-primary landing-auth-btn">
               Get Started
             </Link>
 
@@ -268,10 +268,10 @@ const LandingPage = () => {
               Intelligent Protection
             </button>
             <div className="mobile-menu-actions">
-              <Link to={ROUTES.LOGIN} className="btn btn-secondary w-full" onClick={() => setMobileMenuOpen(false)}>
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-secondary w-full" onClick={() => setMobileMenuOpen(false)}>
                 Sign In
               </Link>
-              <Link to={ROUTES.REGISTER} className="btn btn-primary w-full" onClick={() => setMobileMenuOpen(false)}>
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-primary w-full" onClick={() => setMobileMenuOpen(false)}>
                 Get Started
               </Link>
             </div>
@@ -303,11 +303,11 @@ const LandingPage = () => {
             </p>
 
             <div className="hero-cta-group">
-              <Link to={ROUTES.REGISTER} className="btn btn-primary btn-lg hero-primary-btn">
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-primary btn-lg hero-primary-btn">
                 Get Started
                 <ArrowRight size={18} />
               </Link>
-              <Link to={ROUTES.LOGIN} className="btn btn-secondary btn-lg hero-secondary-btn">
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-secondary btn-lg hero-secondary-btn">
                 Sign In
               </Link>
             </div>
@@ -546,7 +546,7 @@ const LandingPage = () => {
         <div className="landing-container">
           <div className="intelligent-spotlight-card">
             <div className="spotlight-content">
-              <span className="section-tag" style={{ color: '#93c5fd' }}>Security Intelligence</span>
+              <span className="section-tag" style={{ color: '#04DB7E' }}>Security Intelligence</span>
               <h2 className="spotlight-title">
                 Intelligent Protection for Digital Commerce
               </h2>
@@ -634,11 +634,11 @@ const LandingPage = () => {
               Create your customer account in seconds or sign in to explore the platform.
             </p>
             <div className="final-cta-buttons">
-              <Link to={ROUTES.REGISTER} className="btn btn-primary btn-lg">
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-primary btn-lg">
                 Get Started
                 <ArrowRight size={18} />
               </Link>
-              <Link to={ROUTES.LOGIN} className="btn btn-secondary btn-lg">
+              <Link to={ROUTES.PORTAL_SELECTION} className="btn btn-secondary btn-lg">
                 Sign In
               </Link>
             </div>
@@ -749,7 +749,7 @@ const LandingPage = () => {
               <h4 className="footer-col-heading">Support</h4>
               <ul className="footer-col-list">
                 <li>
-                  <Link to={ROUTES.LOGIN} className="footer-link">
+                  <Link to={ROUTES.PORTAL_SELECTION} className="footer-link">
                     Account Help
                   </Link>
                 </li>

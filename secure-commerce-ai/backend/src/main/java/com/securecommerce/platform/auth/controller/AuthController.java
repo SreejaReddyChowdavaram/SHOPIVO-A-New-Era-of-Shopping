@@ -51,6 +51,7 @@ import com.securecommerce.platform.event.service.EventLoggingService;
 public class AuthController {
 
     private final AuthService authService;
+    private final com.securecommerce.platform.auth.service.GoogleAuthService googleAuthService;
     private final EventLoggingService eventLoggingService;
 
     /**
@@ -80,6 +81,18 @@ public class AuthController {
 
         AuthResponse authData = authService.login(request);
         return ResponseEntity.ok(ApiResponse.success("Login successful", authData));
+    }
+
+    /**
+     * POST /api/auth/google
+     * Verifies Google ID token and returns authenticated session for Customer or Seller.
+     */
+    @PostMapping("/google")
+    public ResponseEntity<ApiResponse<AuthResponse>> googleLogin(
+            @Valid @RequestBody com.securecommerce.platform.auth.dto.GoogleAuthRequest request) {
+
+        AuthResponse authData = googleAuthService.authenticateWithGoogle(request);
+        return ResponseEntity.ok(ApiResponse.success("Google authentication successful", authData));
     }
 
     /**

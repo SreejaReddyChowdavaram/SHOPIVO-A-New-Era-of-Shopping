@@ -142,7 +142,7 @@ const SellerDetails = () => {
             width: '56px',
             height: '56px',
             borderRadius: 'var(--radius-sm)',
-            backgroundColor: isSuspended ? 'rgba(239, 68, 68, 0.12)' : 'rgba(99, 102, 241, 0.12)',
+            backgroundColor: isSuspended ? 'rgba(239, 68, 68, 0.12)' : 'rgba(4, 219, 126, 0.12)',
             color: isSuspended ? 'var(--color-danger)' : 'var(--color-primary)',
             display: 'flex',
             alignItems: 'center',

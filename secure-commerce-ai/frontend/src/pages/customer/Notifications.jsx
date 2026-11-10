@@ -34,22 +34,22 @@ const getNotificationMeta = (type) => {
     case 'ORDER_PLACED':
       return {
         icon: Package,
-        color: '#2563eb',
-        bg: '#eff6ff',
+        color: '#087847',
+        bg: '#E5FFF2',
         label: 'Order Placed',
       }
     case 'ORDER_CONFIRMED':
       return {
         icon: CheckCircle2,
-        color: '#059669',
-        bg: '#ecfdf5',
+        color: '#04DB7E',
+        bg: '#E5FFF2',
         label: 'Order Confirmed',
       }
     case 'ORDER_SHIPPED':
       return {
         icon: Truck,
-        color: '#0284c7',
-        bg: '#f0f9ff',
+        color: '#00C77A',
+        bg: 'rgba(0, 199, 122, 0.12)',
         label: 'Shipped',
       }
     case 'ORDER_DELIVERED':

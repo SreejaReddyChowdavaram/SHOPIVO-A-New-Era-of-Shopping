@@ -17,17 +17,17 @@ const NotFound = () => {
       <div style={{ textAlign: 'center', maxWidth: '420px' }}>
         <div style={{
           width: '80px', height: '80px', borderRadius: '50%',
-          background: 'rgba(99, 102, 241, 0.1)',
-          border: '2px solid rgba(99, 102, 241, 0.3)',
+          background: 'rgba(4, 219, 126, 0.12)',
+          border: '2px solid rgba(4, 219, 126, 0.3)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 1.5rem',
         }}>
-          <AlertCircle size={36} color="var(--color-primary-light)" strokeWidth={1.5} />
+          <AlertCircle size={36} color="var(--color-primary)" strokeWidth={1.5} />
         </div>
 
         <h1 style={{
           fontSize: '5rem', fontWeight: '800', lineHeight: 1,
-          background: 'linear-gradient(135deg, var(--color-primary-light), var(--color-info))',
+          background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           backgroundClip: 'text', marginBottom: '0.5rem',
         }}>

@@ -2,36 +2,28 @@ import React from 'react'
 
 const COLOR_MAP = {
   blue: {
-    border: 'border-blue-500/70 dark:border-blue-500/60 hover:border-blue-500 dark:hover:border-blue-400',
-    iconColor: 'text-blue-600 dark:text-blue-400',
+    iconColor: 'text-[#087847] dark:text-[#04DB7E]',
   },
   emerald: {
-    border: 'border-emerald-500/70 dark:border-emerald-500/60 hover:border-emerald-500 dark:hover:border-emerald-400',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    iconColor: 'text-[#04DB7E] dark:text-[#04DB7E]',
   },
   green: {
-    border: 'border-emerald-500/70 dark:border-emerald-500/60 hover:border-emerald-500 dark:hover:border-emerald-400',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    iconColor: 'text-[#04DB7E] dark:text-[#04DB7E]',
   },
   amber: {
-    border: 'border-amber-500/70 dark:border-amber-500/60 hover:border-amber-500 dark:hover:border-amber-400',
     iconColor: 'text-amber-600 dark:text-amber-400',
   },
   rose: {
-    border: 'border-rose-500/70 dark:border-rose-500/60 hover:border-rose-500 dark:hover:border-rose-400',
     iconColor: 'text-rose-600 dark:text-rose-400',
   },
   red: {
-    border: 'border-red-500/70 dark:border-red-500/60 hover:border-red-500 dark:hover:border-red-400',
     iconColor: 'text-red-600 dark:text-red-400',
   },
   purple: {
-    border: 'border-purple-500/70 dark:border-purple-500/60 hover:border-purple-500 dark:hover:border-purple-400',
-    iconColor: 'text-purple-600 dark:text-purple-400',
+    iconColor: 'text-[#00C77A] dark:text-[#00C77A]',
   },
   violet: {
-    border: 'border-violet-500/70 dark:border-violet-500/60 hover:border-violet-500 dark:hover:border-violet-400',
-    iconColor: 'text-violet-600 dark:text-violet-400',
+    iconColor: 'text-[#087847] dark:text-[#04DB7E]',
   },
 }
 
@@ -46,7 +38,7 @@ export default function CustomerMetricCard({
 
   return (
     <div
-      className={`group relative flex flex-col items-center justify-center text-center rounded-2xl bg-white dark:bg-[#101726] border-2 ${scheme.border} p-5 sm:p-6 min-h-[144px] h-full box-border min-w-0 w-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
+      className={`group relative flex flex-col items-center justify-center text-center rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] hover:border-[#04DB7E]/60 p-5 sm:p-6 min-h-[144px] h-full box-border min-w-0 w-full transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
     >
       {/* 1. Top Row: Accent Icon + Metric Label (Horizontal, Centered) */}
       <div className="flex items-center justify-center gap-2 sm:gap-2.5 w-full mb-3 sm:mb-3.5">
