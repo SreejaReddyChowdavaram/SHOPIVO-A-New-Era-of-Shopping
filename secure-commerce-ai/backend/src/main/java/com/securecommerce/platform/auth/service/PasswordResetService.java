@@ -282,6 +282,10 @@ public class PasswordResetService {
 
         // 4. Update password (preserves seller approval status, user role, and user active status)
         user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        if (user.getAuthProvider() == User.AuthProvider.GOOGLE) {
+            user.setAuthProvider(User.AuthProvider.LINKED);
+            log.info("Account upgraded to LINKED after OTP password setup: {}", user.getEmail());
+        }
         userRepository.save(user);
 
         // 5. Invalidate all OTPs for this user to ensure single-use

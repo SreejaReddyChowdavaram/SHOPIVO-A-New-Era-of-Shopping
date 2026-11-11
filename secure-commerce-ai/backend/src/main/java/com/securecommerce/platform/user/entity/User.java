@@ -87,6 +87,40 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    /**
+     * Login activity tracking (added in V22 migration)
+     */
+    @Column(name = "login_count", nullable = false)
+    @Builder.Default
+    private int loginCount = 0;
+
+    @Column(name = "last_login_at")
+    private Instant lastLoginAt;
+
+    @Column(name = "last_login_ip", length = 45)
+    private String lastLoginIp;
+
+    @Column(name = "last_login_location", length = 150)
+    private String lastLoginLocation;
+
+    /**
+     * Authentication provider (added in V23 migration):
+     * LOCAL  → Registered via email & password
+     * GOOGLE → Registered via Google OAuth
+     * LINKED → Registered via one provider and safely linked to both
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false, length = 20)
+    @Builder.Default
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    // ─── Provider Enum ────────────────────────────────────────
+    public enum AuthProvider {
+        LOCAL,
+        GOOGLE,
+        LINKED
+    }
+
     // ─── Role Enum ────────────────────────────────────────────
     public enum Role {
         CUSTOMER,

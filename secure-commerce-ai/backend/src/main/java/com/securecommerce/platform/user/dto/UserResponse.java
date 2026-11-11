@@ -37,6 +37,7 @@ public class UserResponse {
     private String lastName;
     private String role;
     private boolean enabled;
+    private String authProvider;
     private Instant createdAt;
 
     // Notice: NO passwordHash field — intentionally excluded
@@ -53,6 +54,7 @@ public class UserResponse {
                 .lastName(user.getLastName())
                 .role(user.getRole().name())
                 .enabled(user.isEnabled())
+                .authProvider(user.getAuthProvider() != null ? user.getAuthProvider().name() : "LOCAL")
                 .createdAt(user.getCreatedAt())
                 .build();
     }

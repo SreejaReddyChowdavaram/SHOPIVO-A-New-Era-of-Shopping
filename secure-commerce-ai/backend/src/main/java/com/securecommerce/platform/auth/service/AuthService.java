@@ -7,6 +7,7 @@ import com.securecommerce.platform.auth.exception.DuplicateEmailException;
 import com.securecommerce.platform.auth.exception.InvalidCredentialsException;
 import com.securecommerce.platform.event.entity.EventType;
 import com.securecommerce.platform.event.service.EventLoggingService;
+import com.securecommerce.platform.event.service.LoginActivityService;
 import com.securecommerce.platform.security.util.JwtUtil;
 import com.securecommerce.platform.user.dto.UserResponse;
 import com.securecommerce.platform.user.entity.User;
@@ -38,6 +39,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;   // BCryptPasswordEncoder from SecurityConfig
     private final JwtUtil jwtUtil;
     private final EventLoggingService eventLoggingService;
+    private final LoginActivityService loginActivityService;
 
     /**
      * Register a new user account.
@@ -62,6 +64,7 @@ public class AuthService {
                 .firstName(request.getFirstName().trim())
                 .lastName(request.getLastName().trim())
                 .role(request.getRole())
+                .authProvider(User.AuthProvider.LOCAL)
                 .enabled(true)
                 .build();
 
@@ -99,12 +102,30 @@ public class AuthService {
                     null,
                     Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "USER_NOT_FOUND")
             );
+            loginActivityService.recordLoginFailure(attemptedEmail, "UNKNOWN", "PASSWORD", "USER_NOT_FOUND", null);
             throw new InvalidCredentialsException();
         }
 
         User user = userOpt.get();
 
-        // 2. Verify password — BCrypt compares plain text against stored hash
+        // 2. Check if user is registered exclusively with Google OAuth
+        if (user.getAuthProvider() == User.AuthProvider.GOOGLE) {
+            log.warn("Password login attempted for Google-registered account: {}", attemptedEmail);
+            eventLoggingService.logEvent(
+                    EventType.LOGIN_FAILURE,
+                    user,
+                    "USER",
+                    String.valueOf(user.getId()),
+                    Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "GOOGLE_AUTH_REQUIRED")
+            );
+            loginActivityService.recordLoginFailure(user.getEmail(), user.getRole().name(), "PASSWORD", "GOOGLE_AUTH_REQUIRED", user.getId());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "This email is registered with Google. Please continue with Google Sign-In."
+            );
+        }
+
+        // 3. Verify password — BCrypt compares plain text against stored hash
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             eventLoggingService.logEvent(
                     EventType.LOGIN_FAILURE,
@@ -113,6 +134,7 @@ public class AuthService {
                     String.valueOf(user.getId()),
                     Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "INVALID_CREDENTIALS")
             );
+            loginActivityService.recordLoginFailure(user.getEmail(), user.getRole().name(), "PASSWORD", "INVALID_CREDENTIALS", user.getId());
             throw new InvalidCredentialsException();
         }
 
@@ -125,6 +147,7 @@ public class AuthService {
                     String.valueOf(user.getId()),
                     Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "ACCOUNT_DISABLED")
             );
+            loginActivityService.recordLoginFailure(user.getEmail(), user.getRole().name(), "PASSWORD", "ACCOUNT_DISABLED", user.getId());
             throw new InvalidCredentialsException("Account is disabled. Please contact support.");
         }
 
@@ -138,6 +161,7 @@ public class AuthService {
                     Map.of("attemptedEmail", attemptedEmail, "reasonCategory", "ROLE_MISMATCH",
                             "registeredRole", user.getRole().name(), "targetPortal", request.getPortalRole().name())
             );
+            loginActivityService.recordLoginFailure(user.getEmail(), user.getRole().name(), "PASSWORD", "ROLE_MISMATCH", user.getId());
             if (request.getPortalRole() == User.Role.ADMIN) {
                 throw new InvalidCredentialsException("Access denied. Administrator privileges required.");
             }
@@ -156,6 +180,7 @@ public class AuthService {
                 String.valueOf(user.getId()),
                 Map.of("email", user.getEmail(), "role", user.getRole().name())
         );
+        loginActivityService.recordLoginSuccess(user, "PASSWORD");
 
         // 5. Generate JWT and return response
         return buildAuthResponse(user);
