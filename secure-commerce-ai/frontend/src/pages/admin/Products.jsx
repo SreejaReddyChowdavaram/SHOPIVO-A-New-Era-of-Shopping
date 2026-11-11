@@ -489,13 +489,15 @@ const AdminProducts = () => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          overflowY: 'auto',
         }}>
           <div className="card" style={{
             maxWidth: '680px',
             width: '100%',
-            maxHeight: '90vh',
+            maxHeight: 'min(90vh, 90dvh)',
             overflowY: 'auto',
+            margin: 'auto',
             padding: '2rem',
             position: 'relative'
           }}>

@@ -577,6 +577,7 @@ const Customers = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
             backdropFilter: 'blur(3px)',
           }}
         >
@@ -585,6 +586,9 @@ const Customers = () => {
             style={{
               maxWidth: '440px',
               width: '100%',
+              maxHeight: 'min(90vh, 90dvh)',
+              overflowY: 'auto',
+              margin: 'auto',
               padding: '1.75rem',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-xl)',
@@ -638,6 +642,7 @@ const Customers = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
             backdropFilter: 'blur(3px)',
           }}
         >
@@ -646,6 +651,9 @@ const Customers = () => {
             style={{
               maxWidth: '480px',
               width: '100%',
+              maxHeight: 'min(90vh, 90dvh)',
+              overflowY: 'auto',
+              margin: 'auto',
               padding: '1.75rem',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-xl)',

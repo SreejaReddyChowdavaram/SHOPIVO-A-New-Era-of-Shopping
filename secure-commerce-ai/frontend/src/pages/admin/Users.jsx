@@ -488,9 +488,10 @@ const Users = () => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          overflowY: 'auto'
         }}>
-          <div className="card" style={{ width: '100%', maxWidth: '500px', padding: '1.75rem' }}>
+          <div className="card" style={{ width: '100%', maxWidth: '500px', maxHeight: 'min(90vh, 90dvh)', overflowY: 'auto', margin: 'auto', padding: '1.75rem' }}>
             {inspectLoading ? (
               <div style={{ textAlign: 'center', padding: '2rem' }}>
                 <Loader2 size={32} className="animate-spin" color="var(--color-primary)" />
@@ -616,9 +617,10 @@ const Users = () => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          overflowY: 'auto'
         }}>
-          <div className="card" style={{ width: '100%', maxWidth: '440px', padding: '1.75rem' }}>
+          <div className="card" style={{ width: '100%', maxWidth: '440px', maxHeight: 'min(90vh, 90dvh)', overflowY: 'auto', margin: 'auto', padding: '1.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: confirmModal.action === 'suspend' ? 'var(--color-danger)' : 'var(--color-success)' }}>
               <AlertTriangle size={24} />
               <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--color-text-primary)', margin: 0 }}>

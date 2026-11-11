@@ -606,6 +606,7 @@ const Payments = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
           }}
         >
           <div
@@ -615,8 +616,9 @@ const Payments = () => {
               width: '100%',
               padding: '1.75rem',
               borderRadius: 'var(--radius-lg)',
-              maxHeight: '90vh',
+              maxHeight: 'min(90vh, 90dvh)',
               overflowY: 'auto',
+              margin: 'auto',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>

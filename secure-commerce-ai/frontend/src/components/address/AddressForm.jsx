@@ -63,6 +63,7 @@ const AddressForm = ({ initialData = null, onSuccess, onCancel }) => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '1rem',
+        overflowY: 'auto',
       }}
     >
       <div
@@ -73,8 +74,9 @@ const AddressForm = ({ initialData = null, onSuccess, onCancel }) => {
           borderRadius: 'var(--radius-md)',
           maxWidth: '500px',
           width: '100%',
-          maxHeight: '90vh',
+          maxHeight: 'min(90vh, 90dvh)',
           overflowY: 'auto',
+          margin: 'auto',
           position: 'relative',
           boxShadow: 'var(--shadow-xl)',
           padding: '1.5rem',

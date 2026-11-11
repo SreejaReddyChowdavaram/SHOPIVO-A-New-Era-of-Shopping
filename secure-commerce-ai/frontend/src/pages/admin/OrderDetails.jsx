@@ -653,9 +653,10 @@ const AdminOrderDetails = () => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          overflowY: 'auto'
         }}>
-          <div className="card" style={{ width: '100%', maxWidth: '440px', padding: '1.75rem' }}>
+          <div className="card" style={{ width: '100%', maxWidth: '440px', maxHeight: 'min(90vh, 90dvh)', overflowY: 'auto', margin: 'auto', padding: '1.75rem' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>
               Update Order Status
             </h3>
@@ -721,9 +722,10 @@ const AdminOrderDetails = () => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          overflowY: 'auto'
         }}>
-          <div className="card" style={{ width: '100%', maxWidth: '460px', padding: '1.75rem' }}>
+          <div className="card" style={{ width: '100%', maxWidth: '460px', maxHeight: 'min(90vh, 90dvh)', overflowY: 'auto', margin: 'auto', padding: '1.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', color: 'var(--color-danger)' }}>
               <AlertTriangle size={24} />
               <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--color-text-primary)', margin: 0 }}>

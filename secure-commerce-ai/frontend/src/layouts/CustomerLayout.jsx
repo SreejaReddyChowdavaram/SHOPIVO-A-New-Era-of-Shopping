@@ -336,7 +336,8 @@ const CustomerLayout = () => {
             borderRadius: 'var(--radius-md)',
             boxShadow: 'var(--shadow-lg)',
             zIndex: 150,
-            overflow: 'hidden',
+            maxHeight: 'min(360px, 60vh)',
+            overflowY: 'auto',
           }}
         >
           {hasMatchingCategories && (

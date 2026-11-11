@@ -1597,6 +1597,7 @@ const ProductDetails = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
           }}
           onClick={() => !deleteLoading && setDeleteConfirmId(null)}
         >
@@ -1609,6 +1610,9 @@ const ProductDetails = () => {
               boxShadow: 'var(--shadow-xl)',
               maxWidth: '420px',
               width: '100%',
+              maxHeight: 'min(90vh, 90dvh)',
+              overflowY: 'auto',
+              margin: 'auto',
               padding: '1.5rem',
               transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
             }}

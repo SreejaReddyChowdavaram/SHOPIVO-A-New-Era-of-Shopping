@@ -676,10 +676,37 @@ optgroup {
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(3px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 .fade-in { animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .animate-fadeIn { animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+/* ─────────────────────────────────────────────────────────
+   GLOBAL VIEWPORT-SAFE MODAL & DIALOG POSITIONING (MOBILE + DESKTOP)
+   Ensures modals stay within visible mobile viewport, never trapped
+   by ancestor transforms, always scroll internally, and accessible.
+   ───────────────────────────────────────────────────────── */
+.modal-overlay,
+.modal-backdrop,
+div[role="dialog"] {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Ensure inner modal dialog cards stay within viewport and scroll internally */
+.modal-overlay > div,
+.modal-backdrop > div,
+div[role="dialog"] > div:not(.modal-overlay):not(.modal-backdrop) {
+  max-height: min(90vh, 90dvh) !important;
+  overflow-y: auto !important;
+  margin: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
 
 @keyframes authCardEntrance {
   from {

@@ -748,6 +748,7 @@ const CustomerOrderDetails = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
           }}
           onClick={() => !cancelling && setShowCancelModal(false)}
         >
@@ -756,7 +757,9 @@ const CustomerOrderDetails = () => {
             style={{
               maxWidth: '480px',
               width: '100%',
-              overflow: 'hidden',
+              maxHeight: 'min(90vh, 90dvh)',
+              overflowY: 'auto',
+              margin: 'auto',
               padding: 0,
             }}
             onClick={(e) => e.stopPropagation()}
@@ -934,6 +937,7 @@ const CustomerOrderDetails = () => {
             justifyContent: 'center',
             zIndex: 1000,
             padding: '1rem',
+            overflowY: 'auto',
           }}
           onClick={() => !submittingReturn && setShowReturnModal(false)}
         >
@@ -942,7 +946,9 @@ const CustomerOrderDetails = () => {
             style={{
               maxWidth: '480px',
               width: '100%',
-              overflow: 'hidden',
+              maxHeight: 'min(90vh, 90dvh)',
+              overflowY: 'auto',
+              margin: 'auto',
               padding: 0,
             }}
             onClick={(e) => e.stopPropagation()}
