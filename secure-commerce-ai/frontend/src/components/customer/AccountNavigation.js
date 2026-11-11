@@ -16,6 +16,7 @@ import {
   TrendingUp,
   User,
   Bell,
+  ShieldCheck,
 } from 'lucide-react'
 import { ROUTES } from '@/constants/routes'
 
@@ -44,6 +45,7 @@ export const CUSTOMER_NAV_SECTIONS = [
       { label: 'Payment History', path: ROUTES.CUSTOMER_PAYMENTS, icon: CreditCard },
       { label: 'Spending Analytics', path: ROUTES.CUSTOMER_ANALYTICS, icon: TrendingUp },
       { label: 'My Profile & Addresses', path: ROUTES.CUSTOMER_PROFILE, icon: User },
+      { label: 'Login Activity', path: ROUTES.CUSTOMER_LOGIN_ACTIVITY, icon: ShieldCheck },
       { label: 'Notifications', path: ROUTES.CUSTOMER_NOTIFICATIONS, icon: Bell, badgeKey: 'notifications' },
     ],
   },

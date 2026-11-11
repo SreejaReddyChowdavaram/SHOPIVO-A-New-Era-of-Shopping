@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+  try {
+    localStorage.setItem('sc_access_token', 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMDUiLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE3OTQzOTQ1NzQsImV4cCI6MTc5NDQ4MDk3NH0.NduNGd7NUSxK5uHThDFtq30GwxYQ8WpMQeCPEELmQQAadtkLS9E7LF4X0hJhhayuwd-JhPxAKNNMN3VHiIkzOw');
+    localStorage.setItem('sc_user', JSON.stringify({"id": 205, "email": "priya.nair@shopivo.demo", "firstName": "Priya", "lastName": "Nair", "role": "CUSTOMER", "enabled": true, "authProvider": "LOCAL", "createdAt": "2026-10-01T19:27:18.686757Z"}));
+    window.location.replace('http://localhost:5173/customer/login-activity');
+  } catch(e) {
+    document.body.innerText = e.toString();
+  }
+</script>
+</head>
+<body style="background:#050505; color:white;">Authenticating and launching...</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-11T00:00:00.000Z" agent="Shopivo CyberForge Architecture" version="21.0.0" type="device">
+  <diagram name="Overall SHOPIVO System Architecture" id="diagram-1">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" background="#050505" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="c1" value="Customer Marketplace SPA (React 19)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="150" width="340" height="105" as="geometry"/></mxCell>
+        <mxCell id="c2" value="Seller Portal Console (React 19)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="420" y="150" width="340" height="105" as="geometry"/></mxCell>
+        <mxCell id="c3" value="Administrator Console (React 19)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f43f5e;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="790" y="150" width="340" height="105" as="geometry"/></mxCell>
+        <mxCell id="c4" value="Render Cloud Edge &amp; Reverse Proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#161616;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="320" width="1490" height="60" as="geometry"/></mxCell>
+        <mxCell id="c5" value="Spring Boot 3.4.3 Core Backend (Security, REST, Domain Services)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="450" width="1490" height="280" as="geometry"/></mxCell>
+        <mxCell id="c6" value="PostgreSQL Database (Flyway V1..V22, users, user_login_events)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="810" width="450" height="150" as="geometry"/></mxCell>
+        <mxCell id="c7" value="Brevo SMTP Relay (smtp-relay.brevo.com:587)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#10b981;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="810" width="320" height="150" as="geometry"/></mxCell>
+        <mxCell id="c8" value="Razorpay Payment Gateway (Checkout &amp; Webhooks)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="880" y="810" width="320" height="150" as="geometry"/></mxCell>
+        <mxCell id="c9" value="Google Identity &amp; IP-API Geolocation Engine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1230" y="810" width="310" height="150" as="geometry"/></mxCell>
+    
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

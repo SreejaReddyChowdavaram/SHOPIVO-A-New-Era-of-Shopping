@@ -77,18 +77,18 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#DFE9E2] dark:border-[#242424] bg-white dark:bg-[#101010] text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-[#1C1C1C] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#04DB7E]/30"
+        className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30"
       >
-        <Calendar className="w-4 h-4 text-[#087847] dark:text-[#04DB7E] shrink-0" />
-        <span className="text-slate-500 dark:text-slate-400 font-normal hidden min-[400px]:inline">
+        <Calendar className="w-4 h-4 text-[var(--color-primary)] shrink-0" />
+        <span className="text-[var(--color-text-secondary)] font-normal hidden min-[400px]:inline">
           Period:
         </span>
-        <span className="font-bold text-slate-900 dark:text-white max-w-[140px] truncate">
+        <span className="font-bold text-[var(--color-text-primary)] max-w-[140px] truncate">
           {currentLabel || 'All Time'}
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180 text-[#087847] dark:text-[#04DB7E]' : ''
+          className={`w-3.5 h-3.5 text-[var(--color-text-muted)] transition-transform duration-200 shrink-0 ${
+            isOpen ? 'rotate-180 text-[var(--color-primary)]' : ''
           }`}
         />
       </button>
@@ -98,10 +98,10 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
         <div
           role="menu"
           aria-orientation="vertical"
-          className="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute right-0 mt-2 w-64 sm:w-72 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
         >
-          <div className="px-2.5 py-1.5 mb-1 border-b border-slate-100 dark:border-[#242424]">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          <div className="px-2.5 py-1.5 mb-1 border-b border-[var(--color-border)]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               Select Timeframe
             </span>
           </div>
@@ -117,12 +117,12 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
                   onClick={() => handleSelectPreset(opt.value)}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl font-medium transition-colors cursor-pointer ${
                     isActive
-                      ? 'bg-[#E5FFF2] dark:bg-[#09291B] text-[#087847] dark:text-[#04DB7E] font-bold'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C]'
+                      ? 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)] font-bold'
+                      : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]'
                   }`}
                 >
                   <span>{opt.label}</span>
-                  {isActive && <Check className="w-4 h-4 text-[#087847] dark:text-[#04DB7E] shrink-0" />}
+                  {isActive && <Check className="w-4 h-4 text-[var(--color-primary)] shrink-0" />}
                 </button>
               )
             })}
@@ -132,31 +132,31 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
           {showCustomInputs && (
             <form
               onSubmit={handleCustomApply}
-              className="mt-2 pt-2 border-t border-[#DFE9E2] dark:border-[#242424] px-1 space-y-2 animate-fadeIn"
+              className="mt-2 pt-2 border-t border-[var(--color-border)] px-1 space-y-2 animate-fadeIn"
             >
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                <SlidersHorizontal className="w-3 h-3 text-[#04DB7E]" />
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[var(--color-text-primary)]">
+                <SlidersHorizontal className="w-3 h-3 text-[var(--color-primary)]" />
                 <span>Custom Range</span>
               </div>
 
               <div className="space-y-1.5">
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-0.5">Start Date</label>
+                  <label className="block text-[10px] text-[var(--color-text-muted)] mb-0.5">Start Date</label>
                   <input
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#DFE9E2] dark:border-[#242424] bg-slate-50 dark:bg-[#171717] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#04DB7E]"
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-0.5">End Date</label>
+                  <label className="block text-[10px] text-[var(--color-text-muted)] mb-0.5">End Date</label>
                   <input
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[#DFE9E2] dark:border-[#242424] bg-slate-50 dark:bg-[#171717] text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#04DB7E]"
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
                     required
                   />
                 </div>
@@ -164,7 +164,7 @@ export default function CustomerDateFilter({ currentRange, onRangeChange, curren
 
               <button
                 type="submit"
-                className="w-full mt-2 py-1.5 text-xs font-semibold rounded-lg bg-[#04DB7E] text-[#050505] hover:bg-[#00C77A] transition-colors shadow-xs cursor-pointer"
+                className="w-full mt-2 py-1.5 text-xs font-semibold rounded-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] transition-colors shadow-xs cursor-pointer"
               >
                 Apply Range
               </button>

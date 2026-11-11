@@ -46,10 +46,11 @@ const ADMIN_NAV = [
   {
     group: 'Users',
     items: [
-      { label: 'All Users',    icon: Users,     path: ROUTES.ADMIN_USERS },
-      { label: 'Customers',    icon: User,      path: ROUTES.ADMIN_CUSTOMERS },
-      { label: 'Sellers',      icon: Store,     path: ROUTES.ADMIN_SELLERS },
-      { label: 'Verification', icon: UserCheck, path: ROUTES.ADMIN_SELLER_VERIFICATION },
+      { label: 'All Users',     icon: Users,       path: ROUTES.ADMIN_USERS },
+      { label: 'Customers',     icon: User,        path: ROUTES.ADMIN_CUSTOMERS },
+      { label: 'Sellers',       icon: Store,       path: ROUTES.ADMIN_SELLERS },
+      { label: 'Verification',  icon: UserCheck,   path: ROUTES.ADMIN_SELLER_VERIFICATION },
+      { label: 'Login History', icon: ShieldCheck, path: ROUTES.ADMIN_LOGIN_HISTORY },
     ],
   },
   {

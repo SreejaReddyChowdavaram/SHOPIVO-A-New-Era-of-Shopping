@@ -18,8 +18,13 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT p FROM Payment p JOIN FETCH p.order WHERE p.customer.id = :customerId ORDER BY p.createdAt DESC")
     List<Payment> findByCustomerIdOrderByCreatedAtDesc(@Param("customerId") Long customerId);
 
-    @Query("SELECT p FROM Payment p JOIN FETCH p.order WHERE p.order.id = :orderId")
-    Optional<Payment> findByOrderId(@Param("orderId") Long orderId);
+    Optional<Payment> findFirstByOrderIdOrderByCreatedAtDesc(Long orderId);
+
+    default Optional<Payment> findByOrderId(Long orderId) {
+        return findFirstByOrderIdOrderByCreatedAtDesc(orderId);
+    }
+
+    List<Payment> findAllByOrderIdOrderByCreatedAtDesc(Long orderId);
 
     Optional<Payment> findByTransactionId(String transactionId);
 

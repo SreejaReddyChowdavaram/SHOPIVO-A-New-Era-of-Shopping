@@ -29,13 +29,14 @@ import ThemeToggle from '@/components/common/ThemeToggle'
 
 // ─── Seller Sidebar Navigation ───────────────────────────────
 const SELLER_NAV = [
-  { label: 'Dashboard',   icon: LayoutDashboard, path: ROUTES.SELLER_DASHBOARD },
-  { label: 'My Products', icon: Package,         path: ROUTES.SELLER_PRODUCTS },
-  { label: 'Add Product', icon: PlusSquare,      path: ROUTES.SELLER_ADD_PRODUCT },
-  { label: 'Inventory',   icon: Archive,         path: ROUTES.SELLER_INVENTORY },
-  { label: 'Orders',      icon: ShoppingBag,     path: ROUTES.SELLER_ORDERS },
-  { label: 'Analytics',   icon: BarChart3,       path: ROUTES.SELLER_ANALYTICS },
-  { label: 'Reviews',     icon: Star,            path: ROUTES.SELLER_REVIEWS },
+  { label: 'Dashboard',      icon: LayoutDashboard, path: ROUTES.SELLER_DASHBOARD },
+  { label: 'My Products',    icon: Package,         path: ROUTES.SELLER_PRODUCTS },
+  { label: 'Add Product',    icon: PlusSquare,      path: ROUTES.SELLER_ADD_PRODUCT },
+  { label: 'Inventory',      icon: Archive,         path: ROUTES.SELLER_INVENTORY },
+  { label: 'Orders',         icon: ShoppingBag,     path: ROUTES.SELLER_ORDERS },
+  { label: 'Analytics',      icon: BarChart3,       path: ROUTES.SELLER_ANALYTICS },
+  { label: 'Reviews',        icon: Star,            path: ROUTES.SELLER_REVIEWS },
+  { label: 'Login Activity', icon: ShieldCheck,     path: ROUTES.SELLER_LOGIN_ACTIVITY },
 ]
 
 // ─── Logo ─────────────────────────────────────────────────────
@@ -93,6 +94,12 @@ const SellerActions = ({ user, onLogout }) => {
               onMouseEnter={e => e.currentTarget.style.background = 'var(--color-surface-raised)'}
               onMouseLeave={e => e.currentTarget.style.background = 'none'}>
               My Profile
+            </button>
+            <button onClick={() => { navigate(ROUTES.SELLER_LOGIN_ACTIVITY); setProfileOpen(false) }}
+              style={{ width: '100%', padding: '0.625rem 1rem', textAlign: 'left', background: 'none', border: 'none', color: 'var(--color-text-primary)', fontSize: '0.875rem', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--color-surface-raised)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+              Login Activity
             </button>
             <div className="divider" style={{ margin: 0 }} />
             <button onClick={() => { onLogout(); setProfileOpen(false) }}

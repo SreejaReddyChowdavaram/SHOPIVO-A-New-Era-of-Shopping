@@ -120,13 +120,13 @@ export default function CustomerAnalytics() {
   return (
     <div className="flex flex-col gap-6 sm:gap-7 pb-6 max-w-[1440px] mx-auto w-full">
       {/* ── Page Header & Quick Controls ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-1 border-b border-[#DFE9E2] dark:border-[#242424]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-1 border-b border-[var(--color-border)]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2.5">
             <span>Customer Analytics</span>
-            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[#087847] dark:text-[#04DB7E]" />}
+            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[var(--color-primary)]" />}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1">
             Track your shopping activity, purchases, spending and returns.
           </p>
         </div>
@@ -141,10 +141,10 @@ export default function CustomerAnalytics() {
             onClick={() => loadData(true)}
             disabled={loading || refreshing}
             type="button"
-            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#DFE9E2] dark:border-[#242424] bg-white dark:bg-[#101010] text-slate-700 dark:text-slate-200 hover:bg-[#F5F8F5] dark:hover:bg-[#1C1C1C] transition-colors shadow-xs cursor-pointer disabled:opacity-60 shrink-0"
+            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors shadow-xs cursor-pointer disabled:opacity-60 shrink-0"
             aria-label="Refresh Data"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[#087847] dark:text-[#04DB7E]' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[var(--color-primary)]' : ''}`} />
             <span>Refresh Data</span>
           </button>
         </div>

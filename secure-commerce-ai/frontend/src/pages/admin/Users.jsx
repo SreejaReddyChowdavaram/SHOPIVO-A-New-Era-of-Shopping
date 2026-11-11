@@ -51,9 +51,9 @@ const STATUS_FILTERS = [
 ]
 
 const ROLE_BADGE = {
-  CUSTOMER: { label: 'Customer', color: '#087847', bg: '#E7FFF3', border: '#DFE9E2' },
-  SELLER:   { label: 'Seller',   color: '#00C77A', bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
-  ADMIN:    { label: 'Admin',    color: 'var(--color-primary)', bg: 'rgba(4, 219, 126, 0.12)', border: 'rgba(4, 219, 126, 0.3)' },
+  CUSTOMER: { label: 'Customer', color: 'var(--color-primary)', bg: 'var(--color-primary-subtle)', border: 'var(--color-border)' },
+  SELLER:   { label: 'Seller',   color: 'var(--color-primary)', bg: 'var(--color-primary-subtle)', border: 'var(--color-border)' },
+  ADMIN:    { label: 'Admin',    color: 'var(--color-primary)', bg: 'var(--color-primary-subtle)', border: 'var(--color-border)' },
 }
 
 const Users = () => {

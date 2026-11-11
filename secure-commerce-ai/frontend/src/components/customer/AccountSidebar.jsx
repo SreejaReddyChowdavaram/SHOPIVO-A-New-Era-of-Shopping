@@ -43,7 +43,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                 <div
                   style={{
                     height: '1px',
-                    backgroundColor: 'var(--color-border-subtle)',
+                    backgroundColor: 'var(--color-sidebar-border, var(--color-border-subtle))',
                     margin: '0.35rem 0.4rem',
                   }}
                   aria-hidden="true"
@@ -57,7 +57,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                   fontWeight: '700',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--color-sidebar-text-secondary, var(--color-text-muted))',
                 }}
               >
                 {section.title}
@@ -83,29 +83,29 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                     alignItems: 'center',
                     justifyContent: isCollapsed ? 'center' : 'flex-start',
                     gap: isCollapsed ? 0 : '0.75rem',
-                    padding: isCollapsed ? '0.6rem 0' : '0.55rem 0.75rem',
-                    borderRadius: 'var(--radius-md)',
+                    padding: isCollapsed ? '0.6rem 0' : '0.6rem 0.85rem',
+                    borderRadius: '0.75rem',
                     minHeight: '40px',
                     fontSize: '0.84rem',
-                    fontWeight: isActive ? '700' : '500',
-                    color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-primary)',
-                    backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
-                    borderLeft: isCollapsed ? 'none' : `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
-                    borderRight: isCollapsed && isActive ? '3px solid var(--color-nav-active-border, var(--color-primary))' : 'none',
+                    fontWeight: isActive ? '600' : '500',
+                    color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-text-primary, var(--color-text-primary))',
+                    backgroundColor: isActive ? 'var(--color-sidebar-active-bg, var(--color-primary))' : 'transparent',
+                    borderLeft: 'none',
+                    borderRight: 'none',
                     textDecoration: 'none',
                     position: 'relative',
                     transition: 'all var(--transition-fast)',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'var(--color-nav-hover-bg, var(--color-surface-raised))'
-                      e.currentTarget.style.color = 'var(--color-nav-active-text, var(--color-primary))'
+                      e.currentTarget.style.backgroundColor = 'var(--color-sidebar-hover-bg, var(--color-nav-hover-bg))'
+                      e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
                       e.currentTarget.style.backgroundColor = 'transparent'
-                      e.currentTarget.style.color = 'var(--color-text-primary)'
+                      e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
                     }
                   }}
                 >
@@ -113,7 +113,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2.25 : 1.75}
-                      color={isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)'}
+                      color={isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-icon, var(--color-text-secondary))'}
                       style={{ flexShrink: 0, transition: 'color var(--transition-fast)' }}
                     />
                     {isCollapsed && badgeCount > 0 && (
@@ -122,8 +122,8 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                           position: 'absolute',
                           top: '-4px',
                           right: '-6px',
-                          backgroundColor: 'var(--color-primary)',
-                          color: 'var(--color-primary-contrast, #050505)',
+                          backgroundColor: 'var(--color-sidebar-active-bg, var(--color-primary))',
+                          color: 'var(--color-sidebar-active-text, #FFFFFF)',
                           fontSize: '0.575rem',
                           fontWeight: '800',
                           borderRadius: 'var(--radius-full)',
@@ -142,7 +142,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                   </div>
 
                   {!isCollapsed && (
-                    <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'inherit' }}>
                       {item.label}
                     </span>
                   )}
@@ -150,8 +150,8 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                   {!isCollapsed && badgeCount > 0 && (
                     <span
                       style={{
-                        backgroundColor: 'var(--color-primary)',
-                        color: 'var(--color-primary-contrast, #050505)',
+                        backgroundColor: isActive ? 'rgba(255, 255, 255, 0.22)' : 'var(--color-sidebar-active-bg, var(--color-primary))',
+                        color: 'var(--color-sidebar-active-text, #FFFFFF)',
                         fontSize: '0.65rem',
                         fontWeight: '800',
                         borderRadius: 'var(--radius-full)',

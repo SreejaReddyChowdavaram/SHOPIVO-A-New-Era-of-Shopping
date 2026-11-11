@@ -135,7 +135,7 @@ public class SmtpEmailService implements EmailService {
             helper.setText(textContent, htmlContent);
 
             sender.send(mimeMessage);
-            log.info("Password reset OTP email delivered successfully via SMTP to {}", maskEmail(toEmail));
+            log.info("Password reset OTP email message accepted by SMTP relay server for recipient {} (SMTP submission accepted; inbox delivery is dependent on recipient provider)", maskEmail(toEmail));
         } catch (ResponseStatusException rse) {
             throw rse;
         } catch (Exception e) {

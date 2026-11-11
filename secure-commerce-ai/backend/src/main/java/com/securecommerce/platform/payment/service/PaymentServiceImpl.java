@@ -97,16 +97,18 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         long amountInPaise = order.getTotalAmount().multiply(BigDecimal.valueOf(100)).longValue();
+        String orderRef = order.getOrderReference() != null ? order.getOrderReference() : ("SHV-" + order.getId());
 
         // 5. IDEMPOTENCY: Check if an active INITIATED gateway payment already exists for this order
         Optional<Payment> activePaymentOpt = paymentRepository.findFirstByOrderIdAndProviderOrderByCreatedAtDesc(order.getId(), "RAZORPAY");
         if (activePaymentOpt.isPresent()) {
             Payment activePayment = activePaymentOpt.get();
             if (activePayment.getPaymentStatus() == PaymentStatus.INITIATED && activePayment.getProviderOrderId() != null) {
-                log.info("Idempotent hit: Reusing active gateway order {} for Shopivo order #{}",
-                        activePayment.getProviderOrderId(), order.getId());
+                log.info("Idempotent hit: Reusing active gateway order {} for Shopivo order {}",
+                        activePayment.getProviderOrderId(), orderRef);
                 return new GatewayOrderDto(
                         order.getId(),
+                        orderRef,
                         activePayment.getProviderOrderId(),
                         order.getTotalAmount(),
                         amountInPaise,
@@ -154,11 +156,12 @@ public class PaymentServiceImpl implements PaymentService {
                 )
         );
 
-        log.info("Created new gateway order {} for Shopivo order #{} (amount={} paise)",
-                gwOrder.gatewayOrderId(), order.getId(), amountInPaise);
+        log.info("Created new gateway order {} for Shopivo order {} (amount={} paise)",
+                gwOrder.gatewayOrderId(), orderRef, amountInPaise);
 
         return new GatewayOrderDto(
                 order.getId(),
+                orderRef,
                 gwOrder.gatewayOrderId(),
                 order.getTotalAmount(),
                 amountInPaise,
@@ -184,6 +187,19 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (order.getStatus() == OrderStatus.CANCELLED) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot verify payment for a cancelled order");
+        }
+
+        // Authoritative backend payment session expiry validation
+        if (order.getStatus() == OrderStatus.PENDING && order.getPaymentExpiresAt() != null && order.getPaymentExpiresAt().isBefore(Instant.now())) {
+            Optional<Payment> initiatedPayment = paymentRepository.findByProviderOrderId(request.razorpayOrderId());
+            initiatedPayment.ifPresent(p -> {
+                if (p.getPaymentStatus() == PaymentStatus.INITIATED) {
+                    p.setPaymentStatus(PaymentStatus.FAILED);
+                    p.setFailureReason("Payment session expired. Please generate a new payment QR code.");
+                    paymentRepository.save(p);
+                }
+            });
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment session expired. Please generate a new payment QR code.");
         }
 
         // Check if already paid with same payment ID (idempotent retry)
@@ -262,12 +278,24 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 6. Validate actual provider payment status (captured or authorized)
         String gwStatus = details.status() != null ? details.status().toLowerCase() : "";
-        if (!"captured".equals(gwStatus) && !"authorized".equals(gwStatus)) {
-            log.warn("Payment is not in captured/authorized status: status={}", gwStatus);
+        if ("authorized".equals(gwStatus)) {
+            log.info("Payment {} is in authorized status; capturing {} paise for order #{}",
+                    request.razorpayPaymentId(), expectedPaise, order.getId());
+            try {
+                details = paymentGatewayService.capturePayment(request.razorpayPaymentId(), expectedPaise, "INR");
+                gwStatus = details.status() != null ? details.status().toLowerCase() : "";
+            } catch (Exception captureEx) {
+                log.warn("Direct capture call returned: {}", captureEx.getMessage());
+            }
+        }
+
+        final String finalGwStatus = gwStatus;
+        if (!"captured".equals(finalGwStatus) && !"authorized".equals(finalGwStatus)) {
+            log.warn("Payment is not in captured/authorized status: status={}", finalGwStatus);
             Optional<Payment> initiatedPayment = paymentRepository.findByProviderOrderId(request.razorpayOrderId());
             initiatedPayment.ifPresent(p -> {
                 p.setPaymentStatus(PaymentStatus.FAILED);
-                p.setFailureReason("Payment not captured by gateway: " + gwStatus);
+                p.setFailureReason("Payment not captured by gateway: " + finalGwStatus);
                 paymentRepository.save(p);
             });
 
@@ -580,7 +608,19 @@ public class PaymentServiceImpl implements PaymentService {
                     });
                 }
             } else if ("payment.authorized".equalsIgnoreCase(eventType) && providerOrderId != null) {
-                log.info("Payment authorized for orderId={}. Awaiting payment.captured before order fulfillment.", providerOrderId);
+                log.info("Payment authorized for orderId={}. Attempting authoritative capture if uncaptured.", providerOrderId);
+                Optional<Payment> paymentOpt = paymentRepository.findByProviderOrderId(providerOrderId);
+                paymentOpt.ifPresent(p -> {
+                    if (p.getPaymentStatus() == PaymentStatus.INITIATED && providerPaymentId != null && !providerPaymentId.isBlank()) {
+                        try {
+                            long paise = p.getAmount().multiply(BigDecimal.valueOf(100)).longValue();
+                            paymentGatewayService.capturePayment(providerPaymentId, paise, "INR");
+                            log.info("Proactively captured payment {} for order #{}", providerPaymentId, p.getOrder().getId());
+                        } catch (Exception ex) {
+                            log.warn("Proactive webhook capture notice: {}", ex.getMessage());
+                        }
+                    }
+                });
             } else if ("qr_code.credited".equalsIgnoreCase(eventType)) {
                 JsonNode qrEntity = root.path("payload").path("qr_code").path("entity");
                 String qrId = qrEntity.path("id").asText(null);
@@ -717,10 +757,19 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public PaymentResponse getPaymentByOrderId(Long orderId, User requester) {
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Payment details not found for order: " + orderId));
+
+        if (payment.getPaymentStatus() == PaymentStatus.INITIATED && payment.getOrder() != null) {
+            Order o = payment.getOrder();
+            if (o.getStatus() == OrderStatus.PENDING && o.getPaymentExpiresAt() != null && o.getPaymentExpiresAt().isBefore(Instant.now())) {
+                payment.setPaymentStatus(PaymentStatus.FAILED);
+                payment.setFailureReason("Payment session expired. Please generate a new payment QR code.");
+                payment = paymentRepository.save(payment);
+            }
+        }
 
         if (requester.getRole() == User.Role.ADMIN) {
             return PaymentResponse.from(payment);
@@ -762,10 +811,10 @@ public class PaymentServiceImpl implements PaymentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot pay for a cancelled order");
         }
 
-        // 3. Check payment expiry window
-        if (order.getPaymentExpiresAt() != null && order.getPaymentExpiresAt().isBefore(Instant.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment window for this order has expired. Please place a new order.");
-        }
+        // 3. Expiry and Session Management: Exactly 10 minutes (600 seconds)
+        Instant sessionExpiresAt = Instant.now().plus(10, java.time.temporal.ChronoUnit.MINUTES);
+        order.setPaymentExpiresAt(sessionExpiresAt);
+        orderRepository.save(order);
 
         // 4. Prevent duplicate payment for already successful orders
         if (paymentRepository.existsByOrderIdAndPaymentStatus(order.getId(), PaymentStatus.SUCCESS)) {
@@ -774,28 +823,31 @@ public class PaymentServiceImpl implements PaymentService {
 
         long amountInPaise = order.getTotalAmount().multiply(BigDecimal.valueOf(100)).longValue();
         String customerFullName = customer.getFirstName() + (customer.getLastName() != null ? " " + customer.getLastName() : "");
+        String orderRef = order.getOrderReference() != null ? order.getOrderReference() : ("SHV-" + order.getId());
 
         // 5. Generate Dynamic QR via Gateway abstraction
         GatewayQrCodeResponse gwQr = paymentGatewayService.createQrCode(
                 order.getId(),
                 order.getTotalAmount(),
                 "INR",
-                "Payment for Order #" + order.getId(),
-                order.getPaymentExpiresAt() != null ? order.getPaymentExpiresAt().getEpochSecond() : (Instant.now().getEpochSecond() + 900)
+                "Payment for " + orderRef,
+                sessionExpiresAt.getEpochSecond()
         );
 
         // 6. Handle Seamless Fallback if standalone QR API is inactive on merchant account
         if (gwQr.fallbackMode() != null && "STANDARD_CHECKOUT_FALLBACK".equalsIgnoreCase(gwQr.fallbackMode())) {
-            log.info("QR standalone API inactive or error. Generating standard gateway order fallback for Shopivo order #{}", order.getId());
+            log.info("QR standalone API inactive or error. Generating standard gateway order fallback for Shopivo order {}", orderRef);
             GatewayOrderDto gwOrder = createGatewayOrder(customerId, new CreateGatewayOrderRequest(order.getId()));
 
             return QrPaymentDto.builder()
                     .orderId(order.getId())
+                    .orderReference(orderRef)
                     .mode("STANDARD_CHECKOUT_FALLBACK")
                     .gatewayOrderId(gwOrder.gatewayOrderId())
                     .amount(order.getTotalAmount())
                     .amountInPaise(amountInPaise)
                     .currency("INR")
+                    .closeBy(sessionExpiresAt.getEpochSecond())
                     .keyId(gwOrder.keyId())
                     .customerName(customerFullName)
                     .customerEmail(customer.getEmail())
@@ -831,13 +883,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         return QrPaymentDto.builder()
                 .orderId(order.getId())
+                .orderReference(orderRef)
                 .mode("RAZORPAY_QR_CODE")
                 .qrCodeId(gwQr.qrCodeId())
                 .imageUrl(gwQr.imageUrl())
                 .amount(order.getTotalAmount())
                 .amountInPaise(amountInPaise)
                 .currency("INR")
-                .closeBy(gwQr.closeBy())
+                .closeBy(sessionExpiresAt.getEpochSecond())
                 .keyId(paymentGatewayService.getPublicKeyId())
                 .customerName(customerFullName)
                 .customerEmail(customer.getEmail())

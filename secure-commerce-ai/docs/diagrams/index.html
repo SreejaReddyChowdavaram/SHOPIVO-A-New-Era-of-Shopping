@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHOPIVO — Visual Architecture Showcase | College Faculty Demonstration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #050505;
+      --bg-card: #101010;
+      --bg-card-subtle: #141414;
+      --border: #242424;
+      --border-accent: rgba(4, 219, 126, 0.35);
+      --primary: #04DB7E;
+      --primary-hover: #03c26f;
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --blue: #38bdf8;
+      --rose: #f43f5e;
+      --purple: #a855f7;
+      --amber: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      background: rgba(16, 16, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #141414;
+      border: 1.5px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    .brand-title span {
+      color: var(--primary);
+    }
+
+    .brand-tagline {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    .header-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(4, 219, 126, 0.1);
+      border: 1px solid var(--border-accent);
+      color: var(--primary);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 65px);
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 340px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.8px;
+    }
+
+    .diagram-nav-item {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .diagram-nav-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .diagram-nav-item.active {
+      background: rgba(4, 219, 126, 0.08);
+      border-left: 3px solid var(--primary);
+    }
+
+    .nav-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav-badge {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      background: #1c1c1c;
+      border: 1px solid #333;
+      color: #ddd;
+      font-weight: 600;
+    }
+
+    .nav-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .diagram-nav-item.active .nav-title {
+      color: var(--primary);
+    }
+
+    .nav-cat {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Main Content Area */
+    .viewer-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-canvas);
+      overflow-y: auto;
+    }
+
+    /* Viewer Controls Bar */
+    .controls-bar {
+      padding: 0.75rem 1.5rem;
+      background: #0a0a0a;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .diagram-meta h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .diagram-meta p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #181818;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .btn-secondary:hover {
+      background: #222;
+      border-color: #444;
+    }
+
+    /* SVG Canvas Container */
+    .svg-viewport {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #030303;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .svg-wrapper {
+      width: 100%;
+      max-width: 1380px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      background: #050505;
+      transition: transform 0.2s ease;
+    }
+
+    .svg-wrapper svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Talking Points Panel */
+    .details-panel {
+      padding: 1.5rem;
+      max-width: 1380px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .panel-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .talking-points-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .talking-point-item {
+      font-size: 0.8rem;
+      color: #d1d5db;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      background: #141414;
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid #222;
+    }
+
+    .bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 900px) {
+      .app-container {
+        flex-direction: column;
+        height: auto;
+      }
+      .sidebar {
+        width: 100%;
+        max-height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">S</div>
+      <div>
+        <div class="brand-title">SHOPIVO <span>ARCHITECTURE</span></div>
+        <div class="brand-tagline">Multi-Vendor E-Commerce Platform • CyberForge System Showcase</div>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span class="pulse"></span>
+      COLLEGE FACULTY DEMONSTRATION
+    </div>
+  </header>
+
+  <!-- Main Showcase Container -->
+  <div class="app-container">
+    <!-- Sidebar Roster -->
+    <nav class="sidebar" aria-label="Diagrams Catalog">
+      <div class="sidebar-header">Architecture Diagrams (9)</div>
+      <div id="navItems">
+        <!-- Injected via JavaScript -->
+      </div>
+    </nav>
+
+    <!-- Main Interactive Viewer -->
+    <main class="viewer-area">
+      <!-- Toolbar -->
+      <div class="controls-bar">
+        <div class="diagram-meta">
+          <h2 id="viewTitle">Loading Diagram...</h2>
+          <p id="viewSubtitle">Please wait</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" onclick="zoomIn()" title="Zoom In">Zoom +</button>
+          <button class="btn btn-secondary" onclick="zoomOut()" title="Zoom Out">Zoom -</button>
+          <button class="btn btn-secondary" onclick="resetZoom()" title="Reset Zoom">Reset</button>
+          <a id="btnDownloadSvg" class="btn btn-primary" href="#" download>Download .SVG</a>
+          <a id="btnDownloadDrawio" class="btn btn-secondary" href="#" download>Download .DRAWIO</a>
+        </div>
+      </div>
+
+      <!-- Diagram SVG Container -->
+      <div class="svg-viewport">
+        <div class="svg-wrapper" id="svgContainer">
+          <!-- Active SVG renders here -->
+        </div>
+      </div>
+
+      <!-- College Faculty Talking Points -->
+      <div class="details-panel">
+        <div class="panel-card">
+          <div class="panel-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Key Architectural Highlights &amp; Faculty Evaluation Points
+          </div>
+          <ul class="talking-points-list" id="talkingPointsList">
+            <!-- Injected via JavaScript -->
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const DIAGRAMS = [{"id": "01", "file": "01-system-architecture", "title": "Overall System Architecture", "subtitle": "End-to-end multi-tier micro-modular architecture: React 19 SPA, Render Reverse Proxy, Spring Boot 3.4.3 backend, and PostgreSQL", "category": "System Overview", "badge": "TIER 1-4", "talkingPoints": ["Demonstrates complete separation of concerns between client SPA, cloud edge proxy, Spring Boot application services, and PostgreSQL database.", "Render edge terminates SSL/TLS and forwards original client IP via X-Forwarded-For header.", "Spring Boot 3.4.3 backend leverages Spring Security 6, JWT, and rate limiting for robust defense-in-depth.", "PostgreSQL database utilizes Flyway migrations (V1 to V22) ensuring repeatable, zero-drift schema evolution."]}, {"id": "02", "file": "02-customer-workflow", "title": "Customer Marketplace Journey", "subtitle": "End-to-end customer experience: discovery, catalog search, cart validation, Razorpay checkout, order fulfillment, and account security", "category": "Commerce", "badge": "6 STAGES", "talkingPoints": ["Covers the complete 6-stage lifecycle: Discovery, Cart, Checkout, Razorpay Payment, Fulfillment, and Security.", "Demonstrates Razorpay webhook integration with HMAC-SHA256 signature verification for zero-fraud order confirmation.", "Verified purchase review pipeline ensures only delivered orders can submit feedback, preventing competitor manipulation.", "Customer self-service login activity view promotes transparency with approximate city-level location logs."]}, {"id": "03", "file": "03-seller-workflow", "title": "Multi-Vendor Seller Operations", "subtitle": "Merchant journey: registration & verification, catalog management, inventory tracking, order fulfillment, and financial analytics", "category": "Commerce", "badge": "5 PHASES", "talkingPoints": ["Enforces strict multi-tenant row-level data scoping: merchants can only access and mutate their own inventory.", "Catalog publishing engine supports image uploads to secure storage, rich specifications, and Indian Rupee (INR) pricing.", "Multi-vendor order partitioning allows independent order line item fulfillment across different merchants.", "Comprehensive seller financial analytics breakdown gross sales, platform commissions, and net payouts."]}, {"id": "04", "file": "04-admin-workflow", "title": "Administrator Platform Governance", "subtitle": "Admin console workflows: executive analytics, user & seller verification, catalog moderation, financial audits, and security telemetry", "category": "Governance", "badge": "5 PILLARS", "talkingPoints": ["Executive dashboard provides platform-wide GMV, order velocity, and system health status.", "Merchant verification pipeline gives administrators control to approve new stores or suspend compromised accounts.", "Full administrative access to the Semester 2 login activity audit trail with server-side pagination and multi-attribute filters.", "Includes configurable data retention cleanup (90 to 730 days) adhering to enterprise data minimization principles."]}, {"id": "05", "file": "05-authentication-architecture", "title": "Tri-Portal Role-Based Authentication", "subtitle": "Zero-trust identity architecture: portal selection, RateLimitingFilter, BCrypt password auth, Google OIDC token verification, and strict role separation", "category": "Security", "badge": "ZERO TRUST", "talkingPoints": ["Strict tri-portal role separation prevents cross-portal access (e.g. Customer accounts cannot authenticate through Seller portal).", "Administrator accounts are strictly forbidden from Google OAuth and require authorized internal credentials.", "RateLimitingFilter limits authentication requests to 5 req/min per IP, stopping brute-force dictionary attacks.", "Dual-engine authentication supports adaptive BCrypt salted hashing and cryptographic Google OIDC RSA signature validation."]}, {"id": "06", "file": "06-password-reset-workflow", "title": "Secure 6-Digit OTP Password Reset", "subtitle": "Enterprise password recovery: cryptographic OTP generation, Brevo SMTP relay, dark CyberForge branded HTML email, and single-use reset token", "category": "Security", "badge": "BREVO SMTP", "talkingPoints": ["Brevo SMTP relay integration via Spring JavaMailSender (smtp-relay.brevo.com:587) with STARTTLS encryption.", "Sends professional dark CyberForge HTML email template with large 28px letter-spaced OTP and 10-minute expiry notice.", "Timing-attack resistant: uniform response latency returned even for non-existent email addresses.", "Single-use cryptographic Reset Token invalidates OTP after successful password update, preventing replay attacks."]}, {"id": "07", "file": "07-login-activity-architecture", "title": "Semester 2 Login Activity Architecture", "subtitle": "Enterprise authentication telemetry: Render proxy IP resolution, geolocation caching, login count incrementation, self-service activity, and admin audits", "category": "Semester 2", "badge": "FLYWAY V22", "talkingPoints": ["V22 Flyway migration adds login_count, last_login_ip, and creates user_login_events with compound indexes.", "Render reverse proxy client IP extraction handles multi-proxy X-Forwarded-For chains reliably.", "Resilient IP geolocation service features in-memory LRU cache, loopback RFC 1918 detection, and 1.5s non-blocking timeout.", "Metrics isolation: login_count increments ONLY on successful authentications; failed attempts are audited separately with failure codes."]}, {"id": "08", "file": "08-security-privacy-workflow", "title": "Security, Threat Mitigation & Privacy", "subtitle": "Defense-in-depth security principles: brute-force mitigation, cross-role tampering defense, privacy-compliant geolocation, zero-credential logging, and data retention", "category": "Privacy", "badge": "DPDP / GDPR", "talkingPoints": ["Privacy-by-design: Geolocation is approximate (city/country level derived from network IP routing) with ZERO physical GPS tracking.", "Zero sensitive credential logging: Passwords, OTPs, JWT bearer tokens, and SMTP keys are NEVER recorded in database or logs.", "Self-service access scoping: Customers and sellers can only inspect their own personal login activity records.", "Configurable data retention purge supports automated or admin-triggered deletion of historical records older than 90-365 days."]}, {"id": "09", "file": "09-database-architecture", "title": "Relational Database Schema & ERD", "subtitle": "PostgreSQL multi-vendor database model: 10 major entities, primary/foreign key relationships, Flyway migrations (V1-V22), and telemetry tables", "category": "Database", "badge": "10 ENTITIES", "talkingPoints": ["Comprehensive 10-entity schema: users, user_login_events, categories, products, orders, order_items, payments, reviews, user_events, and addresses.", "Demonstrates 1:N and N:M multi-vendor relational modeling with primary and foreign key integrity constraints.", "Compound B-tree indexes optimize high-velocity search queries, user history lookups, and administrative filter operations.", "user_events and user_login_events provide foundational behavioral datasets for Semester 2 Fraud Detection Machine Learning models."]}];
+    let currentIndex = 0;
+    let currentZoom = 1;
+
+    function renderNav() {
+      const container = document.getElementById('navItems');
+      container.innerHTML = DIAGRAMS.map((d, idx) => `
+        <div class="diagram-nav-item ${idx === currentIndex ? 'active' : ''}" onclick="selectDiagram(${idx})">
+          <div class="nav-top">
+            <span class="nav-num">#${d.id}</span>
+            <span class="nav-badge">${d.badge}</span>
+          </div>
+          <div class="nav-title">${d.title}</div>
+          <div class="nav-cat">${d.category}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadDiagram(index) {
+      currentIndex = index;
+      const d = DIAGRAMS[index];
+
+      document.getElementById('viewTitle').textContent = d.title;
+      document.getElementById('viewSubtitle').textContent = d.subtitle;
+
+      // Update downloads
+      const svgPath = d.file + '.svg';
+      const drawioPath = d.file + '.drawio';
+      document.getElementById('btnDownloadSvg').href = svgPath;
+      document.getElementById('btnDownloadSvg').setAttribute('download', svgPath);
+      document.getElementById('btnDownloadDrawio').href = drawioPath;
+      document.getElementById('btnDownloadDrawio').setAttribute('download', drawioPath);
+
+      // Render talking points
+      document.getElementById('talkingPointsList').innerHTML = d.talkingPoints.map(pt => `
+        <li class="talking-point-item">
+          <span class="bullet"></span>
+          <span>${pt}</span>
+        </li>
+      `).join('');
+
+      // Fetch and embed SVG
+      try {
+        const resp = await fetch(svgPath);
+        const text = await resp.text();
+        document.getElementById('svgContainer').innerHTML = text;
+      } catch (err) {
+        document.getElementById('svgContainer').innerHTML = `
+          <div style="padding: 3rem; text-align: center; color: #f43f5e;">
+            <p>Error loading SVG diagram: ${err.message}</p>
+          </div>
+        `;
+      }
+
+      resetZoom();
+      renderNav();
+    }
+
+    function selectDiagram(idx) {
+      loadDiagram(idx);
+    }
+
+    function zoomIn() {
+      currentZoom = Math.min(currentZoom + 0.15, 2.0);
+      applyZoom();
+    }
+
+    function zoomOut() {
+      currentZoom = Math.max(currentZoom - 0.15, 0.6);
+      applyZoom();
+    }
+
+    function resetZoom() {
+      currentZoom = 1.0;
+      applyZoom();
+    }
+
+    function applyZoom() {
+      document.getElementById('svgContainer').style.transform = `scale(${currentZoom})`;
+    }
+
+    // Init on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderNav();
+      loadDiagram(0);
+    });
+  </script>
+</body>
+</html>

@@ -2,8 +2,9 @@
  * PortalSelection.jsx — Role-Based Portal Selection Experience
  *
  * Inspired by the AI-ATS multi-portal layout and fully adapted to SHOPIVO's
- * CyberForge brand identity: Pure/Near Black (#050505), Dark Card (#101010),
- * Crisp Borders (#242424), Pure White (#FFFFFF), and Vibrant Emerald (#04DB7E).
+ * SHOPIVO – Role-Based Authentication Portal Selection
+ * CodeChatura-inspired green identity: Refined Green (#0F8F6B),
+ * Theme-aware Surfaces, Crisp Borders, and Crisp Typography.
  *
  * Provides distinct access paths for:
  * 1. Customer Portal  — Shopping, Orders, Wishlists, Reviews
@@ -59,7 +60,7 @@ export default function PortalSelection() {
       description:
         'Discover products, shop your favourite brands, manage orders, track deliveries and enjoy a personalized shopping experience.',
       icon: ShoppingBag,
-      accentColor: '#04DB7E',
+      accentColor: 'var(--color-primary)',
       badge: 'Shopper Hub',
       primaryAction: {
         label: 'CONTINUE AS CUSTOMER',
@@ -86,7 +87,7 @@ export default function PortalSelection() {
       description:
         'Showcase products, manage inventory, process customer orders, track sales revenue and grow your business with advanced analytics.',
       icon: Store,
-      accentColor: '#04DB7E',
+      accentColor: 'var(--color-primary)',
       badge: 'Merchant Center',
       primaryAction: {
         label: 'CONTINUE AS SELLER',
@@ -113,7 +114,7 @@ export default function PortalSelection() {
       description:
         'Comprehensive administration dashboard to oversee marketplace operations, manage users and sellers, and monitor platform activity.',
       icon: ShieldCheck,
-      accentColor: '#04DB7E',
+      accentColor: 'var(--color-primary)',
       badge: 'Restricted Access',
       primaryAction: {
         label: 'ADMINISTRATOR SIGN IN',
@@ -180,8 +181,8 @@ export default function PortalSelection() {
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#04DB7E'
-              e.currentTarget.style.borderColor = '#04DB7E'
+              e.currentTarget.style.color = 'var(--color-primary)'
+              e.currentTarget.style.borderColor = 'var(--color-primary)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-text-secondary)'
@@ -218,13 +219,13 @@ export default function PortalSelection() {
               padding: '0.35rem 0.85rem',
               borderRadius: '9999px',
               backgroundColor: 'var(--color-primary-subtle)',
-              border: '1px solid rgba(4, 219, 126, 0.3)',
+              border: '1px solid rgba(15, 143, 107, 0.3)',
               marginBottom: '1rem',
               fontSize: '0.75rem',
               fontWeight: 600,
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              color: '#04DB7E',
+              color: 'var(--color-primary)',
             }}
           >
             <Sparkles size={13} />
@@ -241,7 +242,7 @@ export default function PortalSelection() {
               marginBottom: '0.75rem',
             }}
           >
-            Welcome to <span style={{ color: '#04DB7E' }}>SHOPIVO</span>
+            Welcome to <span style={{ color: 'var(--color-primary)' }}>SHOPIVO</span>
           </h1>
 
           <p
@@ -287,8 +288,8 @@ export default function PortalSelection() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)'
-                  e.currentTarget.style.borderColor = '#04DB7E'
-                  e.currentTarget.style.boxShadow = '0 12px 30px -4px rgba(4, 219, 126, 0.15)'
+                  e.currentTarget.style.borderColor = 'var(--color-primary)'
+                  e.currentTarget.style.boxShadow = '0 12px 30px -4px rgba(15, 143, 107, 0.2)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)'
@@ -313,11 +314,11 @@ export default function PortalSelection() {
                         height: '52px',
                         borderRadius: '12px',
                         backgroundColor: 'var(--color-primary-subtle)',
-                        border: '1px solid rgba(4, 219, 126, 0.25)',
+                        border: '1px solid rgba(15, 143, 107, 0.25)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#04DB7E',
+                        color: 'var(--color-primary)',
                       }}
                     >
                       <IconComponent size={26} strokeWidth={2.2} />
@@ -353,7 +354,7 @@ export default function PortalSelection() {
                   <p
                     style={{
                       fontSize: '0.8125rem',
-                      color: '#04DB7E',
+                      color: 'var(--color-primary)',
                       fontWeight: 500,
                       marginBottom: '1rem',
                     }}
@@ -418,7 +419,7 @@ export default function PortalSelection() {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: '#04DB7E',
+                              color: 'var(--color-primary)',
                               flexShrink: 0,
                             }}
                           >
@@ -444,24 +445,24 @@ export default function PortalSelection() {
                       width: '100%',
                       padding: '0.875rem 1.25rem',
                       borderRadius: '10px',
-                      backgroundColor: '#04DB7E',
-                      color: '#050505',
+                      backgroundColor: 'var(--color-primary)',
+                      color: '#FFFFFF',
                       fontWeight: 700,
                       fontSize: '0.875rem',
                       letterSpacing: '0.04em',
                       textDecoration: 'none',
                       transition: 'all 0.15s ease',
-                      boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                      boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#00C77A'
+                      e.currentTarget.style.backgroundColor = 'var(--color-primary-hover, #0B7A5B)'
                       e.currentTarget.style.transform = 'translateY(-1px)'
-                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(4, 219, 126, 0.4)'
+                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(15, 143, 107, 0.4)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#04DB7E'
+                      e.currentTarget.style.backgroundColor = 'var(--color-primary)'
                       e.currentTarget.style.transform = 'translateY(0)'
-                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(4, 219, 126, 0.25)'
+                      e.currentTarget.style.boxShadow = '0 2px 10px rgba(15, 143, 107, 0.25)'
                     }}
                   >
                     <span>{portal.primaryAction.label}</span>
@@ -499,7 +500,7 @@ export default function PortalSelection() {
                       <Link
                         to={`${portal.primaryAction.route}?mode=signin`}
                         style={{
-                          color: '#04DB7E',
+                          color: 'var(--color-primary)',
                           textDecoration: 'none',
                           fontWeight: 600,
                         }}
@@ -514,7 +515,7 @@ export default function PortalSelection() {
                           textDecoration: 'none',
                           fontWeight: 500,
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#04DB7E')}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
                         onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
                       >
                         Sign Up
@@ -527,7 +528,7 @@ export default function PortalSelection() {
                           textDecoration: 'none',
                           fontWeight: 500,
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#04DB7E')}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
                         onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
                       >
                         Google
@@ -561,7 +562,7 @@ export default function PortalSelection() {
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Lock size={13} color="#04DB7E" /> 256-Bit SSL Encrypted
+              <Lock size={13} color="var(--color-primary)" /> 256-Bit SSL Encrypted
             </span>
             <span style={{ color: 'var(--color-border)' }}>|</span>
             <span>Role-Enforced JWT Authentication</span>

@@ -92,7 +92,8 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
           width: '300px',
           maxWidth: '86vw',
           height: '100%',
-          backgroundColor: 'var(--color-surface)',
+          backgroundColor: 'var(--color-sidebar-bg, var(--color-sidebar))',
+          borderRight: '1px solid var(--color-sidebar-border, var(--color-border))',
           display: 'flex',
           flexDirection: 'column',
           boxShadow: 'var(--shadow-xl)',
@@ -106,8 +107,8 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
         <div
           style={{
             padding: '0.85rem 1rem',
-            backgroundColor: 'var(--color-surface)',
-            borderBottom: '1px solid var(--color-border)',
+            backgroundColor: 'var(--color-sidebar-header-bg, var(--color-sidebar))',
+            borderBottom: '1px solid var(--color-sidebar-border, var(--color-border))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -128,16 +129,16 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
               border: 'none',
               borderRadius: 'var(--radius-md)',
               cursor: 'pointer',
-              color: 'var(--color-text-secondary)',
+              color: 'var(--color-sidebar-icon, var(--color-text-secondary))',
               transition: 'background-color var(--transition-fast), color var(--transition-fast)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-surface-raised)'
-              e.currentTarget.style.color = 'var(--color-text-primary)'
+              e.currentTarget.style.backgroundColor = 'var(--color-sidebar-hover-bg, var(--color-surface-raised))'
+              e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent'
-              e.currentTarget.style.color = 'var(--color-text-secondary)'
+              e.currentTarget.style.color = 'var(--color-sidebar-icon, var(--color-text-secondary))'
             }}
           >
             <X size={20} />
@@ -343,7 +344,7 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                   fontWeight: '700',
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',
-                  color: 'var(--color-text-muted)',
+                  color: 'var(--color-sidebar-text-secondary, var(--color-text-muted))',
                 }}
               >
                 {section.title}
@@ -371,27 +372,39 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
                       borderRadius: 'var(--radius-md)',
                       minHeight: '44px',
                       fontSize: '0.875rem',
-                      fontWeight: isActive ? '700' : '500',
-                      color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-primary)',
-                      backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
-                      borderLeft: `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
+                      fontWeight: isActive ? '600' : '500',
+                      color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-text-primary, var(--color-text-primary))',
+                      backgroundColor: isActive ? 'var(--color-sidebar-active-bg, var(--color-primary))' : 'transparent',
+                      borderLeft: 'none',
                       textDecoration: 'none',
                       transition: 'all var(--transition-fast)',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-sidebar-hover-bg, var(--color-nav-hover-bg))'
+                        e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = 'transparent'
+                        e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
+                      }
                     }}
                   >
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2.25 : 1.75}
-                      color={isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)'}
+                      color={isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-icon, var(--color-text-secondary))'}
                       style={{ flexShrink: 0 }}
                     />
-                    <span style={{ flex: 1 }}>{item.label}</span>
+                    <span style={{ flex: 1, color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'inherit' }}>{item.label}</span>
 
                     {badgeCount > 0 && (
                       <span
                         style={{
-                          backgroundColor: 'var(--color-primary)',
-                          color: 'var(--color-primary-contrast, #172117)',
+                          backgroundColor: isActive ? 'rgba(255, 255, 255, 0.22)' : 'var(--color-sidebar-active-bg, var(--color-primary))',
+                          color: 'var(--color-sidebar-active-text, #FFFFFF)',
                           fontSize: '0.65rem',
                           fontWeight: '800',
                           borderRadius: 'var(--radius-full)',
@@ -419,8 +432,8 @@ const CustomerAccountDrawer = ({ isOpen, onClose, unreadNotifications = 0 }) => 
           style={{
             marginTop: 'auto',
             padding: '1rem',
-            borderTop: '1px solid var(--color-border)',
-            backgroundColor: 'var(--color-surface)',
+            borderTop: '1px solid var(--color-sidebar-border, var(--color-border))',
+            backgroundColor: 'var(--color-sidebar-bg, var(--color-surface))',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem',

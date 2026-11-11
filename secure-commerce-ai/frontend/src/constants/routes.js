@@ -43,6 +43,7 @@ export const ROUTES = {
   CUSTOMER_RETURNS: '/customer/returns',
   CUSTOMER_REFUNDS: '/customer/refunds',
   CUSTOMER_NOTIFICATIONS: '/customer/notifications',
+  CUSTOMER_LOGIN_ACTIVITY: '/customer/login-activity',
 
   // Seller
   SELLER_DASHBOARD: '/seller/dashboard',
@@ -57,6 +58,7 @@ export const ROUTES = {
   SELLER_ANALYTICS: '/seller/analytics',
   SELLER_REVIEWS: '/seller/reviews',
   SELLER_NOTIFICATIONS: '/seller/notifications',
+  SELLER_LOGIN_ACTIVITY: '/seller/login-activity',
 
   // Admin
   ADMIN_PROFILE: '/admin/profile',
@@ -75,6 +77,7 @@ export const ROUTES = {
   ADMIN_REPORTS: '/admin/reports',
   ADMIN_ANALYTICS: '/admin/analytics',
   ADMIN_NOTIFICATIONS: '/admin/notifications',
+  ADMIN_LOGIN_HISTORY: '/admin/login-history',
 }
 
 // Role constants — must match backend role names exactly

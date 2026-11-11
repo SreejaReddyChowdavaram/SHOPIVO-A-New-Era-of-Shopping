@@ -1,5 +1,5 @@
 /**
- * paymentService.js — Production Razorpay Test Mode & COD Payment API calls.
+ * paymentService.js — Production Razorpay Live & COD Payment API calls.
  *
  * POST /api/payments/create-gateway-order   → initiates online Razorpay session
  * POST /api/payments/verify-gateway-payment → authoritatively verifies HMAC signature and gateway status

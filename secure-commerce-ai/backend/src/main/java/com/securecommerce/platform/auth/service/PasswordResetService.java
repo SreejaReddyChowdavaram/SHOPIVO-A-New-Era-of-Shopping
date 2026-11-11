@@ -50,7 +50,6 @@ public class PasswordResetService {
 
     /**
      * Request a 6-digit OTP code sent to the registered email address.
-     * Uses generic response messaging to prevent account enumeration.
      */
     @Transactional
     public Map<String, Object> requestOtp(ForgotPasswordRequestOtpRequest request) {
@@ -84,44 +83,46 @@ public class PasswordResetService {
             }
         }
 
-        // 2. Account lookup
+        // 3. Account lookup
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty()) {
-            log.info("Password reset requested for non-existent email: {} under portal: {}", email, portalRole);
-            return Map.of(
-                    "success", true,
-                    "message", "If an account is associated with this email for the " + portalRole + " Portal, a 6-digit verification code has been sent.",
-                    "maskedEmail", maskEmail(email),
-                    "cooldownSeconds", resendCooldownSeconds,
-                    "expiresInMinutes", otpExpiryMinutes
+            log.warn("Password reset requested for non-existent email: {} under portal: {}", email, portalRole);
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No account found with email address: " + email + " for the " + portalRole + " Portal."
             );
         }
 
         User user = userOpt.get();
 
-        // 3. Strict Portal Role Verification
+        // 4. Strict Portal Role Verification
         if (user.getRole() != portalRole) {
             log.warn("Password reset role mismatch: user {} is registered as {}, but attempted reset via {} Portal",
                     email, user.getRole(), portalRole);
-            // Return generic message to avoid leaking role information to unauthenticated users
-            return Map.of(
-                    "success", true,
-                    "message", "If an account is associated with this email for the " + portalRole + " Portal, a 6-digit verification code has been sent.",
-                    "maskedEmail", maskEmail(email),
-                    "cooldownSeconds", resendCooldownSeconds,
-                    "expiresInMinutes", otpExpiryMinutes
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "This email is registered under the " + user.getRole() + " Portal. Please switch to the " + user.getRole() + " Portal to reset password."
             );
         }
 
-        // 4. Invalidate any existing active OTPs for this user
+        // 5. Account status verification (enabled/active)
+        if (!user.isEnabled()) {
+            log.warn("Password reset requested for inactive or disabled account: {} under portal: {}", email, portalRole);
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "This account is currently disabled. Please contact administrator."
+            );
+        }
+
+        // 6. Invalidate any existing active OTPs for this user
         otpRepository.invalidatePreviousOtps(user.getId(), "PASSWORD_RESET", Instant.now());
 
-        // 5. Generate cryptographically secure 6-digit OTP
+        // 7. Generate cryptographically secure 6-digit OTP
         int code = 100000 + secureRandom.nextInt(900000);
         String plainOtp = String.valueOf(code);
 
-        // 6. Save hashed OTP record
+        // 8. Save hashed OTP record
         PasswordResetOtp otpRecord = PasswordResetOtp.builder()
                 .userId(user.getId())
                 .email(email)
@@ -136,13 +137,16 @@ public class PasswordResetService {
 
         otpRepository.save(otpRecord);
 
-        // 7. Dispatch OTP via Email Service
+        // 9. Dispatch OTP via Email Service
         emailService.sendPasswordResetOtp(user.getEmail(), user.getFirstName(), plainOtp, otpExpiryMinutes);
+
+        log.info("Password reset OTP generated and accepted for transmission via SMTP to eligible user: {} ({})", email, portalRole);
 
         return Map.of(
                 "success", true,
                 "message", "A 6-digit verification code has been sent to your email address.",
-                "maskedEmail", maskEmail(email),
+                "email", email,
+                "maskedEmail", email,
                 "cooldownSeconds", resendCooldownSeconds,
                 "expiresInMinutes", otpExpiryMinutes
         );

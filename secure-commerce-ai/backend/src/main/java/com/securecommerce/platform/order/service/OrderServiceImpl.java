@@ -67,6 +67,23 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final com.securecommerce.platform.coupon.service.CouponService couponService;
+
+    private static final String REFERENCE_ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final java.security.SecureRandom SECURE_RANDOM = new java.security.SecureRandom();
+
+    private String generateUniqueOrderReference() {
+        for (int attempt = 0; attempt < 20; attempt++) {
+            StringBuilder sb = new StringBuilder("SHV-");
+            for (int i = 0; i < 8; i++) {
+                sb.append(REFERENCE_ALPHANUMERIC.charAt(SECURE_RANDOM.nextInt(REFERENCE_ALPHANUMERIC.length())));
+            }
+            String candidate = sb.toString();
+            if (!orderRepository.existsByOrderReference(candidate)) {
+                return candidate;
+            }
+        }
+        return "SHV-" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+    }
     private final PaymentRepository paymentRepository;
     private final ReturnRequestRepository returnRequestRepository;
     private final RefundRepository refundRepository;
@@ -90,8 +107,10 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid shipping address"));
 
         // 3. Create Order entity with snapshot address
+        String orderReference = generateUniqueOrderReference();
         Order order = Order.builder()
                 .customer(customer)
+                .orderReference(orderReference)
                 .shippingFullName(address.getFullName())
                 .shippingPhone(address.getPhone())
                 .shippingLine1(address.getLine1())
@@ -101,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
                 .shippingPostalCode(address.getPostalCode())
                 .shippingCountry(address.getCountry())
                 .status(OrderStatus.PENDING)
-                .paymentExpiresAt(java.time.Instant.now().plus(30, java.time.temporal.ChronoUnit.MINUTES))
+                .paymentExpiresAt(java.time.Instant.now().plus(10, java.time.temporal.ChronoUnit.MINUTES))
                 .subtotalAmount(BigDecimal.ZERO)
                 .discountAmount(BigDecimal.ZERO)
                 .totalAmount(BigDecimal.ZERO)

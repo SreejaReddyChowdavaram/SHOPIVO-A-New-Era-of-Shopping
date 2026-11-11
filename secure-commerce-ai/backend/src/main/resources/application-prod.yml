@@ -45,3 +45,12 @@ app:
   jwt:
     # Production strictly requires an externalized JWT_SECRET environment variable
     secret: ${JWT_SECRET}
+
+  razorpay:
+    # Production payment gateway configuration — defaults safely to TEST until explicit dual-confirmation
+    mode: ${RAZORPAY_MODE:TEST}
+    live-enabled: ${RAZORPAY_LIVE_ENABLED:false}
+    key-id: ${RAZORPAY_KEY_ID:}
+    key-secret: ${RAZORPAY_KEY_SECRET:}
+    webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
+    currency: ${RAZORPAY_CURRENCY:INR}

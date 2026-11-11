@@ -7,8 +7,8 @@
  * - NO Google Sign-In or OAuth / Social login.
  * - Strict backend role verification: portalRole = 'ADMIN'.
  * - Non-admin accounts are rejected with security audit logging.
- * - Styled in CyberForge High-Security Aesthetic: Pure Black (#050505), Dark Card (#101010),
- *   Vibrant Emerald (#04DB7E), Crimson Notice (#EF4444).
+ * - Styled with CodeChatura-inspired Theme: Background var(--color-bg), Card var(--color-surface),
+ *   Primary Green var(--color-primary), Crimson Notice (#EF4444).
  */
 
 import React, { useState, useEffect } from 'react'
@@ -157,8 +157,8 @@ export default function AdminAuth() {
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#04DB7E'
-              e.currentTarget.style.borderColor = '#04DB7E'
+              e.currentTarget.style.color = 'var(--color-primary)'
+              e.currentTarget.style.borderColor = 'var(--color-primary)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-text-secondary)'
@@ -313,7 +313,7 @@ export default function AdminAuth() {
                     fontSize: '0.875rem',
                     outline: 'none',
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                   onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                 />
               </div>
@@ -342,7 +342,7 @@ export default function AdminAuth() {
                   to={`${ROUTES.FORGOT_PASSWORD}?portal=ADMIN`}
                   style={{
                     fontSize: '0.75rem',
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     textDecoration: 'none',
                     fontWeight: 500,
                   }}
@@ -379,7 +379,7 @@ export default function AdminAuth() {
                     fontSize: '0.875rem',
                     outline: 'none',
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                   onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                 />
                 <button
@@ -410,8 +410,8 @@ export default function AdminAuth() {
                 width: '100%',
                 padding: '0.8125rem',
                 borderRadius: '10px',
-                backgroundColor: '#04DB7E',
-                color: '#050505',
+                backgroundColor: 'var(--color-primary)',
+                color: '#FFFFFF',
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 letterSpacing: '0.04em',
@@ -422,11 +422,11 @@ export default function AdminAuth() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                 transition: 'background-color 0.15s ease',
               }}
-              onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#00C77A')}
-              onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#04DB7E')}
+              onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary-hover)')}
+              onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
             >
               {loading ? <Loader2 size={18} className="spin" /> : <ShieldCheck size={18} strokeWidth={2.4} />}
               <span>{loading ? 'Authenticating...' : 'Sign In as Administrator'}</span>
@@ -447,7 +447,7 @@ export default function AdminAuth() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-secondary)', fontWeight: 600, marginBottom: '0.25rem' }}>
-              <KeyRound size={13} color="#04DB7E" />
+              <KeyRound size={13} color="var(--color-primary)" />
               <span>Audit Logging Active</span>
             </div>
             All authentication attempts, IP addresses, and administrator interactions are cryptographically recorded in the platform audit log.

@@ -117,6 +117,7 @@ import CustomerReviews from '@/pages/customer/Reviews'
 import Returns from '@/pages/customer/Returns'
 import Refunds from '@/pages/customer/Refunds'
 import CustomerNotifications from '@/pages/customer/Notifications'
+import CustomerLoginActivity from '@/pages/customer/LoginActivity'
 
 // Seller pages
 import SellerDashboard from '@/pages/seller/Dashboard'
@@ -130,6 +131,7 @@ import SellerOrderDetails from '@/pages/seller/OrderDetails'
 import SellerAnalytics from '@/pages/seller/Analytics'
 import SellerReviews from '@/pages/seller/Reviews'
 import SellerNotifications from '@/pages/seller/Notifications'
+import SellerLoginActivity from '@/pages/seller/LoginActivity'
 
 // Admin pages
 import AdminDashboard from '@/pages/admin/Dashboard'
@@ -148,6 +150,7 @@ import AdminReviews from '@/pages/admin/Reviews'
 import Reports from '@/pages/admin/Reports'
 import Analytics from '@/pages/admin/Analytics'
 import AdminNotifications from '@/pages/admin/Notifications'
+import LoginHistory from '@/pages/admin/LoginHistory'
 
 // Public pages
 import LandingPage from '@/pages/public/LandingPage'
@@ -206,6 +209,7 @@ const AppRoutes = () => {
             <Route path="/customer/returns"          element={<Returns />} />
             <Route path="/customer/refunds"          element={<Refunds />} />
             <Route path="/customer/notifications"    element={<CustomerNotifications />} />
+            <Route path="/customer/login-activity"   element={<CustomerLoginActivity />} />
           </Route>
         </Route>
       </Route>
@@ -226,6 +230,7 @@ const AppRoutes = () => {
           <Route path="/seller/analytics"          element={<SellerAnalytics />} />
           <Route path="/seller/reviews"            element={<SellerReviews />} />
           <Route path="/seller/notifications"      element={<SellerNotifications />} />
+          <Route path="/seller/login-activity"     element={<SellerLoginActivity />} />
         </Route>
       </Route>
 
@@ -240,6 +245,7 @@ const AppRoutes = () => {
           <Route path="/admin/sellers"                element={<AdminSellers />} />
           <Route path="/admin/sellers/:id"            element={<AdminSellerDetails />} />
           <Route path="/admin/sellers/verification"   element={<SellerVerification />} />
+          <Route path="/admin/login-history"          element={<LoginHistory />} />
           <Route path="/admin/products"               element={<AdminProducts />} />
           <Route path="/admin/orders"                 element={<AdminOrders />} />
           <Route path="/admin/orders/:id"             element={<AdminOrderDetails />} />

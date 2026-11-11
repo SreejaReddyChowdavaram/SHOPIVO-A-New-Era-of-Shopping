@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-11T00:00:00.000Z" agent="Shopivo CyberForge Architecture" version="21.0.0" type="device">
+  <diagram name="Tri-Portal Role-Based Authentication &amp; Session Architecture" id="diagram-1">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" background="#050505" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p1" value="Customer Portal (/auth/customer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="130" width="260" height="180" as="geometry"/></mxCell>
+        <mxCell id="p2" value="Seller Portal (/auth/seller)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="340" y="130" width="260" height="180" as="geometry"/></mxCell>
+        <mxCell id="p3" value="Admin Portal (/auth/admin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f43f5e;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="630" y="130" width="260" height="180" as="geometry"/></mxCell>
+        <mxCell id="p4" value="RateLimitingFilter (5 req/min)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="940" y="130" width="610" height="180" as="geometry"/></mxCell>
+        <mxCell id="p5" value="Engine A: BCrypt Password Authentication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="360" width="450" height="240" as="geometry"/></mxCell>
+        <mxCell id="p6" value="Engine B: Google OAuth 2.0 / OIDC Verification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="360" width="480" height="240" as="geometry"/></mxCell>
+        <mxCell id="p7" value="Role Boundary Gatekeeper &amp; Access Matrix" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f43f5e;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1040" y="360" width="510" height="240" as="geometry"/></mxCell>
+    
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

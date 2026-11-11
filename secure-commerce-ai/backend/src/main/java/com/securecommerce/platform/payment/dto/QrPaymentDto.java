@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Builder
 public record QrPaymentDto(
         Long orderId,
+        String orderReference,
         String mode,
         String qrCodeId,
         String imageUrl,

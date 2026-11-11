@@ -124,11 +124,11 @@ export default function AdminAnalyticsDashboard() {
       {/* ── Page Header & Quick Controls ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2.5">
             <span>Admin Analytics</span>
-            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[#04DB7E]" />}
+            {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[var(--color-primary)]" />}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1">
             Global marketplace GMV, customer &amp; merchant cohorts, order fulfillment lifecycle, and catalog velocity.
           </p>
         </div>
@@ -138,9 +138,9 @@ export default function AdminAnalyticsDashboard() {
             onClick={() => loadData(true)}
             disabled={loading || refreshing}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#DFE9E2] dark:border-[#242424] bg-white dark:bg-[#101010] text-slate-700 dark:text-slate-200 hover:bg-[#F5F8F5] dark:hover:bg-[#1C1C1C] transition-colors shadow-xs cursor-pointer disabled:opacity-60"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors shadow-xs cursor-pointer disabled:opacity-60"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[#04DB7E]' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[var(--color-primary)]' : ''}`} />
             <span>Refresh Data</span>
           </button>
         </div>
@@ -162,8 +162,8 @@ export default function AdminAnalyticsDashboard() {
 
       {loading ? (
         <div className="py-28 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#04DB7E]" />
-          <p className="text-xs font-medium text-slate-500">Aggregating platform intelligence across multi-tenant database...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
+          <p className="text-xs font-medium text-[var(--color-text-secondary)]">Aggregating platform intelligence across multi-tenant database...</p>
         </div>
       ) : (
         <div className="flex flex-col gap-6 sm:gap-7">
@@ -266,8 +266,8 @@ export default function AdminAnalyticsDashboard() {
                 subtitle="Monthly platform transaction value with refund deductions"
                 data={charts.monthlyGmv}
                 series={[
-                  { key: 'gmv', name: 'Gross Merchandise Value (₹)', color: '#04DB7E' },
-                  { key: 'netRevenue', name: 'Net Revenue (₹)', color: '#00C77A' }
+                  { key: 'gmv', name: 'Gross Merchandise Value (₹)', color: '#0F8F6B' },
+                  { key: 'netRevenue', name: 'Net Revenue (₹)', color: '#0B7A5B' }
                 ]}
                 isCurrency={true}
                 height={320}
@@ -294,8 +294,8 @@ export default function AdminAnalyticsDashboard() {
               subtitle="Completed deliveries vs cancelled orders"
               data={charts.platformOrderTrends}
               series={[
-                { key: 'totalOrders', name: 'Total Placed', color: '#04DB7E' },
-                { key: 'completedOrders', name: 'Delivered', color: '#00C77A' },
+                { key: 'totalOrders', name: 'Total Placed', color: '#0F8F6B' },
+                { key: 'completedOrders', name: 'Delivered', color: '#0B7A5B' },
                 { key: 'cancelledOrders', name: 'Cancelled', color: '#ef4444' },
               ]}
               height={320}
@@ -308,7 +308,7 @@ export default function AdminAnalyticsDashboard() {
               subtitle="New customer accounts and verified seller onboarding"
               data={charts.customerGrowth}
               series={[
-                { key: 'newCustomers', name: 'New Customers', color: '#04DB7E' },
+                { key: 'newCustomers', name: 'New Customers', color: '#0F8F6B' },
                 { key: 'newSellers', name: 'New Sellers', color: '#f59e0b' },
               ]}
               height={320}
@@ -323,7 +323,7 @@ export default function AdminAnalyticsDashboard() {
               subtitle="Ranked by total gross merchandise sales (₹)"
               data={charts.sellerPerformance}
               series={[
-                { key: 'grossSales', name: 'Gross Sales (₹)', color: '#04DB7E' }
+                { key: 'grossSales', name: 'Gross Sales (₹)', color: '#0F8F6B' }
               ]}
               layout="vertical"
               xKey="sellerName"
@@ -337,7 +337,7 @@ export default function AdminAnalyticsDashboard() {
               subtitle="Ranked by total unit volume sold"
               data={charts.productPerformance}
               series={[
-                { key: 'unitsSold', name: 'Units Sold', color: '#00C77A' }
+                { key: 'unitsSold', name: 'Units Sold', color: '#0F8F6B' }
               ]}
               layout="vertical"
               xKey="productName"
@@ -352,7 +352,7 @@ export default function AdminAnalyticsDashboard() {
                 subtitle="Orders placed compared against return and refund frequency"
                 data={charts.purchaseVsReturns}
                 series={[
-                  { key: 'ordersPlaced', name: 'Orders Placed', color: '#04DB7E' },
+                  { key: 'ordersPlaced', name: 'Orders Placed', color: '#0F8F6B' },
                   { key: 'ordersReturned', name: 'Orders Returned', color: '#f87171' },
                 ]}
                 xKey="month"
@@ -392,30 +392,30 @@ export default function AdminAnalyticsDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* New Customers List */}
-            <div className="rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5.5 shadow-xs">
+            <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5.5 shadow-xs">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Newly Registered Customers
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
                     Most recent user sign-ups
                   </p>
                 </div>
-                <span className="text-[11px] font-semibold text-[#087847] dark:text-[#04DB7E] bg-[#E5FFF2] dark:bg-[#09291B] border border-[#04DB7E]/40 dark:border-[#04DB7E]/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-subtle)] border border-[var(--color-border)] px-2 py-0.5 rounded-full flex items-center gap-1">
                   <UserCheck className="w-3.5 h-3.5" />
                   <span>Customers</span>
                 </span>
               </div>
-              <div className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
+              <div className="divide-y divide-[var(--color-border)] text-xs">
                 {recentActivity.newCustomers && recentActivity.newCustomers.length > 0 ? (
                   recentActivity.newCustomers.map((cust) => (
                     <div key={`cust-${cust.id}`} className="py-3 flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">
+                        <p className="font-semibold text-[var(--color-text-primary)]">
                           {cust.name || 'Anonymous Customer'}
                         </p>
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                        <p className="text-[11px] text-[var(--color-text-muted)]">
                           {cust.email}
                         </p>
                       </div>
@@ -433,13 +433,13 @@ export default function AdminAnalyticsDashboard() {
             </div>
 
             {/* New Sellers List */}
-            <div className="rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5.5 shadow-xs">
+            <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5.5 shadow-xs">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
                     Newly Onboarded Sellers
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
                     Most recent merchant registrations
                   </p>
                 </div>
@@ -448,19 +448,19 @@ export default function AdminAnalyticsDashboard() {
                   <span>Vendors</span>
                 </span>
               </div>
-              <div className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
+              <div className="divide-y divide-[var(--color-border)] text-xs">
                 {recentActivity.newSellers && recentActivity.newSellers.length > 0 ? (
                   recentActivity.newSellers.map((seller) => (
                     <div key={`seller-${seller.id}`} className="py-3 flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">
+                        <p className="font-semibold text-[var(--color-text-primary)]">
                           {seller.name || 'Merchant'}
                         </p>
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                        <p className="text-[11px] text-[var(--color-text-muted)]">
                           {seller.email}
                         </p>
                       </div>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#E5FFF2] text-[#087847] dark:bg-[#09291B] dark:text-[#04DB7E] border border-[#04DB7E]/40 dark:border-[#04DB7E]/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--color-primary-subtle)] text-[var(--color-primary)] border border-[var(--color-border)]">
                         {seller.enabled ? 'Approved' : 'Pending'}
                       </span>
                     </div>

@@ -1,0 +1,507 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1040" width="100%" height="100%" style="background:#050505; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#04DB7E" stop-opacity="0.22" />
+      <stop offset="60%" stop-color="#04DB7E" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#050505" stop-opacity="0.0" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141414" />
+      <stop offset="100%" stop-color="#0c0c0c" />
+    </linearGradient>
+    <linearGradient id="tierGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161616" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.8" />
+    </linearGradient>
+
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+    <filter id="cardGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#04DB7E" flood-opacity="0.25"/>
+    </filter>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#04DB7E" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrow-rose" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f43f5e" />
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#71717a" />
+    </marker>
+
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="30" y2="0" stroke="#121212" stroke-width="0.8" />
+      <line x1="0" y1="0" x2="0" y2="30" stroke="#121212" stroke-width="0.8" />
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#050505" />
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  <rect x="12" y="12" width="1576" height="1016" rx="14" fill="none" stroke="#222222" stroke-width="1.2" />
+
+  <!-- Header Banner -->
+  <rect x="24" y="24" width="1552" height="76" rx="12" fill="#0d0d0d" stroke="#262626" stroke-width="1" />
+  <rect x="24" y="24" width="1552" height="76" rx="12" fill="url(#headerGrad)" />
+  <line x1="24" y1="100" x2="1576" y2="100" stroke="#04DB7E" stroke-opacity="0.35" stroke-width="1.5" />
+
+  <!-- Brand Glyph & Title -->
+  <circle cx="56" cy="62" r="18" fill="#141414" stroke="#04DB7E" stroke-width="2" />
+  <polygon points="52,54 64,62 52,70" fill="#04DB7E" />
+
+  <text x="88" y="55" fill="#FFFFFF" font-size="20" font-weight="700" letter-spacing="0.5">SHOPIVO <tspan fill="#04DB7E">|</tspan> Overall SHOPIVO System Architecture</text>
+  <text x="88" y="77" fill="#888888" font-size="12" font-weight="400">End-to-end multi-tier micro-modular architecture: React 19 SPA, Render Reverse Proxy, Spring Boot 3.4.3 backend, and PostgreSQL database</text>
+
+  <!-- Faculty Demo Badge -->
+  <rect x="1310" y="44" width="250" height="36" rx="8" fill="#141414" stroke="#04DB7E" stroke-opacity="0.5" stroke-width="1" />
+  <circle cx="1328" cy="62" r="4.5" fill="#04DB7E" />
+  <text x="1342" y="66" fill="#EEEEEE" font-size="11" font-weight="600" letter-spacing="0.5">COLLEGE FACULTY DEMO</text>
+
+  <!-- Body -->
+
+    <!-- TIER 1: CLIENT TIER -->
+    <rect x="35" y="115" width="1530" height="155" rx="12" fill="url(#tierGrad)" stroke="#222" stroke-width="1.2" />
+    <text x="50" y="138" fill="#04DB7E" font-size="11" font-weight="700" letter-spacing="1">TIER 1: FRONTEND CLIENT LAYER (REACT 19 + VITE 8.2.1)</text>
+    
+  <g transform="translate(50, 150)" filter="url(#shadow)">
+    <rect width="340" height="105" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="340" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="340" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="340" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="52.8" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">CLIENT</text>
+    <text x="66.8" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Customer Marketplace SPA</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Product Discovery, Search &amp; Filters</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Cart, Wishlist &amp; Razorpay Checkout</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Self-Service Login Activity &amp; Orders</text>
+          </g>
+  <g transform="translate(420, 150)" filter="url(#shadow)">
+    <rect width="340" height="105" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="340" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="340" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="340" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="52.8" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">CLIENT</text>
+    <text x="66.8" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Seller Portal Console</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Store Onboarding &amp; Product Catalog</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Inventory Control &amp; Order Processing</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Revenue Analytics &amp; Login Audits</text>
+          </g>
+  <g transform="translate(790, 150)" filter="url(#shadow)">
+    <rect width="340" height="105" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="340" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="340" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="340" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="52.8" height="18" rx="4" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f43f5e" font-size="9" font-weight="700" letter-spacing="0.5">CLIENT</text>
+    <text x="66.8" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Administrator Console</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f43f5e" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Platform Governance &amp; User Directory</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f43f5e" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Seller Verification &amp; Store Approval</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f43f5e" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Login Telemetry Audit &amp; Retention Purge</text>
+          </g>
+  <g transform="translate(1160, 150)" filter="url(#shadow)">
+    <rect width="380" height="105" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="380" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="380" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="380" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="52.8" height="18" rx="4" fill="#a855f7" fill-opacity="0.15" stroke="#a855f7" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#a855f7" font-size="9" font-weight="700" letter-spacing="0.5">SHARED</text>
+    <text x="66.8" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Shared Client Services</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#a855f7" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Redux Toolkit Global State &amp; Auth Slice</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#a855f7" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">React Router v7 RoleRoute Guard</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#a855f7" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Axios HTTP Client + JWT Interceptors</text>
+          </g>
+    <!-- TIER 2: EDGE & PROXY -->
+    <rect x="35" y="295" width="1530" height="95" rx="12" fill="url(#tierGrad)" stroke="#222" stroke-width="1.2" />
+    <text x="50" y="318" fill="#38bdf8" font-size="11" font-weight="700" letter-spacing="1">TIER 2: EDGE INGRESS, REVERSE PROXY &amp; SECURITY FIREWALL (RENDER CLOUD)</text>
+    
+  <g transform="translate(50, 330)" filter="url(#shadow)">
+    <rect width="470" height="50" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="470" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="470" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="470" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="39.2" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">EDGE</text>
+    <text x="53.2" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Render Cloud Edge Proxy</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">TLS 1.3 Termination, HTTPS Redirection, DDoS Protection</text>
+          </g>
+  <g transform="translate(550, 330)" filter="url(#shadow)">
+    <rect width="480" height="50" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="480" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="480" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="480" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="46.0" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">PROXY</text>
+    <text x="60.0" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Proxy IP Forwarding Header</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">X-Forwarded-For: &amp;lt;client-ip&amp;gt;, &amp;lt;proxy-1&amp;gt;, &amp;lt;proxy-2&amp;gt; Forwarding</text>
+          </g>
+  <g transform="translate(1060, 330)" filter="url(#shadow)">
+    <rect width="480" height="50" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="480" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="480" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="480" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">GATEWAY</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Global Rate Limiting &amp;amp; CORS</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Origin Verification, Context-Path: /api, Pre-flight CORS Policy</text>
+          </g>
+    <!-- TIER 3: BACKEND APPLICATION TIER -->
+    <rect x="35" y="415" width="1530" height="340" rx="12" fill="url(#tierGrad)" stroke="#222" stroke-width="1.2" />
+    <text x="50" y="438" fill="#04DB7E" font-size="11" font-weight="700" letter-spacing="1">TIER 3: SECURECOMMERCE CORE APPLICATION BACKEND (SPRING BOOT 3.4.3 / JAVA 21)</text>
+    
+  <g transform="translate(50, 455)" filter="url(#cardGlow)">
+    <rect width="360" height="130" rx="10" fill="url(#cardGrad)" stroke="#04DB7E" stroke-width="1.5" />
+    <rect x="0" y="0" width="360" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="360" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="360" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">SECURITY</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Security &amp; Authentication</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">JwtAuthFilter: Bearer Token Validation</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">RateLimitingFilter: 5 req/min Auth Protection</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">@PreAuthorize Role-Based Method Security</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">BCryptPasswordEncoder (Cost factor 10)</text>
+          </g>
+  <g transform="translate(440, 455)" filter="url(#shadow)">
+    <rect width="350" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="350" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="350" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="350" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">SERVICE</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Identity &amp; Auth Services</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">AuthService: Password login &amp; registration</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">GoogleAuthService: Official OIDC verifier</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">PasswordResetService: 6-digit OTP engine</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Strict Cross-Portal Access Enforcement</text>
+          </g>
+  <g transform="translate(820, 455)" filter="url(#shadow)">
+    <rect width="360" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="360" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="360" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="360" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">SERVICE</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Marketplace Core Services</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">ProductService: Catalog &amp; Specification CRUD</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">OrderService: Multi-item fulfillment &amp; state</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">PaymentService: Razorpay order &amp; signature</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">ReviewService: Verified buyer rating system</text>
+          </g>
+  <g transform="translate(1210, 455)" filter="url(#cardGlow)">
+    <rect width="330" height="130" rx="10" fill="url(#cardGrad)" stroke="#f59e0b" stroke-width="1.5" />
+    <rect x="0" y="0" width="330" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="330" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f59e0b" font-size="9" font-weight="700" letter-spacing="0.5">RESEARCH</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Telemetry &amp; Analytics</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f59e0b" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">EventLoggingService: Telemetry tracking</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f59e0b" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">EventContextResolver: Proxy unwrapping</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f59e0b" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">IpGeolocationService: Geo lookup &amp; cache</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#f59e0b" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">LoginActivityService: Audit trail engine</text>
+          </g>
+  <g transform="translate(50, 605)" filter="url(#shadow)">
+    <rect width="360" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="360" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="360" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="360" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="80.0" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">CONTROLLER</text>
+    <text x="94.0" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Authentication Controllers</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">AuthController: /api/auth/login, /register</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">GoogleAuthController: /api/auth/google</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">PasswordResetController: /forgot-password</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">UserLoginEventController: /auth/login-history</text>
+          </g>
+  <g transform="translate(440, 605)" filter="url(#shadow)">
+    <rect width="350" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="350" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="350" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="350" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="80.0" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">CONTROLLER</text>
+    <text x="94.0" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Commerce REST Controllers</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">ProductController: Public &amp; Seller catalog</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">OrderController: Customer order lifecycle</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">PaymentController: Razorpay checkout &amp; hook</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">ReviewController: Ratings &amp; reviews API</text>
+          </g>
+  <g transform="translate(820, 605)" filter="url(#shadow)">
+    <rect width="360" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="360" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="360" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="360" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="80.0" height="18" rx="4" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f43f5e" font-size="9" font-weight="700" letter-spacing="0.5">CONTROLLER</text>
+    <text x="94.0" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Administration Controllers</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f43f5e" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">AdminUserController: Suspend / activate accounts</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f43f5e" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">AdminSellerController: Verification review</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f43f5e" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">AdminEventController: Raw research dataset export</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#f43f5e" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">AdminLoginEventController: /admin/login-events</text>
+          </g>
+  <g transform="translate(1210, 605)" filter="url(#shadow)">
+    <rect width="330" height="130" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="330" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="330" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="86.8" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">PERSISTENCE</text>
+    <text x="100.8" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Spring Data Repositories</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">UserRepository &amp; UserLoginEventRepository</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">ProductRepository &amp; CategoryRepository</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">OrderRepository &amp; PaymentRepository</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">UserEventRepository (Telemetry store)</text>
+          </g>
+    <!-- TIER 4: DATA & EXTERNAL INTEGRATIONS -->
+    <rect x="35" y="780" width="1530" height="195" rx="12" fill="url(#tierGrad)" stroke="#222" stroke-width="1.2" />
+    <text x="50" y="803" fill="#a855f7" font-size="11" font-weight="700" letter-spacing="1">TIER 4: RELATIONAL DATABASE &amp; THIRD-PARTY INTEGRATION ECOSYSTEM</text>
+    
+  <g transform="translate(50, 820)" filter="url(#cardGlow)">
+    <rect width="420" height="140" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5" />
+    <rect x="0" y="0" width="420" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="420" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="420" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">DATABASE</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">PostgreSQL Database (Render Cloud)</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Flyway Database Migrations (V1__init through V22)</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">users: login_count, last_login_ip, last_login_at</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">user_login_events: Dedicated audit trail table</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">HikariCP Connection Pool (Max: 10, Timeout: 30s)</text>
+          </g>
+  <g transform="translate(500, 820)" filter="url(#shadow)">
+    <rect width="330" height="140" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="330" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="330" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#10b981" font-size="9" font-weight="700" letter-spacing="0.5">EXTERNAL</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Brevo SMTP Relay</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#10b981" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Host: smtp-relay.brevo.com:587</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#10b981" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">JavaMailSender with STARTTLS</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#10b981" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Dynamic 6-digit OTP delivery</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#10b981" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">CyberForge Branded HTML Templates</text>
+          </g>
+  <g transform="translate(860, 820)" filter="url(#shadow)">
+    <rect width="330" height="140" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="330" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="330" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">EXTERNAL</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Razorpay Payments</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Standard Checkout Webhook (HMAC)</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Razorpay Orders &amp; Payment verification</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Currency: INR (Indian Rupee)</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Automated Order Confirmation</text>
+          </g>
+  <g transform="translate(1220, 820)" filter="url(#shadow)">
+    <rect width="320" height="140" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="320" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="320" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="320" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="66.4" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f59e0b" font-size="9" font-weight="700" letter-spacing="0.5">EXTERNAL</text>
+    <text x="80.4" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Google Identity &amp; Geo Services</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f59e0b" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Google Identity Services (OIDC)</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f59e0b" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Cryptographic Token Verifier</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f59e0b" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">IP-API Geolocation Engine</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#f59e0b" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">In-Memory Concurrent LRU Cache</text>
+          </g>
+  <path d="M 220 255 L 280 330" stroke="#38bdf8" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="203.0" y="282.5" width="94.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="250.0" y="296.5" fill="#38bdf8" font-size="9.5" font-weight="600" text-anchor="middle">HTTPS / REST</text>
+        
+    
+  <path d="M 590 255 L 600 330" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="548.0" y="282.5" width="94.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="595.0" y="296.5" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">HTTPS / REST</text>
+        
+    
+  <path d="M 960 255 L 980 330" stroke="#f43f5e" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="923.0" y="282.5" width="94.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="970.0" y="296.5" fill="#f43f5e" font-size="9.5" font-weight="600" text-anchor="middle">HTTPS / REST</text>
+        
+    
+  <path d="M 285 380 L 230 455" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="194.25" y="407.5" width="126.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="257.5" y="421.5" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">Forwarded Request</text>
+        
+    
+  <path d="M 790 380 L 615 455" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="652.25" y="407.5" width="100.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="702.5" y="421.5" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">Proxy Context</text>
+        
+    
+  <path d="M 1300 380 L 1000 455" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="1103.0" y="407.5" width="94.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="1150.0" y="421.5" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">Rate Checked</text>
+        
+    
+  <path d="M 230 735 L 230 820" stroke="#38bdf8" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="192.75" y="767.5" width="74.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="230.0" y="781.5" fill="#38bdf8" font-size="9.5" font-weight="600" text-anchor="middle">JPA / SQL</text>
+        
+    
+  <path d="M 615 735 L 665 820" stroke="#10b981" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="599.5" y="767.5" width="81.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="640.0" y="781.5" fill="#10b981" font-size="9.5" font-weight="600" text-anchor="middle">SMTP / TLS</text>
+        
+    
+  <path d="M 1000 735 L 1025 820" stroke="#38bdf8" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="962.25" y="767.5" width="100.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="1012.5" y="781.5" fill="#38bdf8" font-size="9.5" font-weight="600" text-anchor="middle">REST Webhooks</text>
+        
+    
+  <path d="M 1375 735 L 1380 820" stroke="#f59e0b" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="1333.75" y="767.5" width="87.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="1377.5" y="781.5" fill="#f59e0b" font-size="9.5" font-weight="600" text-anchor="middle">OIDC / HTTP</text>
+        
+    
+
+  <!-- Footer -->
+  <line x1="24" y1="1002" x2="1576" y2="1002" stroke="#1f1f1f" stroke-width="1" />
+  <text x="32" y="1022" fill="#555555" font-size="10" font-family="monospace">SHOPIVO ENTERPRISE MARKETPLACE • SEMESTER 2 AI PLATFORM ARCHITECTURE • CYBERFORGE THEME</text>
+  <text x="1568" y="1022" text-anchor="end" fill="#555555" font-size="10" font-family="monospace">SPRING BOOT 3.4.3 • REACT 19 • POSTGRESQL</text>
+</svg>

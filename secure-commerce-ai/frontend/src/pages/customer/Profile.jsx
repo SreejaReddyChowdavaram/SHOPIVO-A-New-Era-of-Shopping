@@ -3,7 +3,9 @@
  */
 
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { ROUTES } from '@/constants/routes'
 import {
   User,
   Shield,
@@ -502,20 +504,29 @@ const CustomerProfile = () => {
             flexDirection: 'column',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.85rem', borderBottom: '1px solid var(--color-border-subtle)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.85rem', borderBottom: '1px solid var(--color-border-subtle)', flexWrap: 'wrap', gap: '0.5rem' }}>
             <h2 style={{ fontSize: '1rem', fontWeight: '700', margin: 0, color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
               <ShieldCheck size={18} color="var(--color-discount)" /> Account Security
             </h2>
-            {!isChangingPassword && (
-              <button
-                type="button"
-                onClick={() => { setIsChangingPassword(true); setPasswordError(null) }}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Link
+                to={ROUTES.CUSTOMER_LOGIN_ACTIVITY}
                 className="btn btn-secondary"
-                style={{ fontSize: '0.75rem', padding: '0.35rem 0.75rem', gap: '0.35rem' }}
+                style={{ fontSize: '0.75rem', padding: '0.35rem 0.75rem', gap: '0.35rem', textDecoration: 'none' }}
               >
-                <Key size={13} /> Change Password
-              </button>
-            )}
+                <ShieldCheck size={13} /> Login Activity
+              </Link>
+              {!isChangingPassword && (
+                <button
+                  type="button"
+                  onClick={() => { setIsChangingPassword(true); setPasswordError(null) }}
+                  className="btn btn-secondary"
+                  style={{ fontSize: '0.75rem', padding: '0.35rem 0.75rem', gap: '0.35rem' }}
+                >
+                  <Key size={13} /> Change Password
+                </button>
+              )}
+            </div>
           </div>
 
           {passwordError && (

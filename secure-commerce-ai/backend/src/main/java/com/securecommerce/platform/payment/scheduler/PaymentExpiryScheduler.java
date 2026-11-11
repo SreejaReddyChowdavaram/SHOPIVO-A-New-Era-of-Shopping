@@ -76,13 +76,13 @@ public class PaymentExpiryScheduler {
             orderRepository.save(order);
 
             // 3. Mark any INITIATED payments as CANCELLED
-            List<Payment> initiatedPayments = paymentRepository.findByOrderId(order.getId()).stream()
+            List<Payment> initiatedPayments = paymentRepository.findAllByOrderIdOrderByCreatedAtDesc(order.getId()).stream()
                     .filter(p -> p.getPaymentStatus() == PaymentStatus.INITIATED)
                     .toList();
 
             for (Payment payment : initiatedPayments) {
                 payment.setPaymentStatus(PaymentStatus.CANCELLED);
-                payment.setFailureReason("Payment window expired");
+                payment.setFailureReason("Payment session expired. Please generate a new payment QR code.");
                 paymentRepository.save(payment);
             }
 

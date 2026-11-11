@@ -3,6 +3,7 @@ package com.securecommerce.platform.event.context;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -29,6 +30,17 @@ public class EventContextResolver {
     public static final String SESSION_HEADER = "X-Session-Id";
     public static final String SESSION_ATTR = "sc_session_id_attr";
     private static final Pattern SAFE_SESSION_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{8,100}$");
+
+    @Value("${app.rate-limit.trusted-proxy-enabled:${TRUSTED_PROXY_ENABLED:false}}")
+    private boolean trustedProxyEnabled;
+
+    public void setTrustedProxyEnabled(boolean trustedProxyEnabled) {
+        this.trustedProxyEnabled = trustedProxyEnabled;
+    }
+
+    public boolean isTrustedProxyEnabled() {
+        return this.trustedProxyEnabled;
+    }
 
     public EventContext resolveContext() {
         ServletRequestAttributes attrs;
@@ -81,18 +93,92 @@ public class EventContextResolver {
     }
 
     private String extractClientIp(HttpServletRequest request) {
+        if (!trustedProxyEnabled) {
+            return sanitizeIp(cleanIpCandidate(request.getRemoteAddr()));
+        }
+
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isBlank()) {
-            String firstIp = xForwardedFor.split(",")[0].trim();
-            return sanitizeIp(firstIp);
+            String[] parts = xForwardedFor.split(",");
+            // Render appends the real client IP to the end of X-Forwarded-For.
+            // Traverse from right to left to find the rightmost non-internal IP.
+            // This prevents client-injected spoofed headers (e.g. "8.8.8.8, <real-ip>").
+            for (int i = parts.length - 1; i >= 0; i--) {
+                String candidate = cleanIpCandidate(parts[i]);
+                if (isPublicClientIp(candidate)) {
+                    return sanitizeIp(candidate);
+                }
+            }
+            // If all were internal/loopback, take the first cleaned candidate
+            return sanitizeIp(cleanIpCandidate(parts[0]));
         }
 
         String realIp = request.getHeader("X-Real-IP");
         if (realIp != null && !realIp.isBlank()) {
-            return sanitizeIp(realIp.trim());
+            return sanitizeIp(cleanIpCandidate(realIp));
         }
 
-        return sanitizeIp(request.getRemoteAddr());
+        return sanitizeIp(cleanIpCandidate(request.getRemoteAddr()));
+    }
+
+    private String cleanIpCandidate(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return "127.0.0.1";
+        }
+        String ip = raw.trim();
+
+        // Strip IPv6 bracket notation [2001:db8::1]:8080 -> 2001:db8::1
+        if (ip.startsWith("[") && ip.contains("]")) {
+            int closingBracket = ip.indexOf("]");
+            return ip.substring(1, closingBracket);
+        }
+
+        // Strip port from IPv4 address: 203.0.113.195:44321 -> 203.0.113.195
+        // (Do not strip if it contains multiple colons, which indicates raw IPv6)
+        int colonCount = 0;
+        for (int i = 0; i < ip.length(); i++) {
+            if (ip.charAt(i) == ':') colonCount++;
+        }
+        if (colonCount == 1 && ip.contains(".")) {
+            ip = ip.substring(0, ip.indexOf(':'));
+        }
+
+        return ip;
+    }
+
+    private boolean isPublicClientIp(String ip) {
+        if (ip == null || ip.isBlank()) return false;
+        String trimmed = ip.trim().toLowerCase();
+
+        // Loopback detection
+        if (trimmed.equals("127.0.0.1") || trimmed.equals("localhost") ||
+            trimmed.equals("::1") || trimmed.equals("0:0:0:0:0:0:0:1")) {
+            return false;
+        }
+
+        // Private IPv4 ranges
+        if (trimmed.startsWith("10.") ||
+            trimmed.startsWith("192.168.") ||
+            trimmed.startsWith("169.254.")) {
+            return false;
+        }
+
+        if (trimmed.startsWith("172.")) {
+            String[] octets = trimmed.split("\\.");
+            if (octets.length > 1) {
+                try {
+                    int second = Integer.parseInt(octets[1]);
+                    if (second >= 16 && second <= 31) return false;
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+
+        // Private/link-local IPv6 ranges
+        if (trimmed.startsWith("fc00:") || trimmed.startsWith("fd00:") || trimmed.startsWith("fe80:")) {
+            return false;
+        }
+
+        return true;
     }
 
     private String sanitizeIp(String ip) {

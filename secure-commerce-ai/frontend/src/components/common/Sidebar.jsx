@@ -52,9 +52,9 @@ const SidebarItem = ({ item, allPaths = [] }) => {
         borderRadius: 'var(--radius-md)',
         fontSize: '0.875rem',
         fontWeight: isActive ? '600' : '400',
-        color: isActive ? 'var(--color-nav-active-text, var(--color-primary))' : 'var(--color-text-secondary)',
-        backgroundColor: isActive ? 'var(--color-nav-active-bg, var(--color-primary-subtle))' : 'transparent',
-        borderLeft: `3px solid ${isActive ? 'var(--color-nav-active-border, var(--color-primary))' : 'transparent'}`,
+        color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-text-primary, var(--color-text-primary))',
+        backgroundColor: isActive ? 'var(--color-sidebar-active-bg, var(--color-primary))' : 'transparent',
+        borderLeft: 'none',
         textDecoration: 'none',
         transition: 'all var(--transition-fast)',
         cursor: 'pointer',
@@ -62,30 +62,31 @@ const SidebarItem = ({ item, allPaths = [] }) => {
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
-          e.currentTarget.style.backgroundColor = 'var(--color-nav-hover-bg, var(--color-surface-raised))'
-          e.currentTarget.style.color = 'var(--color-nav-active-text, var(--color-text-primary))'
+          e.currentTarget.style.backgroundColor = 'var(--color-sidebar-hover-bg, var(--color-nav-hover-bg))'
+          e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
         }
       }}
       onMouseLeave={(e) => {
         if (!isActive) {
           e.currentTarget.style.backgroundColor = 'transparent'
-          e.currentTarget.style.color = 'var(--color-text-secondary)'
+          e.currentTarget.style.color = 'var(--color-sidebar-text-primary, var(--color-text-primary))'
         }
       }}
     >
       {Icon && (
         <Icon
           size={18}
-          strokeWidth={1.75}
-          style={{ flexShrink: 0 }}
+          strokeWidth={isActive ? 2.25 : 1.75}
+          color={isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-icon, var(--color-text-secondary))'}
+          style={{ flexShrink: 0, transition: 'color var(--transition-fast)' }}
         />
       )}
-      <span style={{ flex: 1 }}>{item.label}</span>
+      <span style={{ flex: 1, color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'inherit' }}>{item.label}</span>
       {item.badge && (
         <span
           style={{
-            background: 'var(--color-primary)',
-            color: 'var(--color-primary-contrast, #050505)',
+            background: isActive ? 'rgba(255, 255, 255, 0.22)' : 'var(--color-sidebar-active-bg, var(--color-primary))',
+            color: 'var(--color-sidebar-active-text, #FFFFFF)',
             fontSize: '0.65rem',
             fontWeight: '700',
             borderRadius: 'var(--radius-full)',
@@ -108,7 +109,7 @@ const SidebarGroup = ({ group, allPaths = [] }) => (
       fontWeight: '700',
       textTransform: 'uppercase',
       letterSpacing: '0.1em',
-      color: 'var(--color-text-disabled)',
+      color: 'var(--color-sidebar-text-secondary, var(--color-text-muted))',
       padding: '0.75rem 1rem 0.375rem',
     }}>
       {group.group}
@@ -136,8 +137,8 @@ const Sidebar = ({ title, navItems = [], width = 260 }) => {
       style={{
         width: `${width}px`,
         minWidth: `${width}px`,
-        background: 'var(--color-sidebar, var(--color-surface))',
-        borderRight: '1px solid var(--color-border)',
+        background: 'var(--color-sidebar-bg, var(--color-sidebar))',
+        borderRight: '1px solid var(--color-sidebar-border, var(--color-border))',
         height: 'calc(100vh - 64px)',  // Full height minus navbar
         overflowY: 'auto',
         display: 'flex',

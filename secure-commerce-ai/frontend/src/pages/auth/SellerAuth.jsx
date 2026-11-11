@@ -2,8 +2,8 @@
  * SellerAuth.jsx — Seller Portal Authentication Experience
  *
  * Provides dual-mode (Sign In & Sign Up) for Merchants, fully styled in SHOPIVO CyberForge:
- * - Pure/Near Black (#050505) & Dark Surface (#101010)
- * - Crisp Borders (#242424) & Vibrant Emerald (#04DB7E)
+ * - CodeChatura-inspired Theme: Background var(--color-bg) & Surface var(--color-surface)
+ * - Crisp Borders var(--color-border) & Primary Green var(--color-primary)
  * - Sign In mode: Email + Password + Google Sign-In with portalRole = 'SELLER'
  * - Sign Up mode: Full Name, Email, Store Name, Password, Confirm Password + Google Sign-In
  * - Enforces role compatibility: redirects to /seller/dashboard
@@ -279,8 +279,8 @@ export default function SellerAuth() {
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#04DB7E'
-              e.currentTarget.style.borderColor = '#04DB7E'
+              e.currentTarget.style.color = 'var(--color-primary)'
+              e.currentTarget.style.borderColor = 'var(--color-primary)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-text-secondary)'
@@ -325,11 +325,11 @@ export default function SellerAuth() {
                 height: '48px',
                 borderRadius: '12px',
                 backgroundColor: 'var(--color-primary-subtle)',
-                border: '1px solid rgba(4, 219, 126, 0.25)',
+                border: '1px solid var(--color-border)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#04DB7E',
+                color: 'var(--color-primary)',
                 marginBottom: '0.75rem',
               }}
             >
@@ -377,8 +377,8 @@ export default function SellerAuth() {
                 cursor: 'pointer',
                 border: 'none',
                 transition: 'all 0.2s ease',
-                backgroundColor: mode === 'signin' ? '#04DB7E' : 'transparent',
-                color: mode === 'signin' ? '#050505' : 'var(--color-text-secondary)',
+                backgroundColor: mode === 'signin' ? 'var(--color-primary)' : 'transparent',
+                color: mode === 'signin' ? '#FFFFFF' : 'var(--color-text-secondary)',
               }}
             >
               Sign In
@@ -395,8 +395,8 @@ export default function SellerAuth() {
                 cursor: 'pointer',
                 border: 'none',
                 transition: 'all 0.2s ease',
-                backgroundColor: mode === 'signup' ? '#04DB7E' : 'transparent',
-                color: mode === 'signup' ? '#050505' : 'var(--color-text-secondary)',
+                backgroundColor: mode === 'signup' ? 'var(--color-primary)' : 'transparent',
+                color: mode === 'signup' ? '#FFFFFF' : 'var(--color-text-secondary)',
               }}
             >
               Register Store
@@ -520,7 +520,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -549,7 +549,7 @@ export default function SellerAuth() {
                     to={`${ROUTES.FORGOT_PASSWORD}?portal=SELLER`}
                     style={{
                       fontSize: '0.75rem',
-                      color: '#04DB7E',
+                      color: 'var(--color-primary)',
                       textDecoration: 'none',
                       fontWeight: 500,
                     }}
@@ -585,7 +585,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -616,8 +616,8 @@ export default function SellerAuth() {
                   width: '100%',
                   padding: '0.8125rem',
                   borderRadius: '10px',
-                  backgroundColor: '#04DB7E',
-                  color: '#050505',
+                  backgroundColor: 'var(--color-primary)',
+                  color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.875rem',
                   letterSpacing: '0.03em',
@@ -628,11 +628,11 @@ export default function SellerAuth() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                  boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                   transition: 'background-color 0.15s ease',
                 }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#00C77A')}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#04DB7E')}
+                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary-hover)')}
+                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
               >
                 {loading ? <Loader2 size={18} className="spin" /> : null}
                 <span>{loading ? 'Signing In...' : 'Sign In as Seller'}</span>
@@ -672,7 +672,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -706,7 +706,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -753,7 +753,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -800,7 +800,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -847,7 +847,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -911,7 +911,7 @@ export default function SellerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -947,7 +947,7 @@ export default function SellerAuth() {
                   gap: '0.5rem',
                 }}
               >
-                <ShieldCheck size={16} color="#04DB7E" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <ShieldCheck size={16} color="var(--color-primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <p style={{ fontSize: '0.75rem', color: 'var(--color-text-primary)', lineHeight: 1.4, margin: 0 }}>
                   Seller accounts undergo compliance verification before store activation.
                 </p>
@@ -960,7 +960,7 @@ export default function SellerAuth() {
                   type="checkbox"
                   checked={signUpData.agreeTerms}
                   onChange={(e) => setSignUpData({ ...signUpData, agreeTerms: e.target.checked })}
-                  style={{ accentColor: '#04DB7E', marginTop: '3px' }}
+                  style={{ accentColor: 'var(--color-primary)', marginTop: '3px' }}
                 />
                 <label htmlFor="agreeSellerTerms" style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', lineHeight: 1.4 }}>
                   I agree to SHOPIVO's Merchant Terms, Fee Policy, and Privacy Agreement.
@@ -975,8 +975,8 @@ export default function SellerAuth() {
                   width: '100%',
                   padding: '0.8125rem',
                   borderRadius: '10px',
-                  backgroundColor: '#04DB7E',
-                  color: '#050505',
+                  backgroundColor: 'var(--color-primary)',
+                  color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.875rem',
                   letterSpacing: '0.03em',
@@ -987,11 +987,11 @@ export default function SellerAuth() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                  boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                   transition: 'background-color 0.15s ease',
                 }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#00C77A')}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#04DB7E')}
+                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary-hover)')}
+                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
               >
                 {loading ? <Loader2 size={18} className="spin" /> : null}
                 <span>{loading ? 'Registering Store...' : 'Create Seller Account'}</span>
@@ -1018,7 +1018,7 @@ export default function SellerAuth() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1036,7 +1036,7 @@ export default function SellerAuth() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}

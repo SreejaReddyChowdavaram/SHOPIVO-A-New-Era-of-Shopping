@@ -1,0 +1,1064 @@
+{
+  "phases": {},
+  "endpoints": [
+    {
+      "path": "/actuator/health",
+      "method": "GET",
+      "status": 200,
+      "expected": 200,
+      "duration_ms": 74,
+      "success": true,
+      "data": {
+        "status": "UP"
+      },
+      "raw": "{\"status\":\"UP\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 1262,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:09.406230Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:09.406230Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 829,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:10.257796800Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:10.257796800Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 1028,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:11.289020400Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:11.289020400Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 1098,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:12.421756700Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:12.421756700Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 961,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:13.384452200Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:13.384452200Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 843,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:14.231878Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:14.231878Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 945,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:15.177202100Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:15.177202100Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 980,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:16.165968700Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:16.165968700Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 1345,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:17.522337500Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:17.522337500Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 401,
+      "expected": 200,
+      "duration_ms": 768,
+      "success": false,
+      "data": {
+        "status": 401,
+        "error": "Unauthorized",
+        "message": "Invalid email or password",
+        "path": "/api/auth/login",
+        "timestamp": "2026-11-11T06:31:18.286635700Z"
+      },
+      "raw": "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid email or password\",\"path\":\"/api/auth/login\",\"timestamp\":\"2026-11-11T06:31:18.286635700Z\"}"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 26,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.311621Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 10,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.337185200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 45,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.382747600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 15,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.400833800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 13,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.418829200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 27,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.449109600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 10,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.458055300Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 9,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.470685600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 11,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.482299Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 12,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.495416200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 18,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.517375600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 13,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.531815800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 27,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.555828400Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 13,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.575182700Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 11,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.589331800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 10,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.604431600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 7,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.612957300Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 7,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.620666400Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 10,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.632740200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 34,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.666722800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 26,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.696410600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 12,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.712881900Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 8,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.723108300Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 8,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.731885100Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 15,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.750273200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 8,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.760736900Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 8,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.770224400Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 9,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.780603500Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 7,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.788771700Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 16,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.804776300Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 11,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.815972900Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 12,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.831536900Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 9,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.839726800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 26,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.865527100Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 11,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.880167700Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 26,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.909235800Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 9,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.921819400Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 7,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.929116200Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 200,
+      "duration_ms": 6,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.939498700Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 401,
+      "duration_ms": 8,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.948041600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 401,
+      "duration_ms": 17,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.967410700Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 400,
+      "duration_ms": 9,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.980382600Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 429,
+      "expected": 401,
+      "duration_ms": 10,
+      "success": false,
+      "data": {
+        "success": false,
+        "message": "Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.",
+        "errors": {
+          "retryAfterSeconds": 50,
+          "code": "RATE_LIMIT_EXCEEDED",
+          "endpoint": "login"
+        },
+        "timestamp": "2026-11-11T06:31:18.991757400Z"
+      },
+      "raw": "{\"success\":false,\"message\":\"Too many login attempts. Rate limit exceeded. Please wait 50 seconds before retrying.\",\"errors\":{\"retryAfterSeconds\":50,\"code\":\"RATE_LIMIT_EXCEEDED\",\"endpoint\":\"login\"},\"ti"
+    },
+    {
+      "path": "/auth/me",
+      "method": "GET",
+      "status": 500,
+      "expected": 401,
+      "duration_ms": 421,
+      "success": false,
+      "data": {
+        "status": 500,
+        "error": "Internal Server Error",
+        "message": "An unexpected error occurred. Please try again later.",
+        "path": "/api/auth/me",
+        "timestamp": "2026-11-11T06:31:19.412836900Z"
+      },
+      "raw": "{\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"An unexpected error occurred. Please try again later.\",\"path\":\"/api/auth/me\",\"timestamp\":\"2026-11-11T06:31:19.412836900Z\"}"
+    },
+    {
+      "path": "/auth/forgot-password/request-otp",
+      "method": "POST",
+      "status": 200,
+      "expected": 200,
+      "duration_ms": 4954,
+      "success": true,
+      "data": {
+        "success": true,
+        "message": "A 6-digit verification code has been sent to your email address.",
+        "data": {
+          "expiresInMinutes": 10,
+          "message": "A 6-digit verification code has been sent to your email address.",
+          "maskedEmail": "r***r@shopivo.demo",
+          "success": true,
+          "cooldownSeconds": 60
+        },
+        "timestamp": "2026-11-11T06:31:24.369222200Z"
+      },
+      "raw": "{\"success\":true,\"message\":\"A 6-digit verification code has been sent to your email address.\",\"data\":{\"expiresInMinutes\":10,\"message\":\"A 6-digit verification code has been sent to your email address.\","
+    },
+    {
+      "path": "/auth/forgot-password/verify-otp",
+      "method": "POST",
+      "status": 400,
+      "expected": 400,
+      "duration_ms": 644,
+      "success": true,
+      "data": {
+        "status": 400,
+        "error": "Bad Request",
+        "message": "Invalid verification code. 4 attempt(s) remaining.",
+        "path": "/api/auth/forgot-password/verify-otp",
+        "timestamp": "2026-11-11T06:31:25.021165800Z"
+      },
+      "raw": "{\"status\":400,\"error\":\"Bad Request\",\"message\":\"Invalid verification code. 4 attempt(s) remaining.\",\"path\":\"/api/auth/forgot-password/verify-otp\",\"timestamp\":\"2026-11-11T06:31:25.021165800Z\"}"
+    }
+  ],
+  "demo_logins": {
+    "customer": {
+      "email": null,
+      "success": false,
+      "user": null
+    },
+    "seller": {
+      "email": null,
+      "success": false,
+      "user": null
+    },
+    "admin": {
+      "email": null,
+      "success": false,
+      "user": null
+    }
+  }
+}

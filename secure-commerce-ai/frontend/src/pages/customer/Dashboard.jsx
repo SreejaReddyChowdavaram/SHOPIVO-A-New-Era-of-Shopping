@@ -399,7 +399,7 @@ const CustomerDashboard = () => {
               to={ROUTES.CUSTOMER_PRODUCTS}
               style={{
                 backgroundColor: '#ffffff',
-                color: '#087847',
+                color: '#0F8F6B',
                 border: 'none',
                 fontWeight: '700',
                 fontSize: '0.84rem',
@@ -439,7 +439,7 @@ const CustomerDashboard = () => {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)')}
             >
-              <TrendingUp size={15} color="#04DB7E" />
+              <TrendingUp size={15} color="var(--color-primary)" />
               <span>Spending Insights</span>
             </Link>
           </div>

@@ -13,7 +13,7 @@ const STATUS_CONFIG = {
   },
   CONFIRMED: {
     label: 'Confirmed',
-    badge: 'bg-[#E5FFF2] text-[#087847] border-[#DFE9E2] dark:bg-[#09291B] dark:text-[#04DB7E] dark:border-[#242424]',
+    badge: 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)] border-[var(--color-border)]',
   },
   PROCESSING: {
     label: 'Processing',
@@ -59,17 +59,17 @@ export default function CustomerRecentPurchases({
 
   return (
     <div
-      className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}
+      className={`rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}
     >
       {/* Table Header Row */}
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Package className="w-4 h-4 text-[#087847] dark:text-[#04DB7E]" />
+          <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] flex items-center gap-2">
+            <Package className="w-4 h-4 text-[var(--color-primary)]" />
             <span>{title}</span>
           </h3>
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
               {subtitle}
             </p>
           )}
@@ -77,7 +77,7 @@ export default function CustomerRecentPurchases({
         {viewAllLink && (
           <Link
             to={viewAllLink}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#087847] dark:text-[#04DB7E] hover:text-[#04DB7E] dark:hover:text-[#00C77A] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-primary)] hover:underline transition-colors"
           >
             <span>View All Orders</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -91,7 +91,7 @@ export default function CustomerRecentPurchases({
           <div className="hidden md:block overflow-x-auto -mx-1">
             <table className="w-full text-left border-collapse min-w-[640px]">
               <thead>
-                <tr className="border-b border-[#DFE9E2] dark:border-[#242424] text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                <tr className="border-b border-[var(--color-border)] text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider">
                   <th className="pb-3 pl-3">Order ID</th>
                   <th className="pb-3">Product</th>
                   <th className="pb-3 text-center">Qty</th>
@@ -100,12 +100,12 @@ export default function CustomerRecentPurchases({
                   <th className="pb-3 pr-3 text-right">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
+              <tbody className="divide-y divide-[var(--color-border)] text-xs">
                 {orders.map((item, idx) => {
                   const rawStatus = item.orderStatus || item.status || 'PENDING'
                   const statusInfo = STATUS_CONFIG[rawStatus.toUpperCase()] || {
                     label: rawStatus,
-                    badge: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+                    badge: 'bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border)]',
                   }
                   const orderId = item.orderId || item.id
                   const productName = item.productName || item.productNameSnapshot || 'Product'
@@ -117,10 +117,10 @@ export default function CustomerRecentPurchases({
                   return (
                     <tr
                       key={`desktop-order-${orderId}-${idx}`}
-                      className="hover:bg-[#F5F8F5] dark:hover:bg-[#1C1C1C] transition-colors"
+                      className="hover:bg-[var(--color-surface-hover)] transition-colors"
                     >
                       {/* Order ID */}
-                      <td className="py-3.5 pl-3 font-bold text-[#087847] dark:text-[#04DB7E] whitespace-nowrap">
+                      <td className="py-3.5 pl-3 font-bold text-[var(--color-primary)] whitespace-nowrap">
                         #{orderId}
                       </td>
 
@@ -199,7 +199,7 @@ export default function CustomerRecentPurchases({
                 >
                   {/* Top: Order ID & Status Badge */}
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-[#087847] dark:text-[#04DB7E]">
+                    <span className="font-bold text-xs text-[var(--color-primary)]">
                       Order #{orderId}
                     </span>
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusInfo.badge}`}>

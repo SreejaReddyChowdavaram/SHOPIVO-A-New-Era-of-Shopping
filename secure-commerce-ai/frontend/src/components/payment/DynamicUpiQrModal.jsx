@@ -14,11 +14,18 @@ import {
 /**
  * DynamicUpiQrModal.jsx — Refined SHOPIVO Razorpay Dynamic UPI QR Payment Modal
  *
- * Prominently presents the authentic Razorpay Dynamic UPI QR code.
- * Clean, minimal, professional layout strictly matching SHOPIVO specifications.
+ * Enforces:
+ * - Perfectly centered layout on desktop, tablet, and mobile.
+ * - Consistent 10-minute (600 seconds) session countdown in MM:SS format.
+ * - Accurate countdown restoration across page refresh.
+ * - Authoritative backend-driven status polling and manual status refresh.
+ * - Non-overlapping close button and perfectly centered QR code container.
+ * - Displays random alphanumeric order reference (e.g., SHV-A8K29X7P).
+ * - Safe QR regeneration on session expiry.
  */
 export const DynamicUpiQrModal = ({
   orderId,
+  orderReference,
   amount,
   amountInPaise,
   imageUrl,
@@ -32,20 +39,31 @@ export const DynamicUpiQrModal = ({
   onDismiss,
   onSwitchToCod,
   onOpenStandardCheckout,
+  onRegenerateQr,
   checkStatusApi,
   errorDetail,
 }) => {
+  // 1. Initial Countdown Calculation from backend closeBy epoch
   const [secondsRemaining, setSecondsRemaining] = useState(() => {
     if (closeBy) {
       const nowEpoch = Math.floor(Date.now() / 1000)
       const diff = closeBy - nowEpoch
-      return diff > 0 ? diff : 900
+      return diff > 0 ? diff : 0
     }
-    return 900
+    return 600 // Default exactly 10 minutes (600s)
   })
-  const [status, setStatus] = useState('WAITING') // WAITING | VERIFYING | SUCCESS | FAILED | EXPIRED
+
+  const [status, setStatus] = useState(() => {
+    if (closeBy) {
+      const nowEpoch = Math.floor(Date.now() / 1000)
+      if (closeBy <= nowEpoch) return 'EXPIRED'
+    }
+    return 'WAITING' // WAITING | VERIFYING | SUCCESS | FAILED | EXPIRED
+  })
+
   const [errorMessage, setErrorMessage] = useState(errorDetail || null)
   const [checkingStatus, setCheckingStatus] = useState(false)
+  const [regenerating, setRegenerating] = useState(false)
   const [imageLoadError, setImageLoadError] = useState(false)
   const [showAltOptions, setShowAltOptions] = useState(false)
   const [qrLayout, setQrLayout] = useState({
@@ -58,6 +76,36 @@ export const DynamicUpiQrModal = ({
 
   const isLiveMode = keyId ? keyId.startsWith('rzp_live_') : false
 
+  // Format order reference
+  const displayOrderReference = orderReference || (orderId ? `SHV-${String(orderId).padStart(6, '0')}` : 'SHV-PAYMENT')
+
+  // Payable amount formatting
+  const displayAmount = amount || (amountInPaise ? amountInPaise / 100 : 0)
+  const formattedAmount = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(displayAmount)
+
+  // Sync closeBy updates
+  useEffect(() => {
+    if (closeBy) {
+      const nowEpoch = Math.floor(Date.now() / 1000)
+      const diff = closeBy - nowEpoch
+      if (diff <= 0) {
+        setSecondsRemaining(0)
+        setStatus('EXPIRED')
+      } else {
+        setSecondsRemaining(diff)
+        if (status === 'EXPIRED') {
+          setStatus('WAITING')
+        }
+      }
+    }
+  }, [closeBy])
+
+  // Center & Fit QR Image
   const handleQrImageLoad = (e) => {
     const img = e?.target || qrImgRef.current
     if (!img) return
@@ -67,7 +115,7 @@ export const DynamicUpiQrModal = ({
 
     const ar = nw / nh
     if (ar < 0.65) {
-      // Standee image crop (mathematically centered on QR code, 100% inside white card)
+      // Standee crop centered cleanly
       const ratioHW = nh / nw
       const topPct = ((0.330 - 0.5155 * ratioHW) / 0.67) * 100
       setQrLayout({
@@ -83,7 +131,7 @@ export const DynamicUpiQrModal = ({
         },
       })
     } else {
-      // Square / standard QR code (complete genuine image, zero distortion)
+      // Standard Square QR
       setQrLayout({
         loaded: true,
         isStandee: false,
@@ -91,7 +139,7 @@ export const DynamicUpiQrModal = ({
           width: '100%',
           height: '100%',
           objectFit: 'contain',
-          padding: '10px',
+          padding: '8px',
           opacity: 1,
         },
       })
@@ -104,21 +152,15 @@ export const DynamicUpiQrModal = ({
     }
   }, [imageUrl])
 
-  // Payable amount formatting
-  const displayAmount = amount || (amountInPaise ? amountInPaise / 100 : 0)
-  const formattedAmount = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(displayAmount)
-
-  // 1. Countdown Timer
+  // 10-Minute Countdown Timer Interval
   useEffect(() => {
+    if (status === 'SUCCESS' || status === 'FAILED') return
+
     if (secondsRemaining <= 0) {
       setStatus('EXPIRED')
       return
     }
+
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
         if (prev <= 1) {
@@ -129,8 +171,9 @@ export const DynamicUpiQrModal = ({
         return prev - 1
       })
     }, 1000)
+
     return () => clearInterval(timer)
-  }, [secondsRemaining])
+  }, [secondsRemaining, status])
 
   const formatTimer = (secs) => {
     const mins = Math.floor(secs / 60)
@@ -138,7 +181,7 @@ export const DynamicUpiQrModal = ({
     return `${String(mins).padStart(2, '0')}:${String(rem).padStart(2, '0')}`
   }
 
-  // 2. Authoritative Backend Status Polling (every 2.5 seconds)
+  // Authoritative Backend Status Polling (every 2.5s)
   useEffect(() => {
     if (status !== 'WAITING' && status !== 'VERIFYING') return
     if (!checkStatusApi || !orderId) return
@@ -157,10 +200,14 @@ export const DynamicUpiQrModal = ({
             onPaymentSuccess?.(paymentData)
           }, 1000)
         } else if (paymentData && paymentData.paymentStatus === 'FAILED') {
-          setStatus('FAILED')
-          setErrorMessage(paymentData.failureReason || 'Payment declined or cancelled by issuing bank.')
           if (pollTimerRef.current) clearInterval(pollTimerRef.current)
-          onPaymentFailed?.(paymentData.failureReason || 'Payment declined')
+          if (paymentData.failureReason && paymentData.failureReason.toLowerCase().includes('expired')) {
+            setStatus('EXPIRED')
+          } else {
+            setStatus('FAILED')
+            setErrorMessage(paymentData.failureReason || 'Payment declined or cancelled by issuing bank.')
+            onPaymentFailed?.(paymentData.failureReason || 'Payment declined')
+          }
         }
       } catch (err) {
         // Non-blocking poll retry
@@ -175,7 +222,7 @@ export const DynamicUpiQrModal = ({
     }
   }, [orderId, status, checkStatusApi, onPaymentSuccess, onPaymentFailed])
 
-  // 3. Manual Status Check
+  // Manual Status Check Button
   const handleManualCheckStatus = async () => {
     if (!checkStatusApi || !orderId) return
     setCheckingStatus(true)
@@ -185,8 +232,12 @@ export const DynamicUpiQrModal = ({
         setStatus('SUCCESS')
         setTimeout(() => onPaymentSuccess?.(paymentData), 1000)
       } else if (paymentData && paymentData.paymentStatus === 'FAILED') {
-        setStatus('FAILED')
-        setErrorMessage(paymentData.failureReason || 'Payment was declined')
+        if (paymentData.failureReason && paymentData.failureReason.toLowerCase().includes('expired')) {
+          setStatus('EXPIRED')
+        } else {
+          setStatus('FAILED')
+          setErrorMessage(paymentData.failureReason || 'Payment was declined')
+        }
       } else {
         setErrorMessage(null)
       }
@@ -197,96 +248,149 @@ export const DynamicUpiQrModal = ({
     }
   }
 
+  // Safe QR Regeneration on Session Expiry
+  const handleRegenerateQr = async () => {
+    if (!onRegenerateQr) return
+    setRegenerating(true)
+    setErrorMessage(null)
+    try {
+      const freshData = await onRegenerateQr()
+      if (freshData && freshData.closeBy) {
+        const nowEpoch = Math.floor(Date.now() / 1000)
+        const diff = freshData.closeBy - nowEpoch
+        setSecondsRemaining(diff > 0 ? diff : 600)
+      } else {
+        setSecondsRemaining(600)
+      }
+      setStatus('WAITING')
+    } catch (err) {
+      setErrorMessage(err?.response?.data?.message || err?.message || 'Failed to generate new payment QR code')
+    } finally {
+      setRegenerating(false)
+    }
+  }
+
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-fade-in"
+      style={{ boxSizing: 'border-box' }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="qr-modal-title"
     >
-      <div className="relative w-full max-w-[420px] max-h-[94vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] shadow-2xl p-5 sm:p-6 text-slate-900 dark:text-white transition-all">
-        {/* Top-Right Close Button: safely triggers onDismiss / cancellation */}
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
-          aria-label="Close and cancel payment"
-        >
-          <X size={16} />
-        </button>
-
-        {/* Modal Brand Header with Dynamic Mode Indicator */}
-        <div className="flex items-center justify-between pr-8 mb-4">
-          <h2 id="qr-modal-title" className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            SHOPIVO PAYMENT
-          </h2>
-          {isLiveMode ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              Live
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/25">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-              Test Mode
-            </span>
-          )}
+      <div
+        className="relative rounded-3xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-2xl p-5 sm:p-6 text-[var(--color-text-primary)] transition-all flex flex-col items-center"
+        style={{
+          boxSizing: 'border-box',
+          width: 'min(calc(100vw - 32px), 440px)',
+          maxHeight: 'min(94vh, 760px)',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+        }}
+      >
+        {/* Header with Title, Mode Badge, and Inline Close Button (Zero text clipping) */}
+        <div className="flex items-center justify-between w-full gap-2 mb-4 shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <h2
+              id="qr-modal-title"
+              className="text-base sm:text-lg font-black tracking-tight text-[var(--color-text-primary)] truncate m-0"
+            >
+              SHOPIVO PAYMENT
+            </h2>
+            {isLiveMode && (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-[rgba(15,143,107,0.12)] text-[var(--color-primary)] border border-[rgba(15,143,107,0.25)] shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
+                Live
+              </span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--color-bg)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer shrink-0"
+            aria-label="Close and cancel payment"
+          >
+            <X size={16} />
+          </button>
         </div>
 
         {/* Order Reference & Payable Amount Row */}
-        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] mb-4">
-          <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div
+          className="w-full flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-[var(--color-bg)] border border-[var(--color-border)] mb-4 shrink-0"
+          style={{ boxSizing: 'border-box' }}
+        >
+          <div className="min-w-0 text-left">
+            <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               Order Reference
             </div>
-            <div className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mt-0.5">
-              #{orderId}
+            <div className="text-xs sm:text-sm font-extrabold text-[var(--color-text-primary)] font-mono tracking-wider mt-0.5 truncate">
+              {displayOrderReference}
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <div className="text-right shrink-0">
+            <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
               Payable Amount
             </div>
-            <div className="text-lg sm:text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
+            <div className="text-base sm:text-lg font-black text-[var(--color-primary)] mt-0.5">
               {formattedAmount}
             </div>
           </div>
         </div>
 
-        {/* Large, Clear Razorpay QR Code Container */}
-        <div className="flex flex-col items-center justify-center mb-4">
+        {/* Center QR Section */}
+        <div className="w-full flex flex-col items-center justify-center mb-4 shrink-0">
           {status === 'EXPIRED' ? (
-            <div className="py-8 text-center text-rose-600 dark:text-rose-400">
-              <AlertCircle size={48} className="mx-auto mb-2.5 opacity-90" />
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">QR Code Expired</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs">
-                The payment session has elapsed. Please retry or choose Cash on Delivery.
+            <div className="py-6 px-3 text-center w-full flex flex-col items-center">
+              <AlertCircle size={46} className="mb-2.5 text-rose-500 opacity-90" />
+              <h4 className="text-base font-bold text-[var(--color-text-primary)] m-0 mb-1">
+                Payment Session Expired
+              </h4>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-1 mb-4 max-w-xs leading-relaxed">
+                Payment session expired. Please generate a new payment QR code.
               </p>
+              {onRegenerateQr && (
+                <button
+                  type="button"
+                  onClick={handleRegenerateQr}
+                  disabled={regenerating}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] transition-all cursor-pointer shadow-md disabled:opacity-50"
+                >
+                  {regenerating ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+                  <span>Generate New QR Code</span>
+                </button>
+              )}
             </div>
           ) : status === 'SUCCESS' ? (
-            <div className="py-8 text-center text-emerald-600 dark:text-emerald-400">
-              <CheckCircle2 size={52} className="mx-auto mb-2.5 animate-bounce" />
-              <h4 className="text-lg font-extrabold text-slate-900 dark:text-white">Payment Confirmed!</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <div className="py-6 px-3 text-center w-full flex flex-col items-center text-[var(--color-primary)]">
+              <CheckCircle2 size={50} className="mb-2.5 animate-bounce" />
+              <h4 className="text-lg font-extrabold text-[var(--color-text-primary)] m-0 mb-1">
+                Payment Confirmed!
+              </h4>
+              <p className="text-xs text-[var(--color-text-secondary)] mt-1 mb-0">
                 Your order is confirmed. Redirecting...
               </p>
             </div>
           ) : imageUrl && !imageLoadError ? (
-            <div className="flex flex-col items-center">
-              {/* Clean White QR Container with Measured Quiet Zone & Zero Distortion */}
+            <div className="w-full flex flex-col items-center">
+              {/* Perfectly Centered Proportional White QR Container with Measured Quiet Zone */}
               <div
-                className="relative bg-white rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/60 flex items-center justify-center overflow-hidden w-[250px] h-[250px] sm:w-[270px] sm:h-[270px]"
+                className="relative bg-white rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/60 flex items-center justify-center overflow-hidden p-2"
+                style={{
+                  width: 'min(240px, 60vw)',
+                  height: 'min(240px, 60vw)',
+                  boxSizing: 'border-box'
+                }}
               >
                 {!qrLayout.loaded && (
                   <div className="flex flex-col items-center justify-center gap-2 text-slate-400">
-                    <Loader2 size={28} className="animate-spin text-[#04DB7E]" />
+                    <Loader2 size={28} className="animate-spin text-[var(--color-primary)]" />
                     <span className="text-[11px] font-medium">Loading QR...</span>
                   </div>
                 )}
                 <img
                   ref={qrImgRef}
                   src={imageUrl}
-                  alt={`Razorpay Dynamic UPI QR for Order #${orderId}`}
+                  alt={`Payment QR for Order ${displayOrderReference}`}
                   onLoad={handleQrImageLoad}
                   onError={() => setImageLoadError(true)}
                   className="select-none pointer-events-none transition-opacity duration-200"
@@ -294,18 +398,18 @@ export const DynamicUpiQrModal = ({
                 />
               </div>
 
-              {/* Clear subtitle */}
-              <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 text-center mt-3">
-                Scan using Google Pay, PhonePe or any UPI app.
+              {/* Centered Payment Instructions */}
+              <p className="text-xs font-medium text-[var(--color-text-secondary)] text-center mt-3 mb-0 px-2 leading-relaxed">
+                Scan using Google Pay, PhonePe, Paytm or any UPI app.
               </p>
 
-              {/* Expiration Countdown Indicator */}
+              {/* Centered Expiry Countdown Timer */}
               {status !== 'EXPIRED' && status !== 'SUCCESS' && (
                 <div
                   className={`mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                     secondsRemaining < 120
                       ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50'
+                      : 'bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border)]'
                   }`}
                 >
                   <Clock size={13} />
@@ -314,13 +418,12 @@ export const DynamicUpiQrModal = ({
               )}
             </div>
           ) : (
-            /* QR Load Failure / Account Activation Required State */
-            <div className="py-6 text-center text-slate-500 dark:text-slate-400">
-              <AlertCircle size={42} className="mx-auto mb-2 text-amber-500 dark:text-amber-400" />
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+            <div className="py-6 px-3 text-center text-[var(--color-text-secondary)] w-full flex flex-col items-center">
+              <AlertCircle size={40} className="mb-2 text-amber-500 dark:text-amber-400" />
+              <h4 className="text-sm font-bold text-[var(--color-text-primary)] m-0 mb-1">
                 Standalone QR Code Unavailable
               </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">
+              <p className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-xs mx-auto leading-relaxed">
                 {errorMessage ||
                   'The standalone QR feature requires account activation in Razorpay Dashboard. You can pay seamlessly via Razorpay Standard Checkout below.'}
               </p>
@@ -328,16 +431,19 @@ export const DynamicUpiQrModal = ({
           )}
         </div>
 
-        {/* Live Status & Check Status Row */}
-        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] flex items-center justify-between gap-3 text-xs mb-3">
-          <div className="flex items-center gap-2">
-            {status === 'WAITING' && <Loader2 size={15} className="animate-spin text-[#04DB7E] shrink-0" />}
-            {status === 'VERIFYING' && <Loader2 size={15} className="animate-spin text-emerald-600 shrink-0" />}
-            {status === 'SUCCESS' && <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />}
+        {/* Live Status & Check Status Controls Row */}
+        <div
+          className="w-full p-3 rounded-2xl bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center justify-between gap-2 text-xs mb-3 shrink-0"
+          style={{ boxSizing: 'border-box' }}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            {status === 'WAITING' && <Loader2 size={15} className="animate-spin text-[var(--color-primary)] shrink-0" />}
+            {status === 'VERIFYING' && <Loader2 size={15} className="animate-spin text-[var(--color-primary)] shrink-0" />}
+            {status === 'SUCCESS' && <CheckCircle2 size={15} className="text-[var(--color-primary)] shrink-0" />}
             {status === 'FAILED' && <AlertCircle size={15} className="text-rose-600 shrink-0" />}
             {status === 'EXPIRED' && <Clock size={15} className="text-rose-600 shrink-0" />}
 
-            <span className="font-semibold text-slate-800 dark:text-slate-200">
+            <span className="font-semibold text-[var(--color-text-primary)] truncate">
               {status === 'WAITING' && 'Waiting for payment...'}
               {status === 'VERIFYING' && 'Verifying payment with Razorpay...'}
               {status === 'SUCCESS' && 'Payment Verified!'}
@@ -349,21 +455,21 @@ export const DynamicUpiQrModal = ({
           <button
             type="button"
             onClick={handleManualCheckStatus}
-            disabled={checkingStatus || status === 'SUCCESS'}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-[#087847] dark:text-[#04DB7E] hover:bg-[#E5FFF2] dark:hover:bg-[#09291B] transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+            disabled={checkingStatus || status === 'SUCCESS' || status === 'EXPIRED'}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-[var(--color-primary)] hover:bg-[var(--color-primary-subtle)] transition-colors cursor-pointer disabled:opacity-40 shrink-0"
           >
             <RotateCcw size={12} className={checkingStatus ? 'animate-spin' : ''} />
             <span>Check Status</span>
           </button>
         </div>
 
-        {/* Alternative Payment Options (Compact & Secondary) */}
+        {/* Other Payment Options Section (Centered & Non-overflowing) */}
         {(onOpenStandardCheckout || onSwitchToCod) && (
-          <div className="border-t border-slate-200/80 dark:border-slate-800/80 pt-2.5">
+          <div className="w-full border-t border-[var(--color-border)] pt-2.5 shrink-0" style={{ boxSizing: 'border-box' }}>
             <button
               type="button"
               onClick={() => setShowAltOptions((prev) => !prev)}
-              className="w-full flex items-center justify-between text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 py-1 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] py-1 transition-colors cursor-pointer"
             >
               <span>Other payment options</span>
               <ChevronDown
@@ -373,15 +479,15 @@ export const DynamicUpiQrModal = ({
             </button>
 
             {showAltOptions && (
-              <div className="mt-2 flex flex-col gap-2 animate-fade-in">
+              <div className="mt-2 flex flex-col gap-2 animate-fade-in w-full">
                 {onOpenStandardCheckout && (
                   <button
                     type="button"
                     onClick={onOpenStandardCheckout}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-[var(--color-bg)] hover:bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border border-[var(--color-border)] transition-colors cursor-pointer"
                   >
-                    <CreditCard size={14} className="text-slate-500" />
-                    <span>Pay via Cards / NetBanking / Razorpay Popup</span>
+                    <CreditCard size={14} className="text-[var(--color-primary)] shrink-0" />
+                    <span className="truncate">Pay via Cards / NetBanking / Razorpay Popup</span>
                   </button>
                 )}
 
@@ -389,10 +495,10 @@ export const DynamicUpiQrModal = ({
                   <button
                     type="button"
                     onClick={onSwitchToCod}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/70 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-[var(--color-bg)] hover:bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border border-[var(--color-border)] transition-colors cursor-pointer"
                   >
-                    <Banknote size={14} className="text-slate-500" />
-                    <span>Switch to Cash on Delivery (COD)</span>
+                    <Banknote size={14} className="text-[var(--color-primary)] shrink-0" />
+                    <span className="truncate">Switch to Cash on Delivery (COD)</span>
                   </button>
                 )}
               </div>

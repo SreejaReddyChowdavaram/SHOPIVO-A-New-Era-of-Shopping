@@ -110,7 +110,8 @@ class PasswordResetServiceTest {
         Map<String, Object> response = passwordResetService.requestOtp(request);
 
         assertThat(response.get("success")).isEqualTo(true);
-        assertThat((String) response.get("maskedEmail")).isEqualTo("c***r@shopivo.test");
+        assertThat((String) response.get("maskedEmail")).isEqualTo("customer@shopivo.test");
+        assertThat((String) response.get("email")).isEqualTo("customer@shopivo.test");
 
         verify(otpRepository).invalidatePreviousOtps(eq(101L), eq("PASSWORD_RESET"), any(Instant.class));
 
@@ -154,8 +155,8 @@ class PasswordResetServiceTest {
     }
 
     @Test
-    @DisplayName("Request OTP returns generic success when email does not exist (Prevents account enumeration)")
-    void testRequestOtp_UserNotFound_GenericResponse() {
+    @DisplayName("Request OTP throws NOT_FOUND when email does not exist")
+    void testRequestOtp_UserNotFound_ThrowsNotFound() {
         ForgotPasswordRequestOtpRequest request = ForgotPasswordRequestOtpRequest.builder()
                 .email("unknown@shopivo.test")
                 .portalRole(User.Role.CUSTOMER)
@@ -165,17 +166,21 @@ class PasswordResetServiceTest {
                 "unknown@shopivo.test", User.Role.CUSTOMER)).thenReturn(Optional.empty());
         when(userRepository.findByEmail("unknown@shopivo.test")).thenReturn(Optional.empty());
 
-        Map<String, Object> response = passwordResetService.requestOtp(request);
+        assertThatThrownBy(() -> passwordResetService.requestOtp(request))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+                    assertThat(rse.getReason()).contains("No account found");
+                });
 
-        assertThat(response.get("success")).isEqualTo(true);
-        assertThat(response.get("message")).toString().contains("If an account is associated");
         verify(emailService, never()).sendPasswordResetOtp(anyString(), anyString(), anyString(), anyInt());
         verify(otpRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("Request OTP returns generic message on role mismatch (Customer trying Admin portal)")
-    void testRequestOtp_RoleMismatch_GenericResponse() {
+    @DisplayName("Request OTP throws BAD_REQUEST on role mismatch (Customer trying Admin portal)")
+    void testRequestOtp_RoleMismatch_ThrowsBadRequest() {
         ForgotPasswordRequestOtpRequest request = ForgotPasswordRequestOtpRequest.builder()
                 .email("customer@shopivo.test")
                 .portalRole(User.Role.ADMIN)
@@ -185,9 +190,38 @@ class PasswordResetServiceTest {
                 "customer@shopivo.test", User.Role.ADMIN)).thenReturn(Optional.empty());
         when(userRepository.findByEmail("customer@shopivo.test")).thenReturn(Optional.of(customerUser));
 
-        Map<String, Object> response = passwordResetService.requestOtp(request);
+        assertThatThrownBy(() -> passwordResetService.requestOtp(request))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+                    assertThat(rse.getReason()).contains("registered under the CUSTOMER Portal");
+                });
 
-        assertThat(response.get("success")).isEqualTo(true);
+        verify(emailService, never()).sendPasswordResetOtp(anyString(), anyString(), anyString(), anyInt());
+        verify(otpRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Request OTP throws FORBIDDEN when account is disabled")
+    void testRequestOtp_DisabledUser_ThrowsForbidden() {
+        ForgotPasswordRequestOtpRequest request = ForgotPasswordRequestOtpRequest.builder()
+                .email("seller@shopivo.test")
+                .portalRole(User.Role.SELLER)
+                .build();
+
+        when(otpRepository.findTopByEmailIgnoreCaseAndPortalRoleAndConsumedAtIsNullOrderByCreatedAtDesc(
+                "seller@shopivo.test", User.Role.SELLER)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("seller@shopivo.test")).thenReturn(Optional.of(sellerUser));
+
+        assertThatThrownBy(() -> passwordResetService.requestOtp(request))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+                    assertThat(rse.getReason()).contains("disabled");
+                });
+
         verify(emailService, never()).sendPasswordResetOtp(anyString(), anyString(), anyString(), anyInt());
         verify(otpRepository, never()).save(any());
     }

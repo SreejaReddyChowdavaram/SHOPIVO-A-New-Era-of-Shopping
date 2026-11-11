@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-11T00:00:00.000Z" agent="Shopivo CyberForge Architecture" version="21.0.0" type="device">
+  <diagram name="Relational Database Schema &amp; Entity-Relationship Architecture" id="diagram-1">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" background="#050505" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="e1" value="Table: users (Account Entity, login_count, last_login_ip)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="120" width="450" height="240" as="geometry"/></mxCell>
+        <mxCell id="e2" value="Table: user_login_events (Audit Entity, ip, location, device, result)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="120" width="520" height="240" as="geometry"/></mxCell>
+        <mxCell id="e3" value="Table: addresses (Shipping Locations)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1080" y="120" width="470" height="240" as="geometry"/></mxCell>
+        <mxCell id="e4" value="Table: categories (Taxonomy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="390" width="450" height="240" as="geometry"/></mxCell>
+        <mxCell id="e5" value="Table: products (Multi-Vendor Items, Specs, Pricing)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="390" width="520" height="240" as="geometry"/></mxCell>
+        <mxCell id="e6" value="Table: reviews (Verified Buyer Ratings &amp; Comments)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#a855f7;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1080" y="390" width="470" height="240" as="geometry"/></mxCell>
+        <mxCell id="e7" value="Table: orders (Purchase Headers, Status Transitions)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="660" width="450" height="280" as="geometry"/></mxCell>
+        <mxCell id="e8" value="Table: order_items (Multi-Vendor Partitioning)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="530" y="660" width="340" height="280" as="geometry"/></mxCell>
+        <mxCell id="e9" value="Table: payments (Razorpay IDs, Status, Signatures)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#10b981;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="890" y="660" width="330" height="280" as="geometry"/></mxCell>
+        <mxCell id="e10" value="Table: user_events (Telemetry Store for AI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1240" y="660" width="310" height="280" as="geometry"/></mxCell>
+    
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

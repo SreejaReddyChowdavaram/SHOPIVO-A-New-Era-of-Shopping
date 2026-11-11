@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-11T00:00:00.000Z" agent="Shopivo CyberForge Architecture" version="21.0.0" type="device">
+  <diagram name="Customer Marketplace Journey &amp; Lifecycle Workflow" id="diagram-1">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" background="#050505" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="w1" value="Stage 1: Discovery &amp; Search" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="130" width="230" height="220" as="geometry"/></mxCell>
+        <mxCell id="w2" value="Stage 2: Cart &amp; Decision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="310" y="130" width="230" height="220" as="geometry"/></mxCell>
+        <mxCell id="w3" value="Stage 3: Secure Checkout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="570" y="130" width="230" height="220" as="geometry"/></mxCell>
+        <mxCell id="w4" value="Stage 4: Payment &amp; Order" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="830" y="130" width="230" height="220" as="geometry"/></mxCell>
+        <mxCell id="w5" value="Stage 5: Order Fulfillment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#a855f7;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1090" y="130" width="230" height="220" as="geometry"/></mxCell>
+        <mxCell id="w6" value="Stage 6: Account &amp; Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1345" y="130" width="205" height="220" as="geometry"/></mxCell>
+    
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,430 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" width="100%" height="100%" style="background:#050505; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#04DB7E" stop-opacity="0.22" />
+      <stop offset="60%" stop-color="#04DB7E" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#050505" stop-opacity="0.0" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141414" />
+      <stop offset="100%" stop-color="#0c0c0c" />
+    </linearGradient>
+    <linearGradient id="tierGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161616" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.8" />
+    </linearGradient>
+
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+    <filter id="cardGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#04DB7E" flood-opacity="0.25"/>
+    </filter>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#04DB7E" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrow-rose" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#f43f5e" />
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#71717a" />
+    </marker>
+
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="30" y2="0" stroke="#121212" stroke-width="0.8" />
+      <line x1="0" y1="0" x2="0" y2="30" stroke="#121212" stroke-width="0.8" />
+    </pattern>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#050505" />
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  <rect x="12" y="12" width="1576" height="936" rx="14" fill="none" stroke="#222222" stroke-width="1.2" />
+
+  <!-- Header Banner -->
+  <rect x="24" y="24" width="1552" height="76" rx="12" fill="#0d0d0d" stroke="#262626" stroke-width="1" />
+  <rect x="24" y="24" width="1552" height="76" rx="12" fill="url(#headerGrad)" />
+  <line x1="24" y1="100" x2="1576" y2="100" stroke="#04DB7E" stroke-opacity="0.35" stroke-width="1.5" />
+
+  <!-- Brand Glyph & Title -->
+  <circle cx="56" cy="62" r="18" fill="#141414" stroke="#04DB7E" stroke-width="2" />
+  <polygon points="52,54 64,62 52,70" fill="#04DB7E" />
+
+  <text x="88" y="55" fill="#FFFFFF" font-size="20" font-weight="700" letter-spacing="0.5">SHOPIVO <tspan fill="#04DB7E">|</tspan> Customer Marketplace Journey &amp; Lifecycle Workflow</text>
+  <text x="88" y="77" fill="#888888" font-size="12" font-weight="400">End-to-end customer experience: discovery, catalog search, cart validation, Razorpay checkout, order fulfillment, and account security</text>
+
+  <!-- Faculty Demo Badge -->
+  <rect x="1310" y="44" width="250" height="36" rx="8" fill="#141414" stroke="#04DB7E" stroke-opacity="0.5" stroke-width="1" />
+  <circle cx="1328" cy="62" r="4.5" fill="#04DB7E" />
+  <text x="1342" y="66" fill="#EEEEEE" font-size="11" font-weight="600" letter-spacing="0.5">COLLEGE FACULTY DEMO</text>
+
+  <!-- Body -->
+
+    <!-- 6 STAGES OF CUSTOMER WORKFLOW -->
+    
+  <g transform="translate(50, 130)" filter="url(#shadow)">
+    <rect width="230" height="220" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="230" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="230" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 1</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">1. Discovery &amp; Search</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Marketplace Landing Page</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Explore Categories</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Live Keyword Auto-complete</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Price &amp; Rating Filter</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#38bdf8" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Inspect Specifications</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#38bdf8" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Customer Reviews &amp; Badges</text>
+          </g>
+  <g transform="translate(310, 130)" filter="url(#shadow)">
+    <rect width="230" height="220" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="230" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="230" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 2</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">2. Cart &amp; Decision</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Add to Cart / Move to Wishlist</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Real-time Stock Validation</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Quantity Adjustments</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Cart Persistence in Local/DB</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#38bdf8" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Coupon Code Application</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#38bdf8" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Subtotal &amp; Tax Calculation</text>
+          </g>
+  <g transform="translate(570, 130)" filter="url(#cardGlow)">
+    <rect width="230" height="220" rx="10" fill="url(#cardGrad)" stroke="#04DB7E" stroke-width="1.5" />
+    <rect x="0" y="0" width="230" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="230" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 3</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">3. Secure Checkout</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Select / Add Shipping Address</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Review Order Line Items</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Total Breakdown in INR</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Generate Razorpay Order</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#04DB7E" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Launch Razorpay Modal</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#04DB7E" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Cards, UPI, Netbanking, Wallets</text>
+          </g>
+  <g transform="translate(830, 130)" filter="url(#cardGlow)">
+    <rect width="230" height="220" rx="10" fill="url(#cardGrad)" stroke="#04DB7E" stroke-width="1.5" />
+    <rect x="0" y="0" width="230" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="230" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 4</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">4. Payment &amp; Order</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Client Payment Submission</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Razorpay Webhook Triggered</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">HMAC Signature Verification</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Order State: CREATED -&gt; PAID</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#04DB7E" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Stock Count Auto-decrement</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#04DB7E" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Confirmation Email via Brevo</text>
+          </g>
+  <g transform="translate(1090, 130)" filter="url(#shadow)">
+    <rect width="230" height="220" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="230" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="230" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#a855f7" fill-opacity="0.15" stroke="#a855f7" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#a855f7" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 5</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">5. Order Fulfillment</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#a855f7" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Real-time Tracking View</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#a855f7" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Seller Packing &amp; Dispatch</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#a855f7" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Status: PROCESSING -&gt; SHIPPED</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#a855f7" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Out for Delivery &amp; DELIVERED</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#a855f7" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Download Invoice / Receipt</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#a855f7" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Initiate Return / Refund</text>
+          </g>
+  <g transform="translate(1345, 130)" filter="url(#shadow)">
+    <rect width="205" height="220" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="205" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="205" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="205" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="59.6" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f59e0b" font-size="9" font-weight="700" letter-spacing="0.5">STAGE 6</text>
+    <text x="73.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">6. Account &amp; Security</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f59e0b" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Spending Analytics Insights</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f59e0b" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Post-purchase Product Review</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f59e0b" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Star Ratings &amp; Testimonials</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#f59e0b" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Login Activity Inspection</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#f59e0b" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">IP &amp; Geolocation Log View</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#f59e0b" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Self-service Password Change</text>
+          </g>
+  <path d="M 280 240 L 310 240" stroke="#38bdf8" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="251.25" y="230.0" width="87.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="295.0" y="244.0" fill="#38bdf8" font-size="9.5" font-weight="600" text-anchor="middle">Add to Cart</text>
+        
+    
+  <path d="M 540 240 L 570 240" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="524.25" y="230.0" width="61.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="555.0" y="244.0" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">Proceed</text>
+        
+    
+  <path d="M 800 240 L 830 240" stroke="#04DB7E" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="784.25" y="230.0" width="61.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="815.0" y="244.0" fill="#04DB7E" font-size="9.5" font-weight="600" text-anchor="middle">Pay INR</text>
+        
+    
+  <path d="M 1060 240 L 1090 240" stroke="#a855f7" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="1037.75" y="230.0" width="74.5" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="1075.0" y="244.0" fill="#a855f7" font-size="9.5" font-weight="600" text-anchor="middle">Fulfilled</text>
+        
+    
+  <path d="M 1320 240 L 1345 240" stroke="#f59e0b" stroke-width="1.8"  marker-end="url(#arrow)" />
+  
+    <rect x="1305.0" y="230.0" width="55.0" height="20" rx="4" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1" />
+    <text x="1332.5" y="244.0" fill="#f59e0b" font-size="9.5" font-weight="600" text-anchor="middle">Review</text>
+        
+    
+    <rect x="50" y="380" width="1500" height="520" rx="12" fill="url(#tierGrad)" stroke="#222" stroke-width="1.2" />
+    <text x="70" y="410" fill="#04DB7E" font-size="12" font-weight="700" letter-spacing="1">DEEP ARCHITECTURAL DIVE: CUSTOMER SECURITY &amp; PAYMENT LIFECYCLE</text>
+    
+  <g transform="translate(70, 430)" filter="url(#shadow)">
+    <rect width="440" height="210" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="440" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="440" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="440" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="114.0" height="18" rx="4" fill="#04DB7E" fill-opacity="0.15" stroke="#04DB7E" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#04DB7E" font-size="9" font-weight="700" letter-spacing="0.5">PAYMENT GATEWAY</text>
+    <text x="128.0" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Checkout &amp; Payment Flow Detail</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#04DB7E" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Frontend calls POST /api/payments/create-order with orderId</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#04DB7E" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Backend creates order via Razorpay SDK with INR amount in paise</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#04DB7E" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Checkout modal opens securely in iframe; card/UPI credentials never touch SHOPIVO servers</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#04DB7E" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Razorpay returns razorpay_payment_id, order_id, signature</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#04DB7E" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Backend verifies HMAC-SHA256 signature using RAZORPAY_KEY_SECRET</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#04DB7E" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Database transaction: Updates Payment &amp; Order status to PAID atomically</text>
+          </g>
+  <g transform="translate(540, 430)" filter="url(#shadow)">
+    <rect width="440" height="210" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="440" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="440" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="440" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="93.6" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">ORDER ENGINE</text>
+    <text x="107.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Order Lifecycle &amp; Stock Sync</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Optimistic locking prevents overselling during flash-sale spikes</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Hibernate updates product.stock_quantity = stock_quantity - quantity</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Seller receives live order notification with shipping address</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Customer tracks live status updates: PENDING -&gt; PROCESSING -&gt; SHIPPED -&gt; DELIVERED</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#38bdf8" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Customer can request replacement or return within eligible return window</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#38bdf8" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Refund processed via Razorpay API and logged to refund audit table</text>
+          </g>
+  <g transform="translate(1010, 430)" filter="url(#cardGlow)">
+    <rect width="520" height="210" rx="10" fill="url(#cardGrad)" stroke="#f59e0b" stroke-width="1.5" />
+    <rect x="0" y="0" width="520" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="520" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="520" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="134.39999999999998" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#f59e0b" font-size="9" font-weight="700" letter-spacing="0.5">SECURITY TELEMETRY</text>
+    <text x="148.39999999999998" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Customer Security &amp; Privacy Telemetry</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#f59e0b" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Every successful sign-in increments users.login_count and records IP / location</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#f59e0b" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Customer accesses personal security dashboard at /customer/login-activity</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#f59e0b" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Transparent notice informs customer: approximate IP geolocation only, zero GPS tracking</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#f59e0b" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Login history reveals browser, operating system, device type, and login timestamp</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#f59e0b" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Failed login attempts are audited separately with failure codes</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#f59e0b" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Strict authorization: Customers can ONLY query their own login history (HTTP 401/403 enforced)</text>
+          </g>
+  <g transform="translate(70, 660)" filter="url(#shadow)">
+    <rect width="440" height="210" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="440" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="440" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="440" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="107.2" height="18" rx="4" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="0.5">CATALOG ENGINE</text>
+    <text x="121.2" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Product Discovery &amp; Filter Engine</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#38bdf8" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Public category navigation (Electronics, Fashion, Home, Beauty, Sports)</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#38bdf8" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Case-insensitive PostgreSQL full-text search with LIKE/ILIKE indexing</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#38bdf8" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Multi-vendor separation: Products display seller store name and verified badge</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#38bdf8" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Dynamic ratings: Aggregated average stars calculated from verified purchase reviews</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#38bdf8" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Responsive grid layout adapts from 4 columns desktop to 2 columns mobile</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#38bdf8" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Infinite scroll / paginated catalog with low network payload footprint</text>
+          </g>
+  <g transform="translate(540, 660)" filter="url(#shadow)">
+    <rect width="440" height="210" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="440" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="440" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="440" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="100.39999999999999" height="18" rx="4" fill="#a855f7" fill-opacity="0.15" stroke="#a855f7" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#a855f7" font-size="9" font-weight="700" letter-spacing="0.5">REVIEW SYSTEM</text>
+    <text x="114.39999999999999" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Review &amp; Social Proof System</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#a855f7" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Only customers with confirmed DELIVERED order status can submit reviews</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#a855f7" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Star rating (1 to 5 stars) + headline + detailed user feedback</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#a855f7" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Prevents competitor review manipulation and fraudulent feedback spam</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#a855f7" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Moderation pipeline: Admin can flag, hide, or inspect reported reviews</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#a855f7" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Reviews immediately update aggregate product rating and review count</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#a855f7" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">Customer can edit or update their existing review anytime</text>
+          </g>
+  <g transform="translate(1010, 660)" filter="url(#shadow)">
+    <rect width="520" height="210" rx="10" fill="url(#cardGrad)" stroke="#262626" stroke-width="1.2" />
+    <rect x="0" y="0" width="520" height="32" rx="10" fill="#161616" />
+    <rect x="0" y="22" width="520" height="10" fill="#161616" />
+    <line x1="0" y1="32" x2="520" y2="32" stroke="#262626" stroke-width="1" />
+    <rect x="10" y="7" width="127.6" height="18" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-opacity="0.4" stroke-width="1" />
+    <text x="16" y="20" fill="#10b981" font-size="9" font-weight="700" letter-spacing="0.5">RETURNS &amp; REFUNDS</text>
+    <text x="141.6" y="21" fill="#FFFFFF" font-size="12" font-weight="600">Post-Purchase Support &amp; Invoicing</text>
+    
+    <circle cx="16" cy="48" r="2" fill="#10b981" />
+    <text x="26" y="52" fill="#C8C8C8" font-size="11">Downloadable GST-compliant order summary and itemized receipts</text>
+        
+    <circle cx="16" cy="69" r="2" fill="#10b981" />
+    <text x="26" y="73" fill="#C8C8C8" font-size="11">Automated transactional email receipts delivered through Brevo SMTP</text>
+        
+    <circle cx="16" cy="90" r="2" fill="#10b981" />
+    <text x="26" y="94" fill="#C8C8C8" font-size="11">Returns workflow: Customer uploads return reason + condition details</text>
+        
+    <circle cx="16" cy="111" r="2" fill="#10b981" />
+    <text x="26" y="115" fill="#C8C8C8" font-size="11">Seller inspects returned merchandise and confirms acceptance</text>
+        
+    <circle cx="16" cy="132" r="2" fill="#10b981" />
+    <text x="26" y="136" fill="#C8C8C8" font-size="11">Refund triggered automatically to original Razorpay payment source</text>
+        
+    <circle cx="16" cy="153" r="2" fill="#10b981" />
+    <text x="26" y="157" fill="#C8C8C8" font-size="11">All return and refund status transitions emit persistent audit telemetry</text>
+          </g>
+
+  <!-- Footer -->
+  <line x1="24" y1="922" x2="1576" y2="922" stroke="#1f1f1f" stroke-width="1" />
+  <text x="32" y="942" fill="#555555" font-size="10" font-family="monospace">SHOPIVO ENTERPRISE MARKETPLACE • SEMESTER 2 AI PLATFORM ARCHITECTURE • CYBERFORGE THEME</text>
+  <text x="1568" y="942" text-anchor="end" fill="#555555" font-size="10" font-family="monospace">SPRING BOOT 3.4.3 • REACT 19 • POSTGRESQL</text>
+</svg>

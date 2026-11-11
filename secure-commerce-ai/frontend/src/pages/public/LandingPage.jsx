@@ -546,7 +546,7 @@ const LandingPage = () => {
         <div className="landing-container">
           <div className="intelligent-spotlight-card">
             <div className="spotlight-content">
-              <span className="section-tag" style={{ color: '#04DB7E' }}>Security Intelligence</span>
+              <span className="section-tag" style={{ color: 'var(--color-primary)' }}>Security Intelligence</span>
               <h2 className="spotlight-title">
                 Intelligent Protection for Digital Commerce
               </h2>

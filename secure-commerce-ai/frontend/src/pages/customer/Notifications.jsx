@@ -41,15 +41,15 @@ const getNotificationMeta = (type) => {
     case 'ORDER_CONFIRMED':
       return {
         icon: CheckCircle2,
-        color: '#04DB7E',
-        bg: '#E5FFF2',
+        color: 'var(--color-primary)',
+        bg: 'var(--color-primary-subtle)',
         label: 'Order Confirmed',
       }
     case 'ORDER_SHIPPED':
       return {
         icon: Truck,
-        color: '#00C77A',
-        bg: 'rgba(0, 199, 122, 0.12)',
+        color: 'var(--color-primary)',
+        bg: 'var(--color-primary-subtle)',
         label: 'Shipped',
       }
     case 'ORDER_DELIVERED':

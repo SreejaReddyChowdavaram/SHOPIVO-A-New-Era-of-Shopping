@@ -469,8 +469,8 @@ const AdminDashboard = () => {
                   <div style={{
                     width: '44px', height: '44px',
                     borderRadius: 'var(--radius-sm)',
-                    backgroundColor: 'rgba(0, 199, 122, 0.12)',
-                    color: '#00C77A',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    color: 'var(--color-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
                     <Users size={22} />

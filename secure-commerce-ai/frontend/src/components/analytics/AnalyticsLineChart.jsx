@@ -19,7 +19,7 @@ export default function AnalyticsLineChart({
   subtitle,
   data = [],
   series = [
-    { key: 'value', name: 'Value', color: '#04DB7E' }
+    { key: 'value', name: 'Value', color: '#0F8F6B' }
   ],
   isCurrency = false,
   height = 320,
@@ -43,18 +43,18 @@ export default function AnalyticsLineChart({
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
-          <p className="font-bold text-slate-600 dark:text-slate-300 mb-1.5 border-b border-[#DFE9E2] dark:border-[#242424] pb-1">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-[var(--color-text-primary)]">
+          <p className="font-bold text-[var(--color-text-secondary)] mb-1.5 border-b border-[var(--color-border)] pb-1">
             {label}
           </p>
           <div className="space-y-1 pt-0.5">
             {payload.map((entry, idx) => (
               <div key={`tt-${idx}`} className="flex items-center justify-between gap-5">
-                <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                   {entry.name}:
                 </span>
-                <span className="font-extrabold text-slate-900 dark:text-white">
+                <span className="font-extrabold text-[var(--color-text-primary)]">
                   {isCurrency || (entry.dataKey && (
                     entry.dataKey.toLowerCase().includes('amount') ||
                     entry.dataKey.toLowerCase().includes('sales') ||
@@ -75,15 +75,15 @@ export default function AnalyticsLineChart({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
-          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+          <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
             {title}
           </h4>
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
               {subtitle}
             </p>
           )}
@@ -112,25 +112,25 @@ export default function AnalyticsLineChart({
                   strokeDasharray="3 3"
                   vertical={false}
                   horizontal={true}
-                  stroke={isDark ? '#242424' : '#EBF2ED'}
+                  stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
                 />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
                   stroke="none"
-                  tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
+                  tick={{ fill: isDark ? 'var(--color-text-secondary)' : '#667B72', fontSize: 11 }}
                 />
                 <YAxis
                   tickFormatter={formatYAxis}
                   tickLine={false}
                   axisLine={false}
                   stroke="none"
-                  tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
+                  tick={{ fill: isDark ? 'var(--color-text-secondary)' : '#667B72', fontSize: 11 }}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ stroke: '#04DB7E', strokeWidth: 1.5, strokeDasharray: '3 3' }}
+                  cursor={{ stroke: '#0F8F6B', strokeWidth: 1.5, strokeDasharray: '3 3' }}
                   wrapperStyle={{ outline: 'none' }}
                 />
                 {series.length > 1 && (
@@ -146,8 +146,8 @@ export default function AnalyticsLineChart({
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill={`url(#color-${s.key})`}
-                    dot={{ r: 3.5, fill: s.color, strokeWidth: 1.5, stroke: isDark ? '#101010' : '#FFFFFF' }}
-                    activeDot={{ r: 5.5, strokeWidth: 2, stroke: isDark ? '#101010' : '#FFFFFF' }}
+                    dot={{ r: 3.5, fill: s.color, strokeWidth: 1.5, stroke: isDark ? 'var(--color-surface)' : '#FFFFFF' }}
+                    activeDot={{ r: 5.5, strokeWidth: 2, stroke: isDark ? 'var(--color-surface)' : '#FFFFFF' }}
                   />
                 ))}
               </AreaChart>
@@ -161,25 +161,25 @@ export default function AnalyticsLineChart({
                   strokeDasharray="3 3"
                   vertical={false}
                   horizontal={true}
-                  stroke={isDark ? '#242424' : '#EBF2ED'}
+                  stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
                 />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
                   axisLine={false}
                   stroke="none"
-                  tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
+                  tick={{ fill: isDark ? 'var(--color-text-secondary)' : '#667B72', fontSize: 11 }}
                 />
                 <YAxis
                   tickFormatter={formatYAxis}
                   tickLine={false}
                   axisLine={false}
                   stroke="none"
-                  tick={{ fill: isDark ? '#B3B3B3' : '#65716A', fontSize: 11 }}
+                  tick={{ fill: isDark ? 'var(--color-text-secondary)' : '#667B72', fontSize: 11 }}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ stroke: '#04DB7E', strokeWidth: 1.5, strokeDasharray: '3 3' }}
+                  cursor={{ stroke: '#0F8F6B', strokeWidth: 1.5, strokeDasharray: '3 3' }}
                   wrapperStyle={{ outline: 'none' }}
                 />
                 {series.length > 1 && (
@@ -193,8 +193,8 @@ export default function AnalyticsLineChart({
                     name={s.name}
                     stroke={s.color}
                     strokeWidth={2.5}
-                    dot={{ r: 3.5, fill: s.color, strokeWidth: 1.5, stroke: isDark ? '#101010' : '#FFFFFF' }}
-                    activeDot={{ r: 5.5, strokeWidth: 2, stroke: isDark ? '#101010' : '#FFFFFF' }}
+                    dot={{ r: 3.5, fill: s.color, strokeWidth: 1.5, stroke: isDark ? 'var(--color-surface)' : '#FFFFFF' }}
+                    activeDot={{ r: 5.5, strokeWidth: 2, stroke: isDark ? 'var(--color-surface)' : '#FFFFFF' }}
                   />
                 ))}
               </LineChart>

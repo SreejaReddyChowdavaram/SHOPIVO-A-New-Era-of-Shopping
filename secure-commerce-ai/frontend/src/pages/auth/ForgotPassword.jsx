@@ -7,13 +7,13 @@
  * - Step 3: Create New Password with strength meter & complexity validation
  * - Step 4: Success confirmation and seamless return to the designated portal sign-in
  *
- * Styled in SHOPIVO's CyberForge Black + Vibrant Emerald + White visual identity:
- * - Background: #050505
- * - Card: #101010
- * - Emerald: #04DB7E / #00C77A
- * - Text: #FFFFFF
- * - Secondary Text: #B3B3B3
- * - Borders: #242424
+ * Styled with CodeChatura-inspired Theme:
+ * - Background: var(--color-bg)
+ * - Card: var(--color-surface)
+ * - Primary Green: var(--color-primary) / var(--color-primary-hover)
+ * - Text: var(--color-text-primary)
+ * - Secondary Text: var(--color-text-secondary)
+ * - Borders: var(--color-border)
  */
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -108,7 +108,7 @@ export default function ForgotPassword() {
 
     if (score <= 1) return { score: 25, label: 'Weak', color: '#EF4444' }
     if (score <= 3) return { score: 60, label: 'Medium', color: '#F59E0B' }
-    return { score: 100, label: 'Strong', color: '#04DB7E' }
+    return { score: 100, label: 'Strong', color: 'var(--color-primary)' }
   })()
 
   // ─── Step 1 Handler: Request OTP ─────────────────────────────
@@ -129,9 +129,9 @@ export default function ForgotPassword() {
         portalRole,
       })
 
-      setMaskedEmail(data?.maskedEmail || email)
+      setMaskedEmail(email)
       setCooldown(data?.cooldownSeconds || 60)
-      setSuccessNotice('A 6-digit verification code has been dispatched to your email address.')
+      setSuccessNotice(data?.message || 'A 6-digit verification code has been sent to your email address.')
       setCurrentStep(2)
     } catch (err) {
       const isNetwork = err.code === 'ERR_NETWORK' || err.isNetworkError || (err.status === 0)
@@ -161,7 +161,7 @@ export default function ForgotPassword() {
       setCooldown(data?.cooldownSeconds || 60)
       setOtpDigits(['', '', '', '', '', ''])
       if (otpInputRefs.current[0]) otpInputRefs.current[0].focus()
-      setSuccessNotice('A fresh verification code has been sent.')
+      setSuccessNotice('A fresh verification code has been sent to your email address.')
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to resend code. Please try again.')
     } finally {
@@ -298,14 +298,44 @@ export default function ForgotPassword() {
     }
     if (portalRole === 'SELLER') {
       return (
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-950/60 border border-[#04DB7E]/30 text-[#04DB7E]">
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.375rem',
+            padding: '0.25rem 0.75rem',
+            borderRadius: '9999px',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            backgroundColor: 'var(--color-primary-subtle)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-primary)',
+          }}
+        >
           <Store size={13} />
           <span>Seller Merchant Portal</span>
         </div>
       )
     }
     return (
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800/80 border border-slate-700 text-slate-300">
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.375rem',
+          padding: '0.25rem 0.75rem',
+          borderRadius: '9999px',
+          fontSize: '0.75rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
+          color: 'var(--color-text-secondary)',
+        }}
+      >
         <ShoppingBag size={13} />
         <span>Customer Account Recovery</span>
       </div>
@@ -317,8 +347,8 @@ export default function ForgotPassword() {
       className="forgot-password-page"
       style={{
         minHeight: '100vh',
-        backgroundColor: '#050505',
-        color: '#FFFFFF',
+        backgroundColor: 'var(--color-bg)',
+        color: 'var(--color-text-primary)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -336,8 +366,8 @@ export default function ForgotPassword() {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '1.25rem 2rem',
-          borderBottom: '1px solid #1C1C1C',
-          backgroundColor: 'rgba(8, 8, 8, 0.85)',
+          borderBottom: '1px solid var(--color-border)',
+          backgroundColor: 'var(--color-surface)',
           backdropFilter: 'blur(12px)',
         }}
       >
@@ -352,13 +382,12 @@ export default function ForgotPassword() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              color: '#B3B3B3',
+              color: 'var(--color-text-secondary)',
               fontSize: '0.85rem',
               fontWeight: '500',
               textDecoration: 'none',
               transition: 'color 0.2s ease',
             }}
-            className="hover:text-white"
           >
             <ArrowLeft size={16} /> Back to Sign In
           </Link>
@@ -381,11 +410,11 @@ export default function ForgotPassword() {
           style={{
             width: '100%',
             maxWidth: '480px',
-            backgroundColor: '#101010',
-            border: '1px solid #242424',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
             borderRadius: '1.25rem',
             padding: '2.5rem',
-            boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03)',
+            boxShadow: '0 20px 40px -15px rgba(0,0,0,0.3)',
             animation: 'fadeIn 0.3s ease-in-out',
           }}
         >
@@ -424,11 +453,11 @@ export default function ForgotPassword() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '0.75rem',
-                backgroundColor: 'rgba(4, 219, 126, 0.08)',
-                border: '1px solid rgba(4, 219, 126, 0.25)',
+                backgroundColor: 'var(--color-primary-subtle)',
+                border: '1px solid var(--color-border)',
                 borderRadius: '0.75rem',
                 padding: '0.875rem 1rem',
-                color: '#04DB7E',
+                color: 'var(--color-primary)',
                 fontSize: '0.825rem',
                 lineHeight: '1.45',
                 marginBottom: '1.5rem',
@@ -451,21 +480,21 @@ export default function ForgotPassword() {
                     width: '56px',
                     height: '56px',
                     borderRadius: '50%',
-                    backgroundColor: '#171717',
-                    border: '1px solid #242424',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    border: '1px solid var(--color-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1rem auto',
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                   }}
                 >
                   <KeyRound size={26} />
                 </div>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
                   Forgot Your Password?
                 </h1>
-                <p style={{ color: '#B3B3B3', fontSize: '0.875rem', lineHeight: '1.5' }}>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', lineHeight: '1.5' }}>
                   Enter your registered email address. We'll send you a 6-digit verification code to reset your password.
                 </p>
               </div>
@@ -480,7 +509,7 @@ export default function ForgotPassword() {
                       fontWeight: '600',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      color: '#B3B3B3',
+                      color: 'var(--color-text-secondary)',
                       marginBottom: '0.5rem',
                     }}
                   >
@@ -494,7 +523,7 @@ export default function ForgotPassword() {
                         left: '1rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#808080',
+                        color: 'var(--color-text-muted)',
                       }}
                     />
                     <input
@@ -507,16 +536,17 @@ export default function ForgotPassword() {
                       autoComplete="email"
                       style={{
                         width: '100%',
-                        backgroundColor: '#050505',
-                        border: '1px solid #242424',
+                        backgroundColor: 'var(--color-bg)',
+                        border: '1px solid var(--color-border)',
                         borderRadius: '0.75rem',
                         padding: '0.875rem 1rem 0.875rem 2.75rem',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '0.9rem',
                         outline: 'none',
                         transition: 'border-color 0.2s ease',
                       }}
-                      className="focus:border-[#04DB7E]"
+                      onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
+                      onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                     />
                   </div>
                 </div>
@@ -526,8 +556,8 @@ export default function ForgotPassword() {
                   disabled={loading}
                   style={{
                     width: '100%',
-                    backgroundColor: '#04DB7E',
-                    color: '#050505',
+                    backgroundColor: 'var(--color-primary)',
+                    color: '#FFFFFF',
                     fontWeight: '700',
                     fontSize: '0.9rem',
                     padding: '0.875rem 1.25rem',
@@ -539,9 +569,10 @@ export default function ForgotPassword() {
                     gap: '0.5rem',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(4, 219, 126, 0.25)',
+                    boxShadow: '0 4px 12px rgba(15, 143, 107, 0.25)',
                   }}
-                  className="hover:bg-[#00C77A] disabled:opacity-60"
+                  onMouseEnter={(e) => !loading && (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                  onMouseLeave={(e) => !loading && (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
                 >
                   {loading ? (
                     <>
@@ -557,14 +588,14 @@ export default function ForgotPassword() {
                 </button>
               </form>
 
-              <div style={{ textAlign: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid #1C1C1C' }}>
+              <div style={{ textAlign: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--color-border)' }}>
                 <Link
                   to={portalSignInUrl}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.4rem',
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     fontSize: '0.85rem',
                     fontWeight: '600',
                     textDecoration: 'none',
@@ -587,24 +618,24 @@ export default function ForgotPassword() {
                     width: '56px',
                     height: '56px',
                     borderRadius: '50%',
-                    backgroundColor: '#171717',
-                    border: '1px solid #242424',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    border: '1px solid var(--color-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1rem auto',
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                   }}
                 >
                   <ShieldCheck size={26} />
                 </div>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
                   Verify Your Email
                 </h1>
-                <p style={{ color: '#B3B3B3', fontSize: '0.875rem', lineHeight: '1.5' }}>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', lineHeight: '1.5' }}>
                   We've sent a 6-digit verification code to:
                   <br />
-                  <strong style={{ color: '#FFFFFF', wordBreak: 'break-all' }}>{maskedEmail || email}</strong>
+                  <strong style={{ color: 'var(--color-primary)', wordBreak: 'break-all', fontSize: '1rem', fontWeight: '700' }}>{email}</strong>
                 </p>
               </div>
 
@@ -619,7 +650,7 @@ export default function ForgotPassword() {
                       fontWeight: '600',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      color: '#B3B3B3',
+                      color: 'var(--color-text-secondary)',
                       marginBottom: '0.875rem',
                     }}
                   >
@@ -650,15 +681,16 @@ export default function ForgotPassword() {
                           textAlign: 'center',
                           fontSize: '1.5rem',
                           fontWeight: '800',
-                          backgroundColor: '#050505',
-                          border: digit ? '2px solid #04DB7E' : '1px solid #242424',
+                          backgroundColor: 'var(--color-bg)',
+                          border: digit ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
                           borderRadius: '0.75rem',
-                          color: '#FFFFFF',
+                          color: 'var(--color-text-primary)',
                           outline: 'none',
                           transition: 'all 0.15s ease',
-                          boxShadow: digit ? '0 0 10px rgba(4, 219, 126, 0.2)' : 'none',
+                          boxShadow: digit ? '0 0 10px rgba(15, 143, 107, 0.2)' : 'none',
                         }}
-                        className="focus:border-[#04DB7E] focus:ring-1 focus:ring-[#04DB7E]"
+                        onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
+                        onBlur={(e) => (e.target.style.borderColor = digit ? 'var(--color-primary)' : 'var(--color-border)')}
                         aria-label={`Digit ${idx + 1}`}
                       />
                     ))}
@@ -672,17 +704,17 @@ export default function ForgotPassword() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '0.75rem 1rem',
-                    backgroundColor: '#080808',
-                    border: '1px solid #1C1C1C',
+                    backgroundColor: 'var(--color-bg)',
+                    border: '1px solid var(--color-border)',
                     borderRadius: '0.75rem',
                     marginBottom: '1.5rem',
                     fontSize: '0.825rem',
                   }}
                 >
-                  <span style={{ color: '#808080' }}>Didn't receive the code?</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>Didn't receive the code?</span>
                   {cooldown > 0 ? (
-                    <span style={{ color: '#AAB5B0', fontWeight: '600' }}>
-                      Resend in <strong style={{ color: '#04DB7E' }}>{cooldown}s</strong>
+                    <span style={{ color: 'var(--color-text-secondary)', fontWeight: '600' }}>
+                      Resend in <strong style={{ color: 'var(--color-primary)' }}>{cooldown}s</strong>
                     </span>
                   ) : (
                     <button
@@ -692,7 +724,7 @@ export default function ForgotPassword() {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#04DB7E',
+                        color: 'var(--color-primary)',
                         fontWeight: '700',
                         cursor: 'pointer',
                         display: 'inline-flex',
@@ -712,8 +744,8 @@ export default function ForgotPassword() {
                   disabled={loading || otpDigits.join('').length !== 6}
                   style={{
                     width: '100%',
-                    backgroundColor: '#04DB7E',
-                    color: '#050505',
+                    backgroundColor: 'var(--color-primary)',
+                    color: '#FFFFFF',
                     fontWeight: '700',
                     fontSize: '0.9rem',
                     padding: '0.875rem 1.25rem',
@@ -725,9 +757,10 @@ export default function ForgotPassword() {
                     gap: '0.5rem',
                     cursor: loading || otpDigits.join('').length !== 6 ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(4, 219, 126, 0.25)',
+                    boxShadow: '0 4px 12px rgba(15, 143, 107, 0.25)',
                   }}
-                  className="hover:bg-[#00C77A] disabled:opacity-60"
+                  onMouseEnter={(e) => !loading && otpDigits.join('').length === 6 && (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                  onMouseLeave={(e) => !loading && (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
                 >
                   {loading ? (
                     <>
@@ -750,7 +783,7 @@ export default function ForgotPassword() {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#B3B3B3',
+                    color: 'var(--color-text-secondary)',
                     fontSize: '0.825rem',
                     cursor: 'pointer',
                     display: 'inline-flex',
@@ -776,21 +809,21 @@ export default function ForgotPassword() {
                     width: '56px',
                     height: '56px',
                     borderRadius: '50%',
-                    backgroundColor: '#171717',
-                    border: '1px solid #242424',
+                    backgroundColor: 'var(--color-primary-subtle)',
+                    border: '1px solid var(--color-border)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1rem auto',
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                   }}
                 >
                   <Lock size={26} />
                 </div>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
                   Create New Password
                 </h1>
-                <p style={{ color: '#B3B3B3', fontSize: '0.875rem', lineHeight: '1.5' }}>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', lineHeight: '1.5' }}>
                   Enter a strong, secure password for your SHOPIVO account.
                 </p>
               </div>
@@ -806,7 +839,7 @@ export default function ForgotPassword() {
                       fontWeight: '600',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      color: '#B3B3B3',
+                      color: 'var(--color-text-secondary)',
                       marginBottom: '0.5rem',
                     }}
                   >
@@ -820,7 +853,7 @@ export default function ForgotPassword() {
                         left: '1rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#808080',
+                        color: 'var(--color-text-muted)',
                       }}
                     />
                     <input
@@ -833,16 +866,17 @@ export default function ForgotPassword() {
                       autoComplete="new-password"
                       style={{
                         width: '100%',
-                        backgroundColor: '#050505',
-                        border: '1px solid #242424',
+                        backgroundColor: 'var(--color-bg)',
+                        border: '1px solid var(--color-border)',
                         borderRadius: '0.75rem',
                         padding: '0.875rem 2.75rem 0.875rem 2.75rem',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '0.9rem',
                         outline: 'none',
                         transition: 'border-color 0.2s ease',
                       }}
-                      className="focus:border-[#04DB7E]"
+                      onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
+                      onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                     />
                     <button
                       type="button"
@@ -854,11 +888,10 @@ export default function ForgotPassword() {
                         transform: 'translateY(-50%)',
                         background: 'none',
                         border: 'none',
-                        color: '#808080',
+                        color: 'var(--color-text-muted)',
                         cursor: 'pointer',
                         padding: '0.25rem',
                       }}
-                      className="hover:text-white"
                       aria-label={showNewPassword ? 'Hide password' : 'Show password'}
                     >
                       {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -872,7 +905,7 @@ export default function ForgotPassword() {
                         style={{
                           height: '4px',
                           width: '100%',
-                          backgroundColor: '#1C1C1C',
+                          backgroundColor: 'var(--color-border)',
                           borderRadius: '2px',
                           overflow: 'hidden',
                           marginBottom: '0.35rem',
@@ -887,7 +920,7 @@ export default function ForgotPassword() {
                           }}
                         />
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#808080' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                         <span>Password Strength:</span>
                         <strong style={{ color: passwordStrength.color }}>{passwordStrength.label}</strong>
                       </div>
@@ -905,7 +938,7 @@ export default function ForgotPassword() {
                       fontWeight: '600',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      color: '#B3B3B3',
+                      color: 'var(--color-text-secondary)',
                       marginBottom: '0.5rem',
                     }}
                   >
@@ -919,7 +952,7 @@ export default function ForgotPassword() {
                         left: '1rem',
                         top: '50%',
                         transform: 'translateY(-50%)',
-                        color: '#808080',
+                        color: 'var(--color-text-muted)',
                       }}
                     />
                     <input
@@ -932,16 +965,17 @@ export default function ForgotPassword() {
                       autoComplete="new-password"
                       style={{
                         width: '100%',
-                        backgroundColor: '#050505',
-                        border: '1px solid #242424',
+                        backgroundColor: 'var(--color-bg)',
+                        border: '1px solid var(--color-border)',
                         borderRadius: '0.75rem',
                         padding: '0.875rem 2.75rem 0.875rem 2.75rem',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '0.9rem',
                         outline: 'none',
                         transition: 'border-color 0.2s ease',
                       }}
-                      className="focus:border-[#04DB7E]"
+                      onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
+                      onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                     />
                     <button
                       type="button"
@@ -953,11 +987,10 @@ export default function ForgotPassword() {
                         transform: 'translateY(-50%)',
                         background: 'none',
                         border: 'none',
-                        color: '#808080',
+                        color: 'var(--color-text-muted)',
                         cursor: 'pointer',
                         padding: '0.25rem',
                       }}
-                      className="hover:text-white"
                       aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                     >
                       {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -968,26 +1001,26 @@ export default function ForgotPassword() {
                 {/* Password Requirements Checklist */}
                 <div
                   style={{
-                    backgroundColor: '#080808',
-                    border: '1px solid #1C1C1C',
+                    backgroundColor: 'var(--color-bg)',
+                    border: '1px solid var(--color-border)',
                     borderRadius: '0.75rem',
                     padding: '0.875rem 1rem',
                     marginBottom: '1.5rem',
                     fontSize: '0.775rem',
-                    color: '#B3B3B3',
+                    color: 'var(--color-text-secondary)',
                   }}
                 >
-                  <div style={{ fontWeight: '600', color: '#FFFFFF', marginBottom: '0.4rem' }}>
+                  <div style={{ fontWeight: '600', color: 'var(--color-text-primary)', marginBottom: '0.4rem' }}>
                     Password Requirements:
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: newPassword.length >= 8 ? '#04DB7E' : '#808080' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: newPassword.length >= 8 ? 'var(--color-primary)' : 'var(--color-text-muted)' }}>
                       <CheckCircle2 size={13} /> At least 8 characters
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: /[0-9!@#$%^&*]/.test(newPassword) ? '#04DB7E' : '#808080' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: /[0-9!@#$%^&*]/.test(newPassword) ? 'var(--color-primary)' : 'var(--color-text-muted)' }}>
                       <CheckCircle2 size={13} /> At least one number or special character
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: newPassword && newPassword === confirmPassword ? '#04DB7E' : '#808080' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: newPassword && newPassword === confirmPassword ? 'var(--color-primary)' : 'var(--color-text-muted)' }}>
                       <CheckCircle2 size={13} /> Passwords match
                     </div>
                   </div>
@@ -998,8 +1031,8 @@ export default function ForgotPassword() {
                   disabled={loading}
                   style={{
                     width: '100%',
-                    backgroundColor: '#04DB7E',
-                    color: '#050505',
+                    backgroundColor: 'var(--color-primary)',
+                    color: '#FFFFFF',
                     fontWeight: '700',
                     fontSize: '0.9rem',
                     padding: '0.875rem 1.25rem',
@@ -1011,9 +1044,10 @@ export default function ForgotPassword() {
                     gap: '0.5rem',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(4, 219, 126, 0.25)',
+                    boxShadow: '0 4px 12px rgba(15, 143, 107, 0.25)',
                   }}
-                  className="hover:bg-[#00C77A] disabled:opacity-60"
+                  onMouseEnter={(e) => !loading && (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                  onMouseLeave={(e) => !loading && (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
                 >
                   {loading ? (
                     <>
@@ -1041,24 +1075,24 @@ export default function ForgotPassword() {
                   width: '64px',
                   height: '64px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(4, 219, 126, 0.1)',
-                  border: '2px solid #04DB7E',
+                  backgroundColor: 'var(--color-primary-subtle)',
+                  border: '2px solid var(--color-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 1.5rem auto',
-                  color: '#04DB7E',
-                  boxShadow: '0 0 24px rgba(4, 219, 126, 0.3)',
+                  color: 'var(--color-primary)',
+                  boxShadow: '0 0 24px rgba(15, 143, 107, 0.3)',
                 }}
               >
                 <CheckCircle2 size={36} />
               </div>
 
-              <h1 style={{ fontSize: '1.65rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '0.75rem' }}>
+              <h1 style={{ fontSize: '1.65rem', fontWeight: '800', color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
                 Password Updated!
               </h1>
 
-              <p style={{ color: '#B3B3B3', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '2rem' }}>
                 Your password has been updated successfully.
                 <br />
                 You can now sign in to your SHOPIVO account with your new credentials.
@@ -1069,8 +1103,8 @@ export default function ForgotPassword() {
                 onClick={() => navigate(portalSignInUrl, { replace: true })}
                 style={{
                   width: '100%',
-                  backgroundColor: '#04DB7E',
-                  color: '#050505',
+                  backgroundColor: 'var(--color-primary)',
+                  color: '#FFFFFF',
                   fontWeight: '700',
                   fontSize: '0.9rem',
                   padding: '0.875rem 1.25rem',
@@ -1082,9 +1116,10 @@ export default function ForgotPassword() {
                   gap: '0.5rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: '0 4px 12px rgba(4, 219, 126, 0.25)',
+                  boxShadow: '0 4px 12px rgba(15, 143, 107, 0.25)',
                 }}
-                className="hover:bg-[#00C77A]"
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
               >
                 <span>Return to Sign In</span>
                 <ArrowRight size={16} />

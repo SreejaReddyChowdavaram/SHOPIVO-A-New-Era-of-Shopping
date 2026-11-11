@@ -204,6 +204,12 @@ public class ReturnServiceImpl implements ReturnService {
 
     @Override
     public ReturnResponse processSandboxApproval(Long returnId, User customer) {
+        if ("LIVE".equalsIgnoreCase(paymentGatewayService.getMode())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Sandbox return approval is strictly disabled in LIVE payment mode. All refunds must be reviewed and approved by an authorized administrator."
+            );
+        }
         return processAdminApproval(returnId, customer);
     }
 

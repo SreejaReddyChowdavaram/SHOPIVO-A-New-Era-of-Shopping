@@ -10,6 +10,7 @@ import java.util.List;
 
 public record OrderResponse(
         Long id,
+        String orderReference,
         Long customerId,
         String customerName,
         String customerEmail,
@@ -26,6 +27,27 @@ public record OrderResponse(
         Instant createdAt,
         Instant updatedAt
 ) {
+
+    public OrderResponse(
+            Long id,
+            Long customerId,
+            String customerName,
+            String customerEmail,
+            ShippingAddressSnapshot shippingAddress,
+            OrderStatus status,
+            BigDecimal subtotalAmount,
+            BigDecimal discountAmount,
+            String couponCode,
+            BigDecimal totalAmount,
+            int totalItems,
+            List<OrderItemResponse> items,
+            String cancellationReason,
+            Instant cancelledAt,
+            Instant createdAt,
+            Instant updatedAt
+    ) {
+        this(id, "SHV-" + id, customerId, customerName, customerEmail, shippingAddress, status, subtotalAmount, discountAmount, couponCode, totalAmount, totalItems, items, cancellationReason, cancelledAt, createdAt, updatedAt);
+    }
 
     public record ShippingAddressSnapshot(
             String fullName,
@@ -97,6 +119,7 @@ public record OrderResponse(
 
         return new OrderResponse(
                 order.getId(),
+                order.getOrderReference() != null ? order.getOrderReference() : ("SHV-" + order.getId()),
                 order.getCustomer() != null ? order.getCustomer().getId() : null,
                 customerName,
                 customerEmail,
@@ -153,6 +176,7 @@ public record OrderResponse(
 
         return new OrderResponse(
                 order.getId(),
+                order.getOrderReference() != null ? order.getOrderReference() : ("SHV-" + order.getId()),
                 order.getCustomer() != null ? order.getCustomer().getId() : null,
                 customerName,
                 customerEmail,

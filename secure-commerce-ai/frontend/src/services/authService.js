@@ -110,6 +110,16 @@ const authService = {
   },
 
   /**
+   * Get authenticated user's personal login history.
+   *
+   * @returns {Promise<Array>} List of recent login events
+   */
+  getMyLoginHistory: async () => {
+    const response = await api.get('/auth/login-history')
+    return response.data.data
+  },
+
+  /**
    * Log out.
    * Sends LOGOUT event to the backend for audit & session analytics,
    * then removes the JWT from localStorage.

@@ -5,7 +5,9 @@
  */
 
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { ROUTES } from '@/constants/routes'
 import {
   User,
   Shield,
@@ -742,9 +744,9 @@ const SellerProfile = () => {
             Security &amp; Password
           </h2>
 
-          {!isChangingPassword && (
-            <button
-              onClick={() => setIsChangingPassword(true)}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <Link
+              to={ROUTES.SELLER_LOGIN_ACTIVITY}
               className="btn btn-secondary"
               style={{
                 padding: '0.35rem 0.75rem',
@@ -752,12 +754,29 @@ const SellerProfile = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.35rem',
+                textDecoration: 'none',
               }}
             >
-              <Key size={13} />
-              Change Password
-            </button>
-          )}
+              <ShieldCheck size={13} />
+              Login Activity
+            </Link>
+            {!isChangingPassword && (
+              <button
+                onClick={() => setIsChangingPassword(true)}
+                className="btn btn-secondary"
+                style={{
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.8125rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <Key size={13} />
+                Change Password
+              </button>
+            )}
+          </div>
         </div>
 
         {isChangingPassword ? (

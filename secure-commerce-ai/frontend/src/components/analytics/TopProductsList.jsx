@@ -9,20 +9,20 @@ export default function TopProductsList({
   className = '',
 }) {
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5.5 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+          <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
             {title}
           </h4>
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
               {subtitle}
             </p>
           )}
         </div>
-        <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 px-2 py-0.5 rounded-full">
+        <span className="flex items-center gap-1 text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-subtle)] border border-[var(--color-border)] px-2 py-0.5 rounded-full">
           <TrendingUp className="w-3.5 h-3.5" />
           <span>By Volume</span>
         </span>
@@ -34,17 +34,17 @@ export default function TopProductsList({
           products.map((item, idx) => (
             <div
               key={`prod-${item.productId || idx}`}
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-50/70 dark:bg-[#171717] border border-[#DFE9E2] dark:border-[#242424] hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C] transition-colors"
+              className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="w-6 h-6 rounded-lg bg-[#E5FFF2] dark:bg-[#09291B] text-[#087847] dark:text-[#04DB7E] flex items-center justify-center font-extrabold text-xs shrink-0">
+                <span className="w-6 h-6 rounded-lg bg-[var(--color-primary-subtle)] text-[var(--color-primary)] flex items-center justify-center font-extrabold text-xs shrink-0">
                   {idx + 1}
                 </span>
                 <div className="min-w-0">
-                  <p className="font-semibold text-xs text-slate-800 dark:text-slate-200 truncate max-w-[200px]">
+                  <p className="font-semibold text-xs text-[var(--color-text-primary)] truncate max-w-[200px]">
                     {item.productName}
                   </p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                  <p className="text-[11px] text-[var(--color-text-muted)]">
                     {role === 'admin' && item.sellerName
                       ? `Seller: ${item.sellerName} • `
                       : ''}
@@ -54,7 +54,7 @@ export default function TopProductsList({
               </div>
 
               <div className="text-right shrink-0 pl-3">
-                <p className="font-bold text-xs text-slate-900 dark:text-white">
+                <p className="font-bold text-xs text-[var(--color-text-primary)]">
                   {Number(item.unitsSold || 0).toLocaleString()}{' '}
                   <span className="font-normal text-[10px] text-slate-400">sold</span>
                 </p>

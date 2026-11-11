@@ -279,8 +279,8 @@ const Sellers = () => {
                           <div style={{
                             width: '36px', height: '36px',
                             borderRadius: 'var(--radius-sm)',
-                            backgroundColor: 'rgba(0, 199, 122, 0.12)',
-                            color: '#00C77A',
+                            backgroundColor: 'var(--color-primary-subtle)',
+                            color: 'var(--color-primary)',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontWeight: '700', fontSize: '0.875rem'
                           }}>

@@ -2,8 +2,9 @@
  * CustomerAuth.jsx — Customer Portal Authentication Experience
  *
  * Provides dual-mode (Sign In & Sign Up) for Shoppers, fully styled in SHOPIVO CyberForge:
- * - Pure/Near Black (#050505) & Dark Surface (#101010)
- * - Crisp Borders (#242424) & Vibrant Emerald (#04DB7E)
+ * SHOPIVO – Customer Portal Authentication
+ * CodeChatura-inspired green identity: Refined Green (#0F8F6B),
+ * Theme-aware Surfaces, Crisp Borders, and Crisp Typography.
  * - Sign In mode: Email + Password + Google Sign-In with portalRole = 'CUSTOMER'
  * - Sign Up mode: Full Name, Email, Password, Confirm Password + Google Sign-In
  * - Enforces role compatibility: redirects to /customer/dashboard
@@ -279,8 +280,8 @@ export default function CustomerAuth() {
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#04DB7E'
-              e.currentTarget.style.borderColor = '#04DB7E'
+              e.currentTarget.style.color = 'var(--color-primary)'
+              e.currentTarget.style.borderColor = 'var(--color-primary)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = 'var(--color-text-secondary)'
@@ -325,11 +326,11 @@ export default function CustomerAuth() {
                 height: '48px',
                 borderRadius: '12px',
                 backgroundColor: 'var(--color-primary-subtle)',
-                border: '1px solid rgba(4, 219, 126, 0.25)',
+                border: '1px solid rgba(15, 143, 107, 0.25)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#04DB7E',
+                color: 'var(--color-primary)',
                 marginBottom: '0.75rem',
               }}
             >
@@ -377,8 +378,8 @@ export default function CustomerAuth() {
                 cursor: 'pointer',
                 border: 'none',
                 transition: 'all 0.2s ease',
-                backgroundColor: mode === 'signin' ? '#04DB7E' : 'transparent',
-                color: mode === 'signin' ? '#050505' : 'var(--color-text-secondary)',
+                backgroundColor: mode === 'signin' ? 'var(--color-primary)' : 'transparent',
+                color: mode === 'signin' ? '#FFFFFF' : 'var(--color-text-secondary)',
               }}
             >
               Sign In
@@ -395,8 +396,8 @@ export default function CustomerAuth() {
                 cursor: 'pointer',
                 border: 'none',
                 transition: 'all 0.2s ease',
-                backgroundColor: mode === 'signup' ? '#04DB7E' : 'transparent',
-                color: mode === 'signup' ? '#050505' : 'var(--color-text-secondary)',
+                backgroundColor: mode === 'signup' ? 'var(--color-primary)' : 'transparent',
+                color: mode === 'signup' ? '#FFFFFF' : 'var(--color-text-secondary)',
               }}
             >
               Create Account
@@ -437,7 +438,7 @@ export default function CustomerAuth() {
                       fontSize: '0.8125rem',
                       padding: '0.45rem 0.85rem',
                       backgroundColor: 'var(--color-primary)',
-                      color: '#050505',
+                      color: '#FFFFFF',
                       fontWeight: '700',
                     }}
                   >
@@ -521,7 +522,7 @@ export default function CustomerAuth() {
                       outline: 'none',
                       transition: 'border-color 0.15s ease',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -550,7 +551,7 @@ export default function CustomerAuth() {
                     to={`${ROUTES.FORGOT_PASSWORD}?portal=CUSTOMER`}
                     style={{
                       fontSize: '0.75rem',
-                      color: '#04DB7E',
+                      color: 'var(--color-primary)',
                       textDecoration: 'none',
                       fontWeight: 500,
                     }}
@@ -587,7 +588,7 @@ export default function CustomerAuth() {
                       outline: 'none',
                       transition: 'border-color 0.15s ease',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -618,8 +619,8 @@ export default function CustomerAuth() {
                   width: '100%',
                   padding: '0.8125rem',
                   borderRadius: '10px',
-                  backgroundColor: '#04DB7E',
-                  color: '#050505',
+                  backgroundColor: 'var(--color-primary)',
+                  color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.875rem',
                   letterSpacing: '0.03em',
@@ -630,11 +631,11 @@ export default function CustomerAuth() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                  boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                   transition: 'background-color 0.15s ease',
                 }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#00C77A')}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#04DB7E')}
+                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary-hover, #0B7A5B)')}
+                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
               >
                 {loading ? <Loader2 size={18} className="spin" /> : null}
                 <span>{loading ? 'Signing In...' : 'Sign In as Customer'}</span>
@@ -674,7 +675,7 @@ export default function CustomerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -708,7 +709,7 @@ export default function CustomerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -755,7 +756,7 @@ export default function CustomerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                 </div>
@@ -802,7 +803,7 @@ export default function CustomerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -866,7 +867,7 @@ export default function CustomerAuth() {
                       fontSize: '0.875rem',
                       outline: 'none',
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = '#04DB7E')}
+                    onFocus={(e) => (e.target.style.borderColor = 'var(--color-primary)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
                   />
                   <button
@@ -896,7 +897,7 @@ export default function CustomerAuth() {
                   type="checkbox"
                   checked={signUpData.agreeTerms}
                   onChange={(e) => setSignUpData({ ...signUpData, agreeTerms: e.target.checked })}
-                  style={{ accentColor: '#04DB7E', marginTop: '3px' }}
+                  style={{ accentColor: 'var(--color-primary)', marginTop: '3px' }}
                 />
                 <label htmlFor="agreeTerms" style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', lineHeight: 1.4 }}>
                   I agree to SHOPIVO's Terms of Service and Privacy Policy.
@@ -911,8 +912,8 @@ export default function CustomerAuth() {
                   width: '100%',
                   padding: '0.8125rem',
                   borderRadius: '10px',
-                  backgroundColor: '#04DB7E',
-                  color: '#050505',
+                  backgroundColor: 'var(--color-primary)',
+                  color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '0.875rem',
                   letterSpacing: '0.03em',
@@ -923,11 +924,11 @@ export default function CustomerAuth() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 2px 10px rgba(4, 219, 126, 0.25)',
+                  boxShadow: '0 2px 10px rgba(15, 143, 107, 0.25)',
                   transition: 'background-color 0.15s ease',
                 }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#00C77A')}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#04DB7E')}
+                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary-hover, #0B7A5B)')}
+                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = 'var(--color-primary)')}
               >
                 {loading ? <Loader2 size={18} className="spin" /> : null}
                 <span>{loading ? 'Creating Account...' : 'Create Customer Account'}</span>
@@ -954,7 +955,7 @@ export default function CustomerAuth() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -972,7 +973,7 @@ export default function CustomerAuth() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: '#04DB7E',
+                    color: 'var(--color-primary)',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-11T00:00:00.000Z" agent="Shopivo CyberForge Architecture" version="21.0.0" type="device">
+  <diagram name="Multi-Vendor Seller Operations &amp; Lifecycle Architecture" id="diagram-1">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" background="#050505" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="s1" value="Phase 1: Registration &amp; Onboarding" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#38bdf8;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="130" width="275" height="230" as="geometry"/></mxCell>
+        <mxCell id="s2" value="Phase 2: Catalog &amp; Products" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="355" y="130" width="275" height="230" as="geometry"/></mxCell>
+        <mxCell id="s3" value="Phase 3: Inventory Control" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#04DB7E;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="660" y="130" width="275" height="230" as="geometry"/></mxCell>
+        <mxCell id="s4" value="Phase 4: Order Processing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#a855f7;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="965" y="130" width="275" height="230" as="geometry"/></mxCell>
+        <mxCell id="s5" value="Phase 5: Revenue &amp; Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#101010;strokeColor=#f59e0b;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1270" y="130" width="280" height="230" as="geometry"/></mxCell>
+    
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

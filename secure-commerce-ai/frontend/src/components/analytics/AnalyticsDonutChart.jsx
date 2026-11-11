@@ -10,13 +10,13 @@ import { PieChart as PieIcon } from 'lucide-react'
 import { useTheme } from '@/context/ThemeContext'
 
 const FALLBACK_COLORS = {
-  Delivered: '#04DB7E',
-  Pending: '#f59e0b',
-  Confirmed: '#04DB7E',
-  Processing: '#00C77A',
-  Shipped: '#00C77A',
-  Cancelled: '#ef4444',
-  Returned: '#B3B3B3',
+  Delivered: '#0F8F6B',
+  Pending: '#D99A35',
+  Confirmed: '#0F8F6B',
+  Processing: '#0B7A5B',
+  Shipped: '#0B7A5B',
+  Cancelled: '#DC5555',
+  Returned: '#A7BDB4',
 }
 
 export default function AnalyticsDonutChart({
@@ -37,21 +37,21 @@ export default function AnalyticsDonutChart({
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload
-      const itemColor = item.color || FALLBACK_COLORS[item.status] || '#04DB7E'
+      const itemColor = item.color || FALLBACK_COLORS[item.status] || '#0F8F6B'
 
       return (
-        <div className="bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-slate-900 dark:text-white">
-          <div className="flex items-center gap-2 mb-1.5 border-b border-[#DFE9E2] dark:border-[#242424] pb-1">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-[var(--color-text-primary)]">
+          <div className="flex items-center gap-2 mb-1.5 border-b border-[var(--color-border)] pb-1">
             <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: itemColor }} />
-            <span className="font-bold text-slate-900 dark:text-white">{item.status || item.method || item.name}</span>
+            <span className="font-bold text-[var(--color-text-primary)]">{item.status || item.method || item.name}</span>
           </div>
-          <div className="flex items-center justify-between gap-5 text-slate-600 dark:text-slate-300">
+          <div className="flex items-center justify-between gap-5 text-[var(--color-text-secondary)]">
             <span>Orders:</span>
-            <span className="font-extrabold text-slate-900 dark:text-white">{Number(item.count).toLocaleString()}</span>
+            <span className="font-extrabold text-[var(--color-text-primary)]">{Number(item.count).toLocaleString()}</span>
           </div>
-          <div className="flex items-center justify-between gap-5 text-slate-600 dark:text-slate-300">
+          <div className="flex items-center justify-between gap-5 text-[var(--color-text-secondary)]">
             <span>Share:</span>
-            <span className="font-semibold text-[#087847] dark:text-[#04DB7E]">{item.percentage || item.share || 0}%</span>
+            <span className="font-semibold text-[var(--color-primary)]">{item.percentage || item.share || 0}%</span>
           </div>
         </div>
       )
@@ -60,19 +60,19 @@ export default function AnalyticsDonutChart({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div>
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+          <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
             {title}
           </h4>
-          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
             {totalCount.toLocaleString()} {totalLabel}
           </span>
         </div>
         {subtitle && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
             {subtitle}
           </p>
         )}
@@ -93,11 +93,11 @@ export default function AnalyticsDonutChart({
                   outerRadius={outerRadius}
                   paddingAngle={3}
                   dataKey="count"
-                  stroke={isDark ? '#101010' : '#FFFFFF'}
+                  stroke={isDark ? 'var(--color-surface)' : '#FFFFFF'}
                   strokeWidth={2}
                 >
                   {data.map((entry, index) => {
-                    const color = entry.color || FALLBACK_COLORS[entry.status] || '#04DB7E'
+                    const color = entry.color || FALLBACK_COLORS[entry.status] || '#0F8F6B'
                     return <Cell key={`cell-${index}`} fill={color} />
                   })}
                 </Pie>
@@ -106,10 +106,10 @@ export default function AnalyticsDonutChart({
 
             {/* Central Metric Indicator */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
+              <span className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight leading-none">
                 {totalCount.toLocaleString()}
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500 mt-1">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--color-text-muted)] mt-1">
                 {totalLabel}
               </span>
             </div>
@@ -123,9 +123,9 @@ export default function AnalyticsDonutChart({
       </div>
 
       {/* Refined Bottom Legend */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-3 border-t border-[#DFE9E2] dark:border-[#242424]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-3 border-t border-[var(--color-border)]">
         {data.map((item, idx) => {
-          const color = item.color || FALLBACK_COLORS[item.status] || '#04DB7E'
+          const color = item.color || FALLBACK_COLORS[item.status] || '#0F8F6B'
           return (
             <div key={`legend-${idx}`} className="flex items-center gap-2 min-w-0">
               <span
@@ -133,13 +133,13 @@ export default function AnalyticsDonutChart({
                 style={{ backgroundColor: color }}
               />
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                <span className="text-xs font-bold text-[var(--color-text-primary)] truncate">
                   {Number(item.count).toLocaleString()}{' '}
-                  <span className="text-[10px] font-normal text-slate-400 dark:text-slate-500">
+                  <span className="text-[10px] font-normal text-[var(--color-text-muted)]">
                     ({item.percentage || 0}%)
                   </span>
                 </span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                <span className="text-[10px] text-[var(--color-text-secondary)] truncate">
                   {item.status || item.method || item.name}
                 </span>
               </div>

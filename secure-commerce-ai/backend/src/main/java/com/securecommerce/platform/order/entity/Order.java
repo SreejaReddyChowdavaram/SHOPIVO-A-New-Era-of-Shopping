@@ -24,6 +24,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "order_reference", nullable = false, unique = true, length = 32)
+    private String orderReference;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
@@ -94,4 +97,11 @@ public class Order {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @PrePersist
+    public void ensureOrderReference() {
+        if (this.orderReference == null || this.orderReference.isBlank()) {
+            this.orderReference = "SHV-" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+        }
+    }
 }

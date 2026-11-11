@@ -144,6 +144,7 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
         Map<String, Object> requestBody = Map.of(
                 "amount", amountInPaise,
                 "currency", currency != null ? currency : "INR",
+                "payment_capture", 1,
                 "receipt", receipt != null ? receipt : ("SHOPIVO-ORD-" + orderId),
                 "notes", Map.of(
                         "shopivo_order_id", String.valueOf(orderId),
@@ -292,6 +293,53 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
         } catch (Exception e) {
             log.error("Failed to fetch Razorpay payment {}: {}", paymentId, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Failed to fetch payment details from Razorpay: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GatewayPaymentDetails capturePayment(String paymentId, Long amountInPaise, String currency) {
+        ensureConfigured();
+
+        if (isDevelopmentPlaceholderKey()) {
+            log.info("[DEV-TEST-MODE] Captured test payment {}", paymentId);
+            return GatewayPaymentDetails.builder()
+                    .paymentId(paymentId)
+                    .amountInPaise(amountInPaise)
+                    .currency(currency != null ? currency : "INR")
+                    .status("captured")
+                    .method("card")
+                    .build();
+        }
+
+        Map<String, Object> requestBody = Map.of(
+                "amount", amountInPaise,
+                "currency", currency != null ? currency : "INR"
+        );
+
+        try {
+            String responseStr = restClient.post()
+                    .uri("/payments/{paymentId}/capture", paymentId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .body(String.class);
+
+            JsonNode root = objectMapper.readTree(responseStr);
+            return GatewayPaymentDetails.builder()
+                    .paymentId(root.path("id").asText())
+                    .orderId(root.path("order_id").asText(null))
+                    .amountInPaise(root.path("amount").asLong(amountInPaise))
+                    .currency(root.path("currency").asText("INR"))
+                    .status(root.path("status").asText("captured"))
+                    .method(root.path("method").asText("unknown"))
+                    .cardLast4(root.path("card").path("last4").asText(null))
+                    .vpa(root.path("vpa").asText(null))
+                    .bank(root.path("bank").asText(null))
+                    .build();
+
+        } catch (Exception e) {
+            log.error("Failed to capture Razorpay payment {}: {}", paymentId, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Razorpay capture API error: " + e.getMessage());
         }
     }
 

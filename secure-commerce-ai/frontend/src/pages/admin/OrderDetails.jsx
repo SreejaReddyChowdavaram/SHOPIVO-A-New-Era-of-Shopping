@@ -43,8 +43,8 @@ const STEPS = [
 
 const STATUS_BADGE = {
   PENDING:    { label: 'Pending',    color: 'var(--color-warning)',       bg: 'rgba(234, 179, 8, 0.12)', border: 'rgba(234, 179, 8, 0.3)' },
-  CONFIRMED:  { label: 'Confirmed',  color: '#087847',                    bg: '#E5FFF2',                  border: '#DFE9E2' },
-  PROCESSING: { label: 'Processing', color: '#00C77A',                    bg: 'rgba(0, 199, 122, 0.12)', border: 'rgba(0, 199, 122, 0.3)' },
+  CONFIRMED:  { label: 'Confirmed',  color: 'var(--color-primary)',       bg: 'var(--color-primary-subtle)', border: 'var(--color-border)' },
+  PROCESSING: { label: 'Processing', color: 'var(--color-primary)',       bg: 'var(--color-primary-subtle)', border: 'var(--color-border)' },
   SHIPPED:    { label: 'Shipped',    color: '#0d9488',                    bg: 'rgba(13, 148, 136, 0.12)', border: 'rgba(13, 148, 136, 0.3)' },
   DELIVERED:  { label: 'Delivered',  color: 'var(--color-success)',       bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.3)' },
   CANCELLED:  { label: 'Cancelled',  color: 'var(--color-danger)',        bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)' },

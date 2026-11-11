@@ -12,7 +12,7 @@ const STATUS_CONFIG = {
   },
   CONFIRMED: {
     label: 'Confirmed',
-    badge: 'bg-[#E5FFF2] text-[#087847] border-[#DFE9E2] dark:bg-[#09291B] dark:text-[#04DB7E] dark:border-[#242424]',
+    badge: 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)] border-[var(--color-border)]',
   },
   PROCESSING: {
     label: 'Processing',
@@ -51,15 +51,15 @@ export default function RecentOrdersTable({
   }
 
   return (
-    <div className={`rounded-2xl bg-white dark:bg-[#101010] border border-[#DFE9E2] dark:border-[#242424] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
+    <div className={`rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5 sm:p-6 shadow-xs flex flex-col justify-between ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 sm:mb-5">
         <div>
-          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+          <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
             {title}
           </h4>
           {subtitle && (
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
               {subtitle}
             </p>
           )}
@@ -67,7 +67,7 @@ export default function RecentOrdersTable({
         {viewAllLink && (
           <Link
             to={viewAllLink}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#087847] dark:text-[#04DB7E] hover:text-[#04DB7E] dark:hover:text-[#00C77A] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-primary)] hover:underline transition-colors"
           >
             <span>View All</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -80,7 +80,7 @@ export default function RecentOrdersTable({
         {orders && orders.length > 0 ? (
           <table className="w-full text-left border-collapse min-w-[580px]">
             <thead>
-              <tr className="border-b border-[#DFE9E2] dark:border-[#242424] text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <tr className="border-b border-[var(--color-border)] text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-wider">
                 <th className="pb-3 pl-2">Order</th>
                 {role === 'customer' && <th className="pb-3">Product</th>}
                 {(role === 'seller' || role === 'admin') && <th className="pb-3">Customer</th>}
@@ -91,12 +91,12 @@ export default function RecentOrdersTable({
                 <th className="pb-3 pr-2 text-right">Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DFE9E2] dark:divide-[#242424] text-xs">
+            <tbody className="divide-y divide-[var(--color-border)] text-xs">
               {orders.map((item, idx) => {
                 const rawStatus = item.orderStatus || item.status || 'PENDING'
                 const statusInfo = STATUS_CONFIG[rawStatus.toUpperCase()] || {
                   label: rawStatus,
-                  badge: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
+                  badge: 'bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border)]',
                 }
                 const orderId = item.orderId || item.id
                 const productName = item.productName || item.productNameSnapshot || 'Product'
@@ -108,10 +108,10 @@ export default function RecentOrdersTable({
                 return (
                   <tr
                     key={`order-row-${orderId}-${idx}`}
-                    className="hover:bg-[#F0FDF4] dark:hover:bg-[#1C1C1C] transition-colors"
+                    className="hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
                     {/* Order ID */}
-                    <td className="py-3.5 pl-2 font-bold text-[#087847] dark:text-[#04DB7E] whitespace-nowrap">
+                    <td className="py-3.5 pl-2 font-bold text-[var(--color-primary)] whitespace-nowrap">
                       #{orderId}
                     </td>
 

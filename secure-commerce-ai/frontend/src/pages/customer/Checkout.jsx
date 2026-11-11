@@ -1,5 +1,5 @@
 /**
- * Checkout.jsx — Marketplace Order Checkout with Razorpay Test Mode & Cash on Delivery.
+ * Checkout.jsx — Marketplace Order Checkout with Razorpay Live Checkout & Cash on Delivery.
  *
  * Enforces:
  * 1. Strictly 2 checkout methods:
@@ -45,10 +45,10 @@ import DynamicUpiQrModal from '@/components/payment/DynamicUpiQrModal'
 const PAYMENT_METHODS = [
   {
     id: 'RAZORPAY',
-    label: 'Online Payment',
+    label: 'Razorpay Standard Checkout',
     icon: ShieldCheck,
-    subtitle: 'Pay securely through Razorpay using UPI (Dynamic QR / Apps), Cards, or Net Banking.',
-    badge: 'Dynamic UPI QR • Instant'
+    subtitle: 'Pay securely through official Razorpay checkout popup using Cards, UPI, Net Banking, or Wallets.',
+    badge: 'Official Razorpay • PCI-DSS'
   },
   {
     id: 'COD',
@@ -99,6 +99,25 @@ const Checkout = () => {
   // Payment Selection: Exactly RAZORPAY or COD
   const [paymentMethod, setPaymentMethod] = useState('RAZORPAY')
 
+  // Clear any legacy standalone QR modal session so Razorpay Standard Checkout opens directly
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem('shopivo_active_qr_session')
+    } catch {
+      // ignore
+    }
+    setDevModalOrder(null)
+  }, [])
+
+  // Sync devModalOrder to sessionStorage
+  useEffect(() => {
+    if (devModalOrder) {
+      sessionStorage.setItem('shopivo_active_qr_session', JSON.stringify(devModalOrder))
+    } else {
+      sessionStorage.removeItem('shopivo_active_qr_session')
+    }
+  }, [devModalOrder])
+
   const loadData = async () => {
     setLoading(true)
     setError(null)
@@ -119,7 +138,7 @@ const Checkout = () => {
       }
 
       // Record research event CHECKOUT_STARTED
-      api.post('/orders/checkout-start').catch(() => {})
+      api.post('/orders/checkout-start').catch(() => { })
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load checkout information')
     } finally {
@@ -213,39 +232,7 @@ const Checkout = () => {
           contact: gwOrder.customerPhone,
         },
         theme: {
-          color: '#04DB7E',
-        },
-        config: {
-          display: {
-            blocks: {
-              upi: {
-                name: 'Pay using UPI / Dynamic QR / Apps',
-                instruments: [
-                  {
-                    method: 'upi'
-                  }
-                ]
-              },
-              other: {
-                name: 'Cards, NetBanking & Wallets',
-                instruments: [
-                  {
-                    method: 'card'
-                  },
-                  {
-                    method: 'netbanking'
-                  },
-                  {
-                    method: 'wallet'
-                  }
-                ]
-              }
-            },
-            sequence: ['block.upi', 'block.other'],
-            preferences: {
-              show_default_blocks: true
-            }
-          }
+          color: '#0F8F6B',
         },
         handler: async function (response) {
           try {
@@ -285,36 +272,22 @@ const Checkout = () => {
     }
   }
 
-  // Initiates dynamic UPI QR code flow by default, with automatic fallback
+  // Directly launches Razorpay Standard Checkout modal
   const triggerRazorpayModal = async (orderId) => {
-    setSubmitting(true)
-    setError(null)
     try {
-      const qrData = await createQrCode(orderId)
-
-      if (qrData.mode === 'RAZORPAY_QR_CODE') {
-        setDevModalOrder({ orderId, qrData })
-        setSubmitting(false)
-        return
-      }
-
-      // If merchant account standalone QR is inactive, fallback cleanly to Standard Checkout with UPI block
-      await launchRazorpayStandardCheckout(orderId, qrData)
-    } catch (err) {
-      // Fallback to Standard Checkout if QR initiation encounters issue
-      try {
-        await launchRazorpayStandardCheckout(orderId)
-      } catch (fallbackErr) {
-        setError(fallbackErr.response?.data?.message || fallbackErr.message || 'Failed to initiate payment')
-        setSubmitting(false)
-      }
+      sessionStorage.removeItem('shopivo_active_qr_session')
+    } catch {
+      // ignore
     }
+    setDevModalOrder(null)
+    await launchRazorpayStandardCheckout(orderId)
   }
 
   // Handle completed payment from DynamicUpiQrModal
   const handleCompletePaymentFromModal = async (result) => {
     setSubmitting(true)
     setError(null)
+    sessionStorage.removeItem('shopivo_active_qr_session')
     try {
       await verifyGatewayPayment({
         orderId: result.orderId,
@@ -385,7 +358,7 @@ const Checkout = () => {
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Failed to place order'
       setError(msg)
-      getCart().then(setCart).catch(() => {})
+      getCart().then(setCart).catch(() => { })
       setSubmitting(false)
     }
   }
@@ -476,7 +449,7 @@ const Checkout = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
             <div>
               <div style={{ fontWeight: '700', color: '#b45309', fontSize: '0.9375rem', marginBottom: '0.2rem' }}>
-                Order #{pendingOrder.id} is Pending Payment (₹{pendingOrder.totalAmount})
+                Order {pendingOrder.orderReference || `#${pendingOrder.id}`} is Pending Payment (₹{pendingOrder.totalAmount})
               </div>
               <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
                 Your order is reserved. You can complete online payment now or switch to Cash on Delivery.
@@ -507,10 +480,10 @@ const Checkout = () => {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
-        
+
         {/* ── Left Column: Delivery Address & Payment Selection ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          
+
           {/* ── 1. Delivery Address Card ── */}
           <div className="card" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
@@ -603,17 +576,17 @@ const Checkout = () => {
                   gap: '0.4rem',
                   padding: '0.2rem 0.65rem',
                   borderRadius: '9999px',
-                  backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                  border: '1px solid rgba(245, 158, 11, 0.25)',
-                  color: '#d97706',
+                  backgroundColor: 'rgba(15, 143, 107, 0.1)',
+                  border: '1px solid rgba(15, 143, 107, 0.25)',
+                  color: 'var(--color-primary)',
                   fontSize: '0.6875rem',
                   fontWeight: '700',
                   letterSpacing: '0.025em',
                   textTransform: 'uppercase'
                 }}
               >
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#d97706', display: 'inline-block' }} />
-                <span>Test Mode · No Real Charges</span>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'inline-block' }} />
+                <span>PCI-DSS Compliant · 256-Bit SSL</span>
               </div>
             </div>
 
@@ -665,10 +638,10 @@ const Checkout = () => {
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)', fontWeight: '700', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
                     <ShieldCheck size={18} />
-                    <span>Razorpay Standard Checkout (Test Mode)</span>
+                    <span>Razorpay Standard Checkout</span>
                   </div>
                   <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)', margin: '0 0 0.85rem', lineHeight: 1.45 }}>
-                    Clicking "Pay & Place Order" will open Razorpay's PCI-DSS compliant checkout popup. You can select any test payment method (Cards, UPI, NetBanking, Wallets). No real card numbers or passwords are ever stored or processed on our servers.
+                    Clicking "Pay & Place Order" will open Razorpay's PCI-DSS compliant checkout popup. You can select your preferred payment method (Cards, UPI, NetBanking, Wallets). No real card numbers or passwords are ever stored or processed on our servers.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.725rem' }}>
                     <span style={{ backgroundColor: 'var(--color-surface)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>Visa / MasterCard / RuPay</span>
@@ -692,7 +665,7 @@ const Checkout = () => {
 
         {/* ── Right Column: Sticky Coupon & Price Details & Pay CTA ── */}
         <div style={{ position: 'sticky', top: '80px', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          
+
           {/* ── Coupon & Promo Code Box ── */}
           <div className="card" style={{ padding: '1.25rem' }}>
             <h3 style={{ fontSize: '0.8125rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.85rem' }}>
@@ -889,6 +862,7 @@ const Checkout = () => {
       {devModalOrder && (
         <DynamicUpiQrModal
           orderId={devModalOrder.orderId}
+          orderReference={devModalOrder.qrData?.orderReference || devModalOrder.orderReference || pendingOrder?.orderReference}
           amount={devModalOrder.qrData?.amount || devModalOrder.gwOrder?.amount}
           amountInPaise={devModalOrder.qrData?.amountInPaise || devModalOrder.gwOrder?.amountInPaise}
           imageUrl={devModalOrder.qrData?.imageUrl}
@@ -901,22 +875,31 @@ const Checkout = () => {
           onPaymentFailed={(msg) => {
             setError(msg)
             setDevModalOrder(null)
+            sessionStorage.removeItem('shopivo_active_qr_session')
+          }}
+          onRegenerateQr={async () => {
+            const freshQr = await createQrCode(devModalOrder.orderId)
+            setDevModalOrder({ orderId: devModalOrder.orderId, qrData: freshQr })
+            return freshQr
           }}
           onDismiss={() => {
             const oid = devModalOrder.orderId
-            cancelQrCode(oid).catch(() => {})
+            cancelQrCode(oid).catch(() => { })
             setDevModalOrder(null)
+            sessionStorage.removeItem('shopivo_active_qr_session')
             setError('Payment window was closed. You can retry payment now or switch to Cash on Delivery.')
           }}
           onSwitchToCod={() => {
             const oid = devModalOrder.orderId
-            cancelQrCode(oid).catch(() => {})
+            cancelQrCode(oid).catch(() => { })
             setDevModalOrder(null)
+            sessionStorage.removeItem('shopivo_active_qr_session')
             handleSwitchToCod(oid)
           }}
           onOpenStandardCheckout={() => {
             const oid = devModalOrder.orderId
             setDevModalOrder(null)
+            sessionStorage.removeItem('shopivo_active_qr_session')
             launchRazorpayStandardCheckout(oid)
           }}
           checkStatusApi={getPaymentByOrderId}

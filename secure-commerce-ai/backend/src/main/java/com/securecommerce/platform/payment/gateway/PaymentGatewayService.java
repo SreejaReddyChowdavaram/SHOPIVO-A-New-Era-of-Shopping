@@ -17,6 +17,8 @@ public interface PaymentGatewayService {
 
     GatewayPaymentDetails fetchPayment(String paymentId);
 
+    GatewayPaymentDetails capturePayment(String paymentId, Long amountInPaise, String currency);
+
     GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason);
 
     GatewayQrCodeResponse createQrCode(Long orderId, BigDecimal amount, String currency, String description, Long closeByEpochSeconds);

@@ -147,6 +147,18 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
     }
 
     @Override
+    public GatewayPaymentDetails capturePayment(String paymentId, Long amountInPaise, String currency) {
+        log.info("[TEST-MOCK] Captured payment {}: amount={} paise, currency={}", paymentId, amountInPaise, currency);
+        return GatewayPaymentDetails.builder()
+                .paymentId(paymentId)
+                .amountInPaise(amountInPaise)
+                .currency(currency != null ? currency : "INR")
+                .status("captured")
+                .method("card")
+                .build();
+    }
+
+    @Override
     public GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason) {
         if ("pay_fail_refund".equalsIgnoreCase(paymentId)) {
             throw new RuntimeException("Simulated gateway refund failure");
@@ -178,7 +190,7 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
         long amountInPaise = amount.multiply(BigDecimal.valueOf(100)).longValue();
         String qrId = "qr_test_" + UUID.randomUUID().toString().replace("-", "").substring(0, 14);
         String imageUrl = "https://api.razorpay.com/v1/payments/qr_codes/" + qrId + "/image";
-        long closeBy = closeByEpochSeconds != null ? closeByEpochSeconds : (System.currentTimeMillis() / 1000 + 900);
+        long closeBy = closeByEpochSeconds != null ? closeByEpochSeconds : (System.currentTimeMillis() / 1000 + 600);
 
         GatewayQrCodeResponse response = GatewayQrCodeResponse.builder()
                 .qrCodeId(qrId)

@@ -145,4 +145,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.customer c ORDER BY o.createdAt DESC")
     List<Order> findRecentOrdersForAdmin(Pageable pageable);
+
+    boolean existsByOrderReference(String orderReference);
+
+    Optional<Order> findByOrderReference(String orderReference);
 }
