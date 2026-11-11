@@ -68,8 +68,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // ── Public: Root and Auth ────────────────────────
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/auth/login-history").authenticated()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/payments/webhook/**").permitAll()
+                .requestMatchers("/payments/webhook", "/payments/webhook/**").permitAll()
 
                 // ── Public: Product browse, categories, reviews and uploaded images ────────
                 // Customers (even logged-out guests) can browse products, reviews and view uploaded images

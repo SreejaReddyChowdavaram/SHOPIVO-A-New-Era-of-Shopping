@@ -103,8 +103,9 @@ public class PaymentController {
     /**
      * Razorpay asynchronous server-to-server webhook endpoint.
      * Publicly accessible, secured via HMAC-SHA256 signature verification.
+     * Accepts both /api/payments/webhook/razorpay and /api/payments/webhook.
      */
-    @PostMapping("/webhook/razorpay")
+    @PostMapping(value = {"/webhook/razorpay", "/webhook"})
     public ResponseEntity<Map<String, String>> handleWebhook(
             @RequestBody String rawPayload,
             @RequestHeader(value = "X-Razorpay-Signature", required = false) String signature,

@@ -148,9 +148,9 @@ app:
   cors:
     allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:${CORS_ORIGINS:http://localhost:5173}}
 
-  # Razorpay Configuration (TEST or LIVE mode supported via RAZORPAY_MODE)
+  # Razorpay Configuration (TEST or LIVE mode supported via SHOPIVO_PAYMENT_MODE or RAZORPAY_MODE)
   razorpay:
-    mode: ${RAZORPAY_MODE:TEST}
+    mode: ${SHOPIVO_PAYMENT_MODE:${RAZORPAY_MODE:TEST}}
     live-enabled: ${RAZORPAY_LIVE_ENABLED:false}
     key-id: ${RAZORPAY_KEY_ID:}
     key-secret: ${RAZORPAY_KEY_SECRET:}
