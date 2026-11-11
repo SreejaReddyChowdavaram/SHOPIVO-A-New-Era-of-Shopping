@@ -92,7 +92,7 @@ const Login = () => {
 
       navigate(destination, { replace: true })
     } catch (err) {
-      setApiError(err.message || 'Unable to sign in. Please check your email and password.')
+      setApiError(err.response?.data?.message || err.message || 'Unable to sign in. Please check your email and password.')
     } finally {
       setIsLoading(false)
     }
@@ -126,7 +126,7 @@ const Login = () => {
           role="alert"
           style={{
             display: 'flex',
-            alignItems: 'flex-start',
+            flexDirection: 'column',
             gap: '0.625rem',
             backgroundColor: 'var(--color-danger-subtle)',
             border: '1px solid var(--color-danger)',
@@ -139,8 +139,27 @@ const Login = () => {
             animation: 'fadeIn 0.2s ease-out forwards',
           }}
         >
-          <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
-          <span>{apiError}</span>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem' }}>
+            <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <span>{apiError}</span>
+          </div>
+          {apiError.includes('registered with Google') && (
+            <div style={{ marginTop: '0.25rem' }}>
+              <Link
+                to={ROUTES.CUSTOMER_AUTH}
+                className="btn btn-primary"
+                style={{
+                  display: 'block',
+                  textAlign: 'center',
+                  fontSize: '0.8125rem',
+                  padding: '0.45rem 0.85rem',
+                  textDecoration: 'none',
+                }}
+              >
+                Continue with Google Sign-In
+              </Link>
+            </div>
+          )}
         </div>
       )}
 

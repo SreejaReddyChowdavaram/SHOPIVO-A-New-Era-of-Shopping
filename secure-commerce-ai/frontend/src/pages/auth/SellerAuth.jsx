@@ -207,7 +207,15 @@ export default function SellerAuth() {
         })
       )
 
-      navigate(ROUTES.SELLER_DASHBOARD, { replace: true })
+      // Strict role-based redirection from backend source of truth
+      const userRole = authData.user?.role
+      if (userRole === 'ADMIN') {
+        navigate(ROUTES.ADMIN_DASHBOARD, { replace: true })
+      } else if (userRole === 'SELLER') {
+        navigate(ROUTES.SELLER_DASHBOARD, { replace: true })
+      } else {
+        navigate(ROUTES.CUSTOMER_DASHBOARD, { replace: true })
+      }
     } catch (err) {
       if (err.code === 'ERR_NETWORK' || !err.response) {
         setError('Network connection error. Unable to reach authentication server.')
@@ -399,7 +407,7 @@ export default function SellerAuth() {
             <div
               style={{
                 display: 'flex',
-                alignItems: 'flex-start',
+                flexDirection: 'column',
                 gap: '0.625rem',
                 padding: '0.75rem 1rem',
                 borderRadius: '8px',
@@ -410,8 +418,32 @@ export default function SellerAuth() {
                 marginBottom: '1.25rem',
               }}
             >
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span>{error}</span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem' }}>
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span>{error}</span>
+              </div>
+              {error.includes('registered with Google') && (
+                <div style={{ marginTop: '0.25rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const btn = document.querySelector('.google-sign-in-btn') || document.querySelector('#google-signin-wrapper')
+                      if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    }}
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%',
+                      fontSize: '0.8125rem',
+                      padding: '0.45rem 0.85rem',
+                      backgroundColor: 'var(--color-primary)',
+                      color: '#050505',
+                      fontWeight: '700',
+                    }}
+                  >
+                    Continue with Google Sign-In
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

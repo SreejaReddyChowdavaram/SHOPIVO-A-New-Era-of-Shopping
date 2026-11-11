@@ -7,6 +7,7 @@ import com.securecommerce.platform.auth.dto.AuthResponse;
 import com.securecommerce.platform.auth.dto.GoogleAuthRequest;
 import com.securecommerce.platform.event.entity.EventType;
 import com.securecommerce.platform.event.service.EventLoggingService;
+import com.securecommerce.platform.event.service.LoginActivityService;
 import com.securecommerce.platform.security.util.JwtUtil;
 import com.securecommerce.platform.user.entity.User;
 import com.securecommerce.platform.user.repository.UserRepository;
@@ -47,6 +48,9 @@ class GoogleAuthServiceTest {
 
     @Mock
     private EventLoggingService eventLoggingService;
+
+    @Mock
+    private LoginActivityService loginActivityService;
 
     @Mock
     private GoogleIdTokenVerifier mockVerifier;
@@ -319,6 +323,7 @@ class GoogleAuthServiceTest {
                 .firstName("Ravi")
                 .lastName("Kumar")
                 .role(User.Role.CUSTOMER)
+                .authProvider(User.AuthProvider.GOOGLE)
                 .enabled(true)
                 .build();
         when(userRepository.findByEmail("ravi.kumar@shopivo.demo")).thenReturn(Optional.of(existingCustomer));
@@ -454,5 +459,63 @@ class GoogleAuthServiceTest {
         assertThat(userCaptor.getValue().isEnabled()).isFalse();
         verify(eventLoggingService).logEvent(eq(EventType.REGISTRATION), eq(pendingSeller), eq("USER"), eq("88"), anyMap());
         verify(eventLoggingService, never()).logEvent(eq(EventType.LOGIN_SUCCESS), any(User.class), any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("New Google registration sets authProvider to GOOGLE")
+    void testNewGoogleRegistrationSetsAuthProviderGoogle() throws Exception {
+        GoogleIdToken token = createMockIdToken("newcustomer@gmail.com", true, "sub-new-123", TEST_CLIENT_ID);
+        when(mockVerifier.verify(MOCK_CREDENTIAL)).thenReturn(token);
+        when(userRepository.findByEmail("newcustomer@gmail.com")).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn("hashed_uuid");
+
+        User savedUser = User.builder()
+                .id(101L)
+                .email("newcustomer@gmail.com")
+                .role(User.Role.CUSTOMER)
+                .authProvider(User.AuthProvider.GOOGLE)
+                .enabled(true)
+                .build();
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(jwtUtil.generateToken(101L, "CUSTOMER")).thenReturn("jwt.token.here");
+
+        GoogleAuthRequest request = new GoogleAuthRequest();
+        request.setPortalRole(User.Role.CUSTOMER);
+        request.setCredential(MOCK_CREDENTIAL);
+
+        AuthResponse response = googleAuthService.authenticateWithGoogle(request);
+
+        assertThat(response).isNotNull();
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertThat(captor.getValue().getAuthProvider()).isEqualTo(User.AuthProvider.GOOGLE);
+    }
+
+    @Test
+    @DisplayName("Existing LOCAL user authenticating with verified Google email upgrades authProvider to LINKED")
+    void testExistingLocalUserUpgradesToLinked() throws Exception {
+        GoogleIdToken token = createMockIdToken("existinglocal@shopivo.test", true, "sub-local-456", TEST_CLIENT_ID);
+        when(mockVerifier.verify(MOCK_CREDENTIAL)).thenReturn(token);
+
+        User existingUser = User.builder()
+                .id(102L)
+                .email("existinglocal@shopivo.test")
+                .role(User.Role.CUSTOMER)
+                .authProvider(User.AuthProvider.LOCAL)
+                .enabled(true)
+                .build();
+        when(userRepository.findByEmail("existinglocal@shopivo.test")).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(jwtUtil.generateToken(102L, "CUSTOMER")).thenReturn("jwt.token.linked");
+
+        GoogleAuthRequest request = new GoogleAuthRequest();
+        request.setPortalRole(User.Role.CUSTOMER);
+        request.setCredential(MOCK_CREDENTIAL);
+
+        AuthResponse response = googleAuthService.authenticateWithGoogle(request);
+
+        assertThat(response).isNotNull();
+        assertThat(existingUser.getAuthProvider()).isEqualTo(User.AuthProvider.LINKED);
+        verify(userRepository).save(existingUser);
     }
 }

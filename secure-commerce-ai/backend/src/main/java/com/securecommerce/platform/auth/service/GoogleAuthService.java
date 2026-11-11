@@ -11,6 +11,7 @@ import com.securecommerce.platform.auth.dto.AuthResponse;
 import com.securecommerce.platform.auth.dto.GoogleAuthRequest;
 import com.securecommerce.platform.event.entity.EventType;
 import com.securecommerce.platform.event.service.EventLoggingService;
+import com.securecommerce.platform.event.service.LoginActivityService;
 import com.securecommerce.platform.security.util.JwtUtil;
 import com.securecommerce.platform.user.dto.UserResponse;
 import com.securecommerce.platform.user.entity.User;
@@ -63,6 +64,7 @@ public class GoogleAuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EventLoggingService eventLoggingService;
+    private final LoginActivityService loginActivityService;
 
     @Value("${app.google.client-id:${GOOGLE_CLIENT_ID:}}")
     private String configuredGoogleClientId;
@@ -209,6 +211,7 @@ public class GoogleAuthService {
             // Strict security check: NEVER allow Google to access an ADMIN account
             if (user.getRole() == User.Role.ADMIN) {
                 log.warn("Security Alert: Blocked attempt to sign in to ADMIN account ({}) via Google OAuth", email);
+                loginActivityService.recordLoginFailure(email, "ADMIN", "GOOGLE_OAUTH", "ADMIN_FORBIDDEN", user.getId());
                 throw new ResponseStatusException(
                         HttpStatus.FORBIDDEN,
                         "Administrator accounts cannot sign in via Google OAuth. Authorized internal credentials are required."
@@ -219,6 +222,7 @@ public class GoogleAuthService {
             if (user.getRole() != request.getPortalRole()) {
                 log.warn("Google auth role mismatch: user {} is registered as {}, but attempted login via {} Portal",
                         email, user.getRole(), request.getPortalRole());
+                loginActivityService.recordLoginFailure(email, user.getRole().name(), "GOOGLE_OAUTH", "ROLE_MISMATCH", user.getId());
                 throw new ResponseStatusException(
                         HttpStatus.CONFLICT,
                         "This account is registered as " + user.getRole() + ". Please sign in through the " + user.getRole() + " Portal."
@@ -228,14 +232,23 @@ public class GoogleAuthService {
             // Verify account status (active vs suspended / pending verification)
             if (!user.isEnabled()) {
                 log.warn("Google auth attempt for disabled/suspended account: {}", email);
+                loginActivityService.recordLoginFailure(email, user.getRole().name(), "GOOGLE_OAUTH", "ACCOUNT_DISABLED", user.getId());
                 String disabledMsg = user.getRole() == User.Role.SELLER
                         ? "Seller account is currently pending administrative verification or has been suspended. Please contact platform administration."
                         : "Account is disabled. Please contact customer support.";
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, disabledMsg);
             }
 
-            log.info("Existing {} authenticated via Google: id={}, email={}, sub={}",
-                    user.getRole(), user.getId(), user.getEmail(), sub);
+            // Safe account linking: if existing account was registered with LOCAL credentials,
+            // upgrade provider to LINKED since Google has cryptographically verified this email.
+            if (user.getAuthProvider() == User.AuthProvider.LOCAL) {
+                user.setAuthProvider(User.AuthProvider.LINKED);
+                user = userRepository.save(user);
+                log.info("Safely linked Google authentication to existing local account: id={}, email={}", user.getId(), user.getEmail());
+            }
+
+            log.info("Existing {} authenticated via Google: id={}, email={}, sub={}, provider={}",
+                    user.getRole(), user.getId(), user.getEmail(), sub, user.getAuthProvider());
 
             eventLoggingService.logEvent(
                     EventType.LOGIN_SUCCESS,
@@ -244,6 +257,7 @@ public class GoogleAuthService {
                     String.valueOf(user.getId()),
                     Map.of("email", user.getEmail(), "role", user.getRole().name(), "provider", "GOOGLE", "googleSub", sub)
             );
+            loginActivityService.recordLoginSuccess(user, "GOOGLE_OAUTH");
         } else {
             // New user registration via Google
             boolean isSeller = (request.getPortalRole() == User.Role.SELLER);
@@ -255,6 +269,7 @@ public class GoogleAuthService {
                     .lastName(familyName.trim())
                     .passwordHash(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .role(request.getPortalRole())
+                    .authProvider(User.AuthProvider.GOOGLE)
                     .enabled(initialEnabled)
                     .build();
 
@@ -273,6 +288,7 @@ public class GoogleAuthService {
             // If seller requires admin verification and is not enabled, inform user
             if (!user.isEnabled()) {
                 log.info("New seller {} registered and awaiting administrative verification", email);
+                loginActivityService.recordLoginFailure(email, user.getRole().name(), "GOOGLE_OAUTH", "SELLER_PENDING_APPROVAL", user.getId());
                 throw new ResponseStatusException(
                         HttpStatus.FORBIDDEN,
                         "Seller account created successfully. Your store is pending administrative approval before activation."
@@ -286,6 +302,7 @@ public class GoogleAuthService {
                     String.valueOf(user.getId()),
                     Map.of("email", user.getEmail(), "role", user.getRole().name(), "provider", "GOOGLE")
             );
+            loginActivityService.recordLoginSuccess(user, "GOOGLE_OAUTH");
         }
 
         // 10. Issue SHOPIVO JWT
