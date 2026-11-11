@@ -217,7 +217,8 @@ export default function CustomerAuth() {
         }
       }
     } catch (err) {
-      if (err.code === 'ERR_NETWORK' || !err.response) {
+      const isNetwork = err.code === 'ERR_NETWORK' || err.isNetworkError || (err.status === 0)
+      if (isNetwork) {
         setError('Network connection error. Unable to reach authentication server.')
       } else {
         setError(err.response?.data?.message || err.message || 'Google sign-in failed. Please try again.')

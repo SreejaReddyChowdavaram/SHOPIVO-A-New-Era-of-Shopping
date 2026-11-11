@@ -37,8 +37,30 @@ import axios from 'axios'
 export const TOKEN_KEY = 'sc_access_token'
 export const SESSION_KEY = 'sc_session_id'
 
+export const resolveBaseUrl = () => {
+  const isCloudHost =
+    typeof window !== 'undefined' &&
+    window.location?.hostname &&
+    !['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+  const envUrl = import.meta.env.VITE_API_URL
+
+  // If running on a cloud host (e.g. Render) and envUrl is missing or points to localhost, route to production backend
+  if (isCloudHost) {
+    if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+      return 'https://shopivo-a-new-era-of-shopping.onrender.com/api'
+    }
+  }
+
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    return envUrl.trim()
+  }
+
+  return 'http://localhost:8080/api'
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: resolveBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -88,6 +110,8 @@ api.interceptors.response.use(
       enhancedError.status = status
       enhancedError.details = data?.details || []
       enhancedError.apiError = data    // Full ApiError body, for debugging
+      enhancedError.response = error.response // Preserve original Axios response structure for downstream catch handlers
+      enhancedError.isNetworkError = false
 
       // 401 → token expired or invalid — clear it and let ProtectedRoute redirect
       if (status === 401) {
@@ -105,6 +129,8 @@ api.interceptors.response.use(
       )
       networkError.status = 0
       networkError.details = []
+      networkError.isNetworkError = true
+      networkError.code = 'ERR_NETWORK'
       return Promise.reject(networkError)
     }
 

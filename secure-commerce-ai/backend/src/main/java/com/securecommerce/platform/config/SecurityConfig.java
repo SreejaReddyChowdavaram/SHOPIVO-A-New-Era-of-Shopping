@@ -121,6 +121,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         java.util.Set<String> allowedOrigins = new java.util.LinkedHashSet<>();
+        allowedOrigins.add("https://shopivo-a-new-era-of-shopping-znib.onrender.com");
         allowedOrigins.add("http://localhost:5173");
         allowedOrigins.add("http://localhost:3000");
         allowedOrigins.add("http://127.0.0.1:5173");

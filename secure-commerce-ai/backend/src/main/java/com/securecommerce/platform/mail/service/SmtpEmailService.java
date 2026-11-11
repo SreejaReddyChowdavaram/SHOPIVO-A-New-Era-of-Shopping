@@ -95,9 +95,10 @@ public class SmtpEmailService implements EmailService {
         props.put("mail.smtp.auth", String.valueOf(smtpAuth));
         props.put("mail.smtp.starttls.enable", String.valueOf(starttlsEnable));
         props.put("mail.smtp.starttls.required", String.valueOf(starttlsEnable));
-        props.put("mail.smtp.connectiontimeout", "5000");
-        props.put("mail.smtp.timeout", "5000");
-        props.put("mail.smtp.writetimeout", "5000");
+        props.put("mail.smtp.ssl.trust", mailHost != null && !mailHost.isBlank() ? mailHost.trim() : "*");
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+        props.put("mail.smtp.writetimeout", "10000");
 
         return sender;
     }
@@ -139,10 +140,14 @@ public class SmtpEmailService implements EmailService {
             throw rse;
         } catch (Exception e) {
             log.error("Failed to transmit OTP email to {}: {}", maskEmail(toEmail), e.getMessage());
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_GATEWAY,
-                    "Failed to deliver email through SMTP gateway. Please try again later."
-            );
+            String detailMsg = "Failed to deliver email through SMTP gateway. Please try again later.";
+            String rawErr = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+            if (rawErr.contains("authentication") || rawErr.contains("535") || rawErr.contains("username and password not accepted")) {
+                detailMsg = "SMTP authentication failed with Brevo. Please verify your MAIL_PASSWORD key in Render.";
+            } else if (rawErr.contains("timed out") || rawErr.contains("timeout") || rawErr.contains("connect")) {
+                detailMsg = "SMTP connection to Brevo timed out. Please try again.";
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, detailMsg);
         }
     }
 

@@ -29,7 +29,15 @@ export const resolveImageUrl = (url) => {
   }
 
   // Handle server-managed paths like /uploads/products/xyz.webp
-  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+  const isCloudHost =
+    typeof window !== 'undefined' &&
+    window.location?.hostname &&
+    !['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+  let apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+  if (isCloudHost && (apiBase.includes('localhost') || apiBase.includes('127.0.0.1'))) {
+    apiBase = 'https://shopivo-a-new-era-of-shopping.onrender.com/api'
+  }
   try {
     const origin = new URL(apiBase).origin
     if (trimmed.startsWith('/api/')) {
