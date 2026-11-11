@@ -33,14 +33,18 @@ import com.securecommerce.platform.payment.entity.PaymentMethod;
 import com.securecommerce.platform.payment.entity.PaymentStatus;
 import com.securecommerce.platform.payment.repository.PaymentRepository;
 import com.securecommerce.platform.payment.service.PaymentService;
+import com.securecommerce.platform.product.dto.ProductRequest;
+import com.securecommerce.platform.product.dto.ProductResponse;
 import com.securecommerce.platform.product.entity.Product;
 import com.securecommerce.platform.product.repository.ProductRepository;
+import com.securecommerce.platform.product.service.ProductService;
 import com.securecommerce.platform.returns.dto.CreateReturnRequest;
 import com.securecommerce.platform.returns.dto.ReturnResponse;
 import com.securecommerce.platform.returns.entity.ReturnStatus;
 import com.securecommerce.platform.returns.repository.ReturnRequestRepository;
 import com.securecommerce.platform.returns.service.ReturnService;
 import com.securecommerce.platform.review.dto.CreateReviewRequest;
+import com.securecommerce.platform.review.dto.ProductReviewSummaryResponse;
 import com.securecommerce.platform.review.dto.ReviewResponse;
 import com.securecommerce.platform.review.service.ReviewService;
 import com.securecommerce.platform.user.entity.User;
@@ -52,6 +56,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +81,7 @@ public class CustomerRegressionIntegrationTest {
     @Autowired private CouponService couponService;
     @Autowired private OrderService orderService;
     @Autowired private PaymentService paymentService;
+    @Autowired private ProductService productService;
     @Autowired private ReviewService reviewService;
     @Autowired private ReturnService returnService;
     @Autowired private NotificationService notificationService;
@@ -468,5 +474,123 @@ public class CustomerRegressionIntegrationTest {
         // Customer B cannot mark Customer A's notification as read
         assertThatThrownBy(() -> notificationService.markAsRead(notifId, customerB))
                 .isInstanceOf(ResponseStatusException.class);
+    }
+
+    @Test
+    @DisplayName("Task 5 Verification: Seller product is stored in PostgreSQL and shared across Customer A and Customer B")
+    void testSellerProductSharedAcrossMultipleCustomers() {
+        // 1. Seller creates a new product
+        Category electronics = categoryRepository.findAll().stream()
+                .filter(c -> "Electronics".equalsIgnoreCase(c.getName()))
+                .findFirst()
+                .orElseGet(() -> categoryRepository.save(Category.builder().name("Electronics").slug("electronics-" + System.currentTimeMillis()).build()));
+
+        ProductRequest createReq = new ProductRequest(
+                "Shared Wireless Mechanical Keyboard",
+                "High performance mechanical keyboard for gaming and productivity",
+                new BigDecimal("4999.00"),
+                25,
+                "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80",
+                electronics.getId()
+        );
+
+        ProductResponse created = productService.createProduct(seller.getId(), createReq);
+        assertThat(created).isNotNull();
+        assertThat(created.status()).isEqualTo("PENDING");
+
+        // Pre-approval: not visible in customer marketplace browse
+        Page<ProductResponse> preApprovedBrowse = productService.getApprovedProducts(0, 50, electronics.getId(), "Mechanical Keyboard");
+        assertThat(preApprovedBrowse.getContent()).noneMatch(p -> p.id().equals(created.id()));
+
+        // 2. Admin approves product
+        ProductResponse approved = productService.approveProduct(created.id());
+        assertThat(approved.status()).isEqualTo("APPROVED");
+
+        // 3. Customer A browses marketplace: sees the product
+        Page<ProductResponse> customerABrowse = productService.getApprovedProducts(0, 50, electronics.getId(), "Mechanical Keyboard");
+        assertThat(customerABrowse.getContent()).anyMatch(p -> p.id().equals(created.id()));
+        ProductResponse foundForA = customerABrowse.getContent().stream()
+                .filter(p -> p.id().equals(created.id()))
+                .findFirst().orElseThrow();
+        assertThat(foundForA.price()).isEqualByComparingTo("4999.00");
+        assertThat(foundForA.sellerName()).isNotBlank();
+
+        // 4. Customer B browses marketplace independently: sees the EXACT same product and catalog data
+        Page<ProductResponse> customerBBrowse = productService.getApprovedProducts(0, 50, electronics.getId(), "Mechanical Keyboard");
+        assertThat(customerBBrowse.getContent()).anyMatch(p -> p.id().equals(created.id()));
+        ProductResponse foundForB = customerBBrowse.getContent().stream()
+                .filter(p -> p.id().equals(created.id()))
+                .findFirst().orElseThrow();
+        assertThat(foundForB.id()).isEqualTo(foundForA.id());
+        assertThat(foundForB.name()).isEqualTo(foundForA.name());
+        assertThat(foundForB.price()).isEqualByComparingTo(foundForA.price());
+
+        // 5. Customer A and B both query direct product details by ID
+        ProductResponse directA = productService.getApprovedProductById(created.id());
+        ProductResponse directB = productService.getApprovedProductById(created.id());
+        assertThat(directA.id()).isEqualTo(created.id());
+        assertThat(directB.id()).isEqualTo(created.id());
+        assertThat(directA.slug()).isEqualTo(directB.slug());
+    }
+
+    @Test
+    @DisplayName("Task 6 Verification: Customer reviews and aggregate rating calculations are shared across all customers")
+    void testCustomerReviewsAndRatingsSharedAcrossMultipleCustomers() {
+        // 1. Customer A orders and receives the mouseProduct
+        cartService.addItem(customerA.getId(), new CartItemRequest(mouseProduct.getId(), 1));
+        OrderResponse orderA = orderService.placeOrder(customerA.getId(), new OrderRequest(addressA.getId(), null));
+        Order orderEntityA = orderRepository.findById(orderA.id()).orElseThrow();
+        orderEntityA.setStatus(OrderStatus.DELIVERED);
+        orderRepository.save(orderEntityA);
+
+        // 2. Customer A submits a 5-star verified review
+        ReviewResponse reviewA = reviewService.createReview(
+                new CreateReviewRequest(mouseProduct.getId(), 5, "Outstanding precision mouse!"),
+                customerA
+        );
+        assertThat(reviewA.rating()).isEqualTo(5);
+
+        // 3. Customer B opens mouseProduct: sees Customer A's review and updated average rating 5.0
+        ProductReviewSummaryResponse summarySeenByB = reviewService.getProductReviews(mouseProduct.getId());
+        assertThat(summarySeenByB.totalReviews()).isEqualTo(1L);
+        assertThat(summarySeenByB.averageRating()).isEqualTo(5.0);
+        assertThat(summarySeenByB.rating5Count()).isEqualTo(1L);
+        assertThat(summarySeenByB.reviews()).hasSize(1);
+        assertThat(summarySeenByB.reviews().get(0).reviewText()).isEqualTo("Outstanding precision mouse!");
+
+        // 4. Customer B also purchases mouseProduct
+        Address addressB = addressRepository.save(Address.builder()
+                .user(customerB)
+                .label("Home")
+                .fullName("Customer B Delivery")
+                .phone("9876543211")
+                .line1("456 Park Avenue")
+                .city("Mumbai")
+                .state("Maharashtra")
+                .postalCode("400001")
+                .country("India")
+                .isDefault(true)
+                .build()
+        );
+        cartService.addItem(customerB.getId(), new CartItemRequest(mouseProduct.getId(), 1));
+        OrderResponse orderB = orderService.placeOrder(customerB.getId(), new OrderRequest(addressB.getId(), null));
+        Order orderEntityB = orderRepository.findById(orderB.id()).orElseThrow();
+        orderEntityB.setStatus(OrderStatus.DELIVERED);
+        orderRepository.save(orderEntityB);
+
+        // Customer B submits a 3-star review
+        ReviewResponse reviewB = reviewService.createReview(
+                new CreateReviewRequest(mouseProduct.getId(), 3, "Good, but scroll wheel is slightly stiff."),
+                customerB
+        );
+        assertThat(reviewB.rating()).isEqualTo(3);
+
+        // 5. Customer A views product again: sees BOTH reviews and aggregated rating (5 + 3)/2 = 4.0
+        ProductReviewSummaryResponse summarySeenByA = reviewService.getProductReviews(mouseProduct.getId());
+        assertThat(summarySeenByA.totalReviews()).isEqualTo(2L);
+        assertThat(summarySeenByA.averageRating()).isEqualTo(4.0);
+        assertThat(summarySeenByA.rating5Count()).isEqualTo(1L);
+        assertThat(summarySeenByA.rating3Count()).isEqualTo(1L);
+        assertThat(summarySeenByA.reviews()).hasSize(2);
     }
 }
