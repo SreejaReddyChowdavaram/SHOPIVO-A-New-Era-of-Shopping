@@ -27,6 +27,8 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
 
     Optional<Refund> findByOrderId(Long orderId);
 
+    Optional<Refund> findByProviderRefundId(String providerRefundId);
+
     boolean existsByReturnRequestId(Long returnRequestId);
 
     @Query("SELECT COALESCE(SUM(ref.refundAmount), 0.0) FROM Refund ref " +

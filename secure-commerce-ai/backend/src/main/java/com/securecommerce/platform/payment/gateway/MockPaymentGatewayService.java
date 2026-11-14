@@ -27,10 +27,25 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
     private final Map<String, GatewayPaymentDetails> customPayments = new ConcurrentHashMap<>();
     private final Map<String, Long> orderAmounts = new ConcurrentHashMap<>();
     private final Map<String, GatewayQrCodeResponse> customQrCodes = new ConcurrentHashMap<>();
+    private final Map<String, GatewayRefundResponse> customRefunds = new ConcurrentHashMap<>();
+    private final Map<String, GatewayRefundResponse> refundsByReceipt = new ConcurrentHashMap<>();
     private boolean forceQrFallback = false;
+    private int refundCallCount = 0;
 
     public void setForceQrFallback(boolean forceQrFallback) {
         this.forceQrFallback = forceQrFallback;
+    }
+
+    public int getRefundCallCount() {
+        return refundCallCount;
+    }
+
+    public void resetRefundCallCount() {
+        this.refundCallCount = 0;
+    }
+
+    public void registerRefundDetails(String refundId, GatewayRefundResponse details) {
+        customRefunds.put(refundId, details);
     }
 
     public void registerPaymentDetails(String paymentId, GatewayPaymentDetails details) {
@@ -41,7 +56,10 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
         customPayments.clear();
         orderAmounts.clear();
         customQrCodes.clear();
+        customRefunds.clear();
+        refundsByReceipt.clear();
         forceQrFallback = false;
+        refundCallCount = 0;
     }
 
     @Override
@@ -160,17 +178,64 @@ public class MockPaymentGatewayService implements PaymentGatewayService {
 
     @Override
     public GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason) {
+        return refundPayment(paymentId, amount, reason, null);
+    }
+
+    @Override
+    public GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason, String receipt) {
+        refundCallCount++;
+
         if ("pay_fail_refund".equalsIgnoreCase(paymentId)) {
             throw new RuntimeException("Simulated gateway refund failure");
         }
 
+        if ("pay_timeout_refund".equalsIgnoreCase(paymentId)) {
+            throw new RuntimeException("Simulated gateway connection timeout during refund submission");
+        }
+
+        if (receipt != null && refundsByReceipt.containsKey(receipt)) {
+            log.info("[TEST-MOCK] Returning existing refund by receipt: {}", receipt);
+            return refundsByReceipt.get(receipt);
+        }
+
         String refundId = "rfnd_test_" + UUID.randomUUID().toString().substring(0, 14);
         long amountInPaise = amount.multiply(BigDecimal.valueOf(100)).longValue();
+        String status = "pay_processing_refund".equalsIgnoreCase(paymentId) ? "processing" : "processed";
 
-        return GatewayRefundResponse.builder()
+        GatewayRefundResponse resp = GatewayRefundResponse.builder()
                 .refundId(refundId)
                 .paymentId(paymentId)
                 .amountInPaise(amountInPaise)
+                .currency("INR")
+                .status(status)
+                .build();
+
+        customRefunds.put(refundId, resp);
+        if (receipt != null) {
+            refundsByReceipt.put(receipt, resp);
+        }
+
+        return resp;
+    }
+
+    @Override
+    public GatewayRefundResponse fetchRefund(String refundId) {
+        if (customRefunds.containsKey(refundId)) {
+            return customRefunds.get(refundId);
+        }
+
+        if (refundId != null && (refundId.startsWith("rfnd_timeout_") || refundId.startsWith("rfnd_pending_"))) {
+            return GatewayRefundResponse.builder()
+                    .refundId(refundId)
+                    .amountInPaise(10000L)
+                    .currency("INR")
+                    .status("processing")
+                    .build();
+        }
+
+        return GatewayRefundResponse.builder()
+                .refundId(refundId)
+                .amountInPaise(10000L)
                 .currency("INR")
                 .status("processed")
                 .build();

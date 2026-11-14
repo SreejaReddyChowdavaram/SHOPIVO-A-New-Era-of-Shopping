@@ -398,23 +398,6 @@ const Cart = () => {
                 <span>PLACE ORDER</span>
                 <ArrowRight size={16} />
               </Link>
-
-              {/* Safe Payments Trust Banner */}
-              <div
-                style={{
-                  marginTop: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  color: 'var(--color-text-secondary)',
-                  fontSize: '0.75rem',
-                  borderTop: '1px solid var(--color-border-subtle)',
-                  paddingTop: '0.85rem',
-                }}
-              >
-                <ShieldCheck size={18} color="var(--color-discount)" style={{ flexShrink: 0 }} />
-                <span>Safe and Secure Payments. 100% Authentic products.</span>
-              </div>
             </div>
           </div>
         </div>

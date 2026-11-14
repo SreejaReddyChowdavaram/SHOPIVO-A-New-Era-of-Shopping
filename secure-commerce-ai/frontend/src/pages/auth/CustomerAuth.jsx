@@ -455,6 +455,7 @@ export default function CustomerAuth() {
               portalRole="CUSTOMER"
               buttonText={mode === 'signin' ? 'Sign in with Google' : 'Sign up with Google'}
               onCredentialReceived={handleGoogleCredential}
+              onError={setError}
               disabled={loading}
             />
           </div>

@@ -219,20 +219,43 @@ const CustomerDashboard = () => {
 
   const customerFirstName = user?.firstName || 'Valued Customer'
 
-  // Order status badge styling
+  // Order status badge styling (case-safe)
   const getOrderStatusBadge = (status) => {
-    switch (status) {
+    const s = String(status || '').trim().toUpperCase()
+    switch (s) {
       case 'DELIVERED':
         return { label: 'Delivered', bg: 'var(--color-success-subtle)', color: 'var(--color-success)', icon: CheckCircle2 }
       case 'SHIPPED':
         return { label: 'Shipped', bg: 'var(--color-info-subtle)', color: 'var(--color-info)', icon: Truck }
+      case 'OUT_FOR_DELIVERY':
+        return { label: 'Out for Delivery', bg: 'var(--color-primary-subtle)', color: 'var(--color-primary)', icon: Truck }
+      case 'CONFIRMED':
+        return { label: 'Confirmed', bg: 'var(--color-info-subtle)', color: 'var(--color-info)', icon: CheckCircle2 }
       case 'PROCESSING':
         return { label: 'Processing', bg: 'var(--color-primary-subtle)', color: 'var(--color-primary)', icon: Clock }
       case 'CANCELLED':
         return { label: 'Cancelled', bg: 'var(--color-danger-subtle)', color: 'var(--color-danger)', icon: AlertCircle }
+      case 'RETURNED':
+        return { label: 'Returned', bg: 'var(--color-danger-subtle)', color: 'var(--color-danger)', icon: AlertCircle }
+      case 'REFUNDED':
+        return { label: 'Refunded', bg: 'var(--color-success-subtle)', color: 'var(--color-success)', icon: CheckCircle2 }
       default:
         return { label: status || 'Pending', bg: 'var(--color-warning-subtle)', color: 'var(--color-warning)', icon: Clock }
     }
+  }
+
+  // Determine if order status qualifies for active Track Order action
+  const isOrderTrackable = (status) => {
+    if (!status) return false
+    const s = String(status).trim().toUpperCase()
+    // Explicit non-trackable terminal statuses:
+    // CANCELLED, DELIVERED, RETURNED, REFUNDED -> Hide Track Order
+    if (['CANCELLED', 'DELIVERED', 'RETURNED', 'REFUNDED'].includes(s)) {
+      return false
+    }
+    // Supported active statuses:
+    // PENDING, CONFIRMED, PROCESSING, SHIPPED, OUT_FOR_DELIVERY -> Show Track Order
+    return ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'OUT_FOR_DELIVERY'].includes(s)
   }
 
   return (
@@ -505,9 +528,17 @@ const CustomerDashboard = () => {
 
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--color-text-primary)' }}>
+                      <Link
+                        to={`/customer/orders/${latest.id}`}
+                        style={{
+                          fontSize: '0.875rem',
+                          fontWeight: '700',
+                          color: 'var(--color-text-primary)',
+                          textDecoration: 'none',
+                        }}
+                      >
                         Recent Order #{latest.id}
-                      </span>
+                      </Link>
                       <span
                         style={{
                           fontSize: '0.6875rem',
@@ -534,23 +565,27 @@ const CustomerDashboard = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  <Link
-                    to={`/customer/orders/${latest.id}`}
-                    style={{
-                      fontSize: '0.8125rem',
-                      fontWeight: '700',
-                      color: 'var(--color-primary)',
-                      textDecoration: 'none',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                    }}
-                  >
-                    <span>Track Order</span>
-                    <ArrowRight size={14} />
-                  </Link>
+                  {isOrderTrackable(latest.status) && (
+                    <>
+                      <Link
+                        to={`/customer/orders/${latest.id}`}
+                        style={{
+                          fontSize: '0.8125rem',
+                          fontWeight: '700',
+                          color: 'var(--color-primary)',
+                          textDecoration: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                        }}
+                      >
+                        <span>Track Order</span>
+                        <ArrowRight size={14} />
+                      </Link>
 
-                  <span style={{ color: 'var(--color-border)' }}>|</span>
+                      <span style={{ color: 'var(--color-border)' }}>|</span>
+                    </>
+                  )}
 
                   <Link
                     to={ROUTES.CUSTOMER_ORDERS}

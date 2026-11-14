@@ -36,6 +36,23 @@ public class ReturnRequest {
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id")
+    private User seller;
+
+    @Column(name = "seller_approval_status", length = 50)
+    @Builder.Default
+    private String sellerApprovalStatus = "PENDING_SELLER_APPROVAL";
+
+    @Column(name = "seller_approved_at")
+    private Instant sellerApprovedAt;
+
+    @Column(name = "seller_rejected_at")
+    private Instant sellerRejectedAt;
+
+    @Column(name = "seller_rejection_reason", columnDefinition = "TEXT")
+    private String sellerRejectionReason;
+
     @Column(nullable = false, length = 100)
     private String reason;
 

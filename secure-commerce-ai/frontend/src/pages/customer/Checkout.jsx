@@ -45,16 +45,15 @@ import DynamicUpiQrModal from '@/components/payment/DynamicUpiQrModal'
 const PAYMENT_METHODS = [
   {
     id: 'RAZORPAY',
-    label: 'Razorpay Standard Checkout',
-    icon: ShieldCheck,
-    subtitle: 'Pay securely through official Razorpay checkout popup using Cards, UPI, Net Banking, or Wallets.',
-    badge: 'Official Razorpay • PCI-DSS'
+    label: 'Online Payment',
+    icon: CreditCard,
+    subtitle: 'Cards, UPI, NetBanking, and Wallets',
   },
   {
     id: 'COD',
     label: 'Cash on Delivery',
     icon: Banknote,
-    subtitle: 'Pay when your order is delivered with cash upon package delivery at your doorstep.'
+    subtitle: 'Pay with cash upon delivery',
   },
 ]
 
@@ -62,6 +61,16 @@ const loadRazorpayScript = () => {
   return new Promise((resolve) => {
     if (window.Razorpay) {
       resolve(true)
+      return
+    }
+    const existing = document.querySelector('script[src*="checkout.razorpay.com"]')
+    if (existing) {
+      existing.addEventListener('load', () => resolve(true))
+      existing.addEventListener('error', () => resolve(false))
+      // If already finished loading before listeners were attached
+      setTimeout(() => {
+        if (window.Razorpay) resolve(true)
+      }, 300)
       return
     }
     const script = document.createElement('script')
@@ -203,8 +212,11 @@ const Checkout = () => {
     try {
       const gwOrder = fallbackData?.gatewayOrderId ? fallbackData : await createGatewayOrder(orderId)
 
-      // Detect if the gateway returned a local developer placeholder key
-      const isDevKey = !gwOrder.keyId || gwOrder.keyId.includes('shopivo_dev') || gwOrder.keyId.includes('placeholder') || gwOrder.gatewayOrderId?.startsWith('order_dev_')
+      // Resolve active Razorpay key ID from backend response or frontend environment
+      const activeKey = gwOrder.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID
+
+      // Only enter local simulated fallback if no genuine key is available
+      const isDevKey = (!activeKey || activeKey.includes('shopivo_dev') || activeKey.includes('placeholder') || gwOrder.gatewayOrderId?.startsWith('order_dev_'))
 
       if (isDevKey) {
         setDevModalOrder({ orderId, qrData: { ...gwOrder, mode: 'RAZORPAY_QR_CODE' } })
@@ -220,7 +232,7 @@ const Checkout = () => {
       }
 
       const options = {
-        key: gwOrder.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: activeKey,
         amount: gwOrder.amountInPaise,
         currency: gwOrder.currency || 'INR',
         name: 'SHOPIVO',
@@ -370,7 +382,7 @@ const Checkout = () => {
     return (
       <div className="fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh', flexDirection: 'column', gap: '0.75rem', color: 'var(--color-text-secondary)' }}>
         <Loader2 size={32} style={{ animation: 'spin 0.8s linear infinite', color: 'var(--color-primary)' }} />
-        <span>Preparing your secure checkout...</span>
+        <span>Loading checkout...</span>
       </div>
     )
   }
@@ -564,34 +576,15 @@ const Checkout = () => {
           <div className="card" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ShieldCheck size={18} color="var(--color-primary)" />
+                <CreditCard size={18} color="var(--color-primary)" />
                 <h2 style={{ fontSize: '1rem', fontWeight: '700', margin: 0, color: 'var(--color-text-primary)' }}>
                   Select Payment Method
                 </h2>
               </div>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.2rem 0.65rem',
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(15, 143, 107, 0.1)',
-                  border: '1px solid rgba(15, 143, 107, 0.25)',
-                  color: 'var(--color-primary)',
-                  fontSize: '0.6875rem',
-                  fontWeight: '700',
-                  letterSpacing: '0.025em',
-                  textTransform: 'uppercase'
-                }}
-              >
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', display: 'inline-block' }} />
-                <span>PCI-DSS Compliant · 256-Bit SSL</span>
-              </div>
             </div>
 
             {/* Selection Grid: Exactly Razorpay or COD */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.85rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.85rem' }}>
               {PAYMENT_METHODS.map((pm) => {
                 const IconComponent = pm.icon
                 const isSelected = paymentMethod === pm.id
@@ -609,20 +602,13 @@ const Checkout = () => {
                       position: 'relative',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                        <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', backgroundColor: isSelected ? 'var(--color-surface)' : 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <IconComponent size={18} color="var(--color-primary)" />
-                        </div>
-                        <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--color-text-primary)' }}>
-                          {pm.label}
-                        </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', backgroundColor: isSelected ? 'var(--color-surface)' : 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconComponent size={18} color="var(--color-primary)" />
                       </div>
-                      {pm.badge && (
-                        <span style={{ fontSize: '0.6875rem', fontWeight: '700', color: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)' }}>
-                          {pm.badge}
-                        </span>
-                      )}
+                      <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--color-text-primary)' }}>
+                        {pm.label}
+                      </span>
                     </div>
                     <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.4 }}>
                       {pm.subtitle}
@@ -630,34 +616,6 @@ const Checkout = () => {
                   </div>
                 )
               })}
-            </div>
-
-            {/* Contextual Payment Details */}
-            <div style={{ backgroundColor: 'var(--color-bg)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
-              {paymentMethod === 'RAZORPAY' && (
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)', fontWeight: '700', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                    <ShieldCheck size={18} />
-                    <span>Razorpay Standard Checkout</span>
-                  </div>
-                  <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)', margin: '0 0 0.85rem', lineHeight: 1.45 }}>
-                    Clicking "Pay & Place Order" will open Razorpay's PCI-DSS compliant checkout popup. You can select your preferred payment method (Cards, UPI, NetBanking, Wallets). No real card numbers or passwords are ever stored or processed on our servers.
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.725rem' }}>
-                    <span style={{ backgroundColor: 'var(--color-surface)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>Visa / MasterCard / RuPay</span>
-                    <span style={{ backgroundColor: 'var(--color-surface)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>UPI (GPay / PhonePe / Paytm)</span>
-                    <span style={{ backgroundColor: 'var(--color-surface)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>All Major Indian Banks</span>
-                    <span style={{ backgroundColor: 'var(--color-surface)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border)' }}>Popular Wallets</span>
-                  </div>
-                </div>
-              )}
-
-              {paymentMethod === 'COD' && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-text-secondary)', fontSize: '0.8125rem' }}>
-                  <Banknote size={22} color="var(--color-primary)" style={{ flexShrink: 0 }} />
-                  <span>Cash on Delivery selected. You will pay in cash directly to the delivery partner when the package is delivered.</span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -827,23 +785,6 @@ const Checkout = () => {
                 </span>
               )}
             </button>
-
-            {/* Trust Footnote */}
-            <div
-              style={{
-                marginTop: '1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                color: 'var(--color-text-secondary)',
-                fontSize: '0.725rem',
-                borderTop: '1px solid var(--color-border-subtle)',
-                paddingTop: '0.85rem',
-              }}
-            >
-              <ShieldCheck size={18} color="var(--color-discount)" style={{ flexShrink: 0 }} />
-              <span>Razorpay 256-bit SSL encrypted checkout. PCI-DSS Level 1 compliant.</span>
-            </div>
           </div>
         </div>
 

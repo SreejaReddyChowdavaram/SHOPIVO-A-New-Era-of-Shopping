@@ -279,11 +279,11 @@ export const DynamicUpiQrModal = ({
       aria-labelledby="qr-modal-title"
     >
       <div
-        className="relative rounded-3xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-2xl p-5 sm:p-6 text-[var(--color-text-primary)] transition-all flex flex-col items-center"
+        className="relative rounded-3xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-2xl p-5 sm:p-6 pb-6 text-[var(--color-text-primary)] transition-all flex flex-col items-center"
         style={{
           boxSizing: 'border-box',
           width: 'min(calc(100vw - 32px), 440px)',
-          maxHeight: 'min(94vh, 760px)',
+          maxHeight: 'min(92vh, 740px)',
           overflowY: 'auto',
           overflowX: 'hidden',
         }}
@@ -425,7 +425,7 @@ export const DynamicUpiQrModal = ({
               </h4>
               <p className="text-xs text-[var(--color-text-secondary)] mt-1 max-w-xs mx-auto leading-relaxed">
                 {errorMessage ||
-                  'The standalone QR feature requires account activation in Razorpay Dashboard. You can pay seamlessly via Razorpay Standard Checkout below.'}
+                  'The QR code payment session could not be initialized. Please complete payment using online checkout.'}
               </p>
             </div>
           )}
@@ -465,11 +465,11 @@ export const DynamicUpiQrModal = ({
 
         {/* Other Payment Options Section (Centered & Non-overflowing) */}
         {(onOpenStandardCheckout || onSwitchToCod) && (
-          <div className="w-full border-t border-[var(--color-border)] pt-2.5 shrink-0" style={{ boxSizing: 'border-box' }}>
+          <div className="w-full border-t border-[var(--color-border)] pt-3 mt-1 pb-1 shrink-0" style={{ boxSizing: 'border-box' }}>
             <button
               type="button"
               onClick={() => setShowAltOptions((prev) => !prev)}
-              className="w-full flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] py-1 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] py-1.5 px-1 transition-colors cursor-pointer"
             >
               <span>Other payment options</span>
               <ChevronDown

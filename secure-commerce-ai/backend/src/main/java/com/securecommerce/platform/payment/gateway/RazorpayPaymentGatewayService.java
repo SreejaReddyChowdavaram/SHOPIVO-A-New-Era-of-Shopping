@@ -345,13 +345,18 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
 
     @Override
     public GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason) {
+        return refundPayment(paymentId, amount, reason, null);
+    }
+
+    @Override
+    public GatewayRefundResponse refundPayment(String paymentId, BigDecimal amount, String reason, String receipt) {
         ensureConfigured();
 
         long amountInPaise = amount.multiply(BigDecimal.valueOf(100)).longValue();
 
-        if (isDevelopmentPlaceholderKey()) {
+        if (isDevelopmentPlaceholderKey() || paymentId.startsWith("pay_test_") || paymentId.startsWith("pay_dev_") || paymentId.startsWith("mock_")) {
             String refundId = "rfnd_dev_" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 14);
-            log.info("[DEV-TEST-MODE] Generated local test refund {} for payment {}", refundId, paymentId);
+            log.info("[DEV-TEST-MODE] Generated local test refund {} for payment {} with receipt {}", refundId, paymentId, receipt);
             return GatewayRefundResponse.builder()
                     .refundId(refundId)
                     .paymentId(paymentId)
@@ -361,10 +366,17 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
                     .build();
         }
 
-        Map<String, Object> requestBody = Map.of(
-                "amount", amountInPaise,
-                "notes", Map.of("reason", reason != null ? reason : "Customer return accepted")
-        );
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("amount", amountInPaise);
+        if (receipt != null && !receipt.isBlank()) {
+            requestBody.put("receipt", receipt);
+        }
+        Map<String, String> notes = new HashMap<>();
+        notes.put("reason", reason != null ? reason : "Customer return accepted");
+        if (receipt != null) {
+            notes.put("receipt", receipt);
+        }
+        requestBody.put("notes", notes);
 
         try {
             String responseStr = restClient.post()
@@ -387,6 +399,40 @@ public class RazorpayPaymentGatewayService implements PaymentGatewayService {
         } catch (Exception e) {
             log.error("Failed to issue Razorpay refund for payment {}: {}", paymentId, e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Razorpay Refund API error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public GatewayRefundResponse fetchRefund(String refundId) {
+        ensureConfigured();
+        if (refundId == null || refundId.isBlank()) return null;
+
+        if (isDevelopmentPlaceholderKey() || refundId.startsWith("rfnd_dev_") || refundId.startsWith("rfnd_mock_") || refundId.startsWith("rfnd_test_")) {
+            return GatewayRefundResponse.builder()
+                    .refundId(refundId)
+                    .currency("INR")
+                    .status("processed")
+                    .build();
+        }
+
+        try {
+            String responseStr = restClient.get()
+                    .uri("/refunds/{refundId}", refundId)
+                    .retrieve()
+                    .body(String.class);
+
+            JsonNode root = objectMapper.readTree(responseStr);
+            return GatewayRefundResponse.builder()
+                    .refundId(root.path("id").asText())
+                    .paymentId(root.path("payment_id").asText())
+                    .amountInPaise(root.path("amount").asLong(0L))
+                    .currency(root.path("currency").asText("INR"))
+                    .status(root.path("status").asText("processed"))
+                    .speedProcessed(root.path("speed_processed").asText(null))
+                    .build();
+        } catch (Exception e) {
+            log.error("Failed to fetch Razorpay refund {}: {}", refundId, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Razorpay Fetch Refund API error: " + e.getMessage());
         }
     }
 

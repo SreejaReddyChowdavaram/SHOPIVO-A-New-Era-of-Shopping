@@ -401,9 +401,9 @@ const UserLoginActivityView = ({ portalName = 'Customer' }) => {
         </div>
 
         {/* Controls: Filter Pills + Search Input */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 flex-wrap">
           {/* Filter Pills */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => setFilterType('ALL')}
@@ -691,72 +691,6 @@ const UserLoginActivityView = ({ portalName = 'Customer' }) => {
             </div>
           </div>
         )}
-      </div>
-
-      {/* ───────────────────────────────────────────────────────────── */}
-      {/* 4. BOTTOM HORIZONTAL SECURITY BANNER                          */}
-      {/* ───────────────────────────────────────────────────────────── */}
-      <div
-        className="rounded-2xl p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 transition-all"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-        }}
-      >
-        {/* Left: Shield Icon + Title */}
-        <div className="flex items-center gap-3.5 shrink-0">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-            style={{
-              backgroundColor: 'rgba(15, 143, 107, 0.12)',
-              border: '1px solid rgba(15, 143, 107, 0.25)',
-              color: 'var(--color-primary)',
-            }}
-          >
-            <ShieldCheck size={26} strokeWidth={2.2} />
-          </div>
-          <div className="font-bold text-base sm:text-lg tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
-            Keep your account secure
-          </div>
-        </div>
-
-        {/* Center: Security Guidance Bullets */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--color-primary)' }} />
-            <span>Never share your password with anyone.</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--color-primary)' }} />
-            <span>Never share your OTP (one-time password).</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--color-primary)' }} />
-            <span>Review unfamiliar login attempts.</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--color-primary)' }} />
-            <span>Reset your password if you notice any suspicious activity.</span>
-          </div>
-        </div>
-
-        {/* Right: Reset Password Action */}
-        <Link
-          to={resetPasswordUrl}
-          style={{
-            backgroundColor: 'var(--color-primary)',
-            color: '#FFFFFF',
-            textDecoration: 'none',
-            fontWeight: 700,
-            whiteSpace: 'nowrap',
-          }}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs sm:text-sm rounded-lg transition-all shadow-sm shrink-0 self-start lg:self-center"
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover, #0B7A5B)')}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
-        >
-          <Lock size={15} color="#FFFFFF" />
-          <span>Reset Password</span>
-        </Link>
       </div>
     </div>
   )

@@ -454,6 +454,7 @@ export default function SellerAuth() {
               portalRole="SELLER"
               buttonText={mode === 'signin' ? 'Sign in with Google' : 'Register Store with Google'}
               onCredentialReceived={handleGoogleCredential}
+              onError={setError}
               disabled={loading}
             />
           </div>
@@ -932,25 +933,6 @@ export default function SellerAuth() {
                     {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-              </div>
-
-              {/* Compliance Notice */}
-              <div
-                style={{
-                  padding: '0.75rem 0.875rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--color-primary-subtle)',
-                  border: '1px solid rgba(4, 219, 126, 0.25)',
-                  marginBottom: '1.25rem',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '0.5rem',
-                }}
-              >
-                <ShieldCheck size={16} color="var(--color-primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <p style={{ fontSize: '0.75rem', color: 'var(--color-text-primary)', lineHeight: 1.4, margin: 0 }}>
-                  Seller accounts undergo compliance verification before store activation.
-                </p>
               </div>
 
               {/* Terms Checkbox */}

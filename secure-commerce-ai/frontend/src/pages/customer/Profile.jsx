@@ -657,28 +657,9 @@ const CustomerProfile = () => {
               </div>
             </form>
           ) : (
-            /* Security Status Info */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ backgroundColor: 'var(--color-bg)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                  <Key size={15} color="var(--color-primary)" />
-                  <span style={{ fontWeight: '700', fontSize: '0.8125rem', color: 'var(--color-text-primary)' }}>Password Protection</span>
-                </div>
-                <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                  Your account is protected with encrypted credentials. Regularly updating your password enhances security.
-                </p>
-              </div>
-
-              <div style={{ backgroundColor: 'var(--color-bg)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
-                  <Shield size={15} color="var(--color-discount)" />
-                  <span style={{ fontWeight: '700', fontSize: '0.8125rem', color: 'var(--color-text-primary)' }}>Secure Sign-In Session</span>
-                </div>
-                <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.45 }}>
-                  Your account activity is safeguarded by Shopivo authentication and token verification.
-                </p>
-              </div>
-            </div>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)', margin: 0 }}>
+              Manage your password and review recent sign-in activity.
+            </p>
           )}
         </div>
 

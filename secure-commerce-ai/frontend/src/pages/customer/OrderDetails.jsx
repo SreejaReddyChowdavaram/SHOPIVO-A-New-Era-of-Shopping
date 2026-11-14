@@ -239,9 +239,9 @@ const CustomerOrderDetails = () => {
   }
 
   const isCancelled = order.status === 'CANCELLED'
-  const isCancellable = order.status === 'PENDING' || order.status === 'CONFIRMED'
+  const isCancellable = order.status === 'PENDING'
   const isDelivered = order.status === 'DELIVERED'
-  const isReturnEligible = isDelivered && returnEligibility?.eligible
+  const isReturnEligible = order.status !== 'CANCELLED' && order.status !== 'PENDING' && returnEligibility?.eligible
   const currentStatusIndex = STATUS_ORDER.indexOf(order.status)
   const isPaid = payment && (payment.paymentStatus === 'SUCCESS' || payment.paymentStatus === 'REFUNDED')
 

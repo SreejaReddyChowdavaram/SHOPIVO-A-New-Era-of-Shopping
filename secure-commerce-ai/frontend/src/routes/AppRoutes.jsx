@@ -132,6 +132,7 @@ import SellerAnalytics from '@/pages/seller/Analytics'
 import SellerReviews from '@/pages/seller/Reviews'
 import SellerNotifications from '@/pages/seller/Notifications'
 import SellerLoginActivity from '@/pages/seller/LoginActivity'
+import SellerRefunds from '@/pages/seller/Refunds'
 
 // Admin pages
 import AdminDashboard from '@/pages/admin/Dashboard'
@@ -145,6 +146,7 @@ import AdminProducts from '@/pages/admin/Products'
 import AdminOrders from '@/pages/admin/Orders'
 import AdminOrderDetails from '@/pages/admin/OrderDetails'
 import AdminPayments from '@/pages/admin/Payments'
+import AdminRefunds from '@/pages/admin/Refunds'
 import AdminInventory from '@/pages/admin/Inventory'
 import AdminReviews from '@/pages/admin/Reviews'
 import Reports from '@/pages/admin/Reports'
@@ -226,6 +228,7 @@ const AppRoutes = () => {
           <Route path="/seller/inventory"          element={<Inventory />} />
           <Route path="/seller/orders"             element={<SellerOrders />} />
           <Route path="/seller/orders/:id"         element={<SellerOrderDetails />} />
+          <Route path="/seller/refunds"            element={<SellerRefunds />} />
           <Route path="/seller/revenue"            element={<Navigate to="/seller/analytics" replace />} />
           <Route path="/seller/analytics"          element={<SellerAnalytics />} />
           <Route path="/seller/reviews"            element={<SellerReviews />} />
@@ -250,6 +253,7 @@ const AppRoutes = () => {
           <Route path="/admin/orders"                 element={<AdminOrders />} />
           <Route path="/admin/orders/:id"             element={<AdminOrderDetails />} />
           <Route path="/admin/payments"               element={<AdminPayments />} />
+          <Route path="/admin/refunds"                element={<AdminRefunds />} />
           <Route path="/admin/inventory"              element={<AdminInventory />} />
           <Route path="/admin/reviews"                element={<AdminReviews />} />
           <Route path="/admin/reports"                element={<Reports />} />

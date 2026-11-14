@@ -432,26 +432,6 @@ export default function AdminAuth() {
               <span>{loading ? 'Authenticating...' : 'Sign In as Administrator'}</span>
             </button>
           </form>
-
-          {/* Audit & Compliance Notice */}
-          <div
-            style={{
-              marginTop: '1.75rem',
-              padding: '0.85rem',
-              borderRadius: '8px',
-              backgroundColor: 'var(--color-bg)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.75rem',
-              color: 'var(--color-text-muted)',
-              lineHeight: 1.45,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-text-secondary)', fontWeight: 600, marginBottom: '0.25rem' }}>
-              <KeyRound size={13} color="var(--color-primary)" />
-              <span>Audit Logging Active</span>
-            </div>
-            All authentication attempts, IP addresses, and administrator interactions are cryptographically recorded in the platform audit log.
-          </div>
         </div>
       </main>
     </div>

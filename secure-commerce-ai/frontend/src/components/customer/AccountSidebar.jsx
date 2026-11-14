@@ -32,11 +32,11 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
           padding: isCollapsed ? '0.75rem 0.35rem 2rem' : '0.75rem 0.65rem 2rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: isCollapsed ? '0.65rem' : '1rem',
+          gap: isCollapsed ? '0.35rem' : '1rem',
         }}
       >
         {CUSTOMER_NAV_SECTIONS.map((section, idx) => (
-          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div key={section.title} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {/* Section Header or Divider */}
             {isCollapsed ? (
               idx > 0 && (
@@ -44,7 +44,8 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                   style={{
                     height: '1px',
                     backgroundColor: 'var(--color-sidebar-border, var(--color-border-subtle))',
-                    margin: '0.35rem 0.4rem',
+                    margin: '0.45rem 0.5rem',
+                    opacity: 0.6,
                   }}
                   aria-hidden="true"
                 />
@@ -77,15 +78,17 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                   key={item.label}
                   to={item.path}
                   end={item.path === ROUTES.CUSTOMER_DASHBOARD}
-                  title={isCollapsed ? item.label : undefined}
+                  title={item.label}
+                  aria-label={item.label}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: isCollapsed ? 'center' : 'flex-start',
                     gap: isCollapsed ? 0 : '0.75rem',
-                    padding: isCollapsed ? '0.6rem 0' : '0.6rem 0.85rem',
-                    borderRadius: '0.75rem',
-                    minHeight: '40px',
+                    padding: isCollapsed ? '0.65rem 0' : '0.6rem 0.85rem',
+                    borderRadius: 'var(--radius-md, 0.75rem)',
+                    minHeight: isCollapsed ? '44px' : '40px',
+                    margin: isCollapsed ? '2px 4px' : '2px 0',
                     fontSize: '0.84rem',
                     fontWeight: isActive ? '600' : '500',
                     color: isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-text-primary, var(--color-text-primary))',
@@ -111,7 +114,7 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                 >
                   <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon
-                      size={18}
+                      size={20}
                       strokeWidth={isActive ? 2.25 : 1.75}
                       color={isActive ? 'var(--color-sidebar-active-text, #FFFFFF)' : 'var(--color-sidebar-icon, var(--color-text-secondary))'}
                       style={{ flexShrink: 0, transition: 'color var(--transition-fast)' }}
@@ -120,20 +123,23 @@ const AccountSidebar = ({ unreadNotifications = 0, isCollapsed = false }) => {
                       <span
                         style={{
                           position: 'absolute',
-                          top: '-4px',
-                          right: '-6px',
+                          top: '-6px',
+                          right: '-8px',
                           backgroundColor: 'var(--color-sidebar-active-bg, var(--color-primary))',
-                          color: 'var(--color-sidebar-active-text, #FFFFFF)',
-                          fontSize: '0.575rem',
+                          color: '#FFFFFF',
+                          fontSize: '0.6rem',
                           fontWeight: '800',
                           borderRadius: 'var(--radius-full)',
-                          padding: '0 3px',
-                          minWidth: '14px',
-                          height: '14px',
+                          padding: '0 4px',
+                          minWidth: '15px',
+                          height: '15px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           lineHeight: 1,
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+                          border: '1.5px solid var(--color-surface)',
+                          zIndex: 2,
                         }}
                       >
                         {badgeCount > 9 ? '9+' : badgeCount}

@@ -16,7 +16,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom'
 import {
   ShieldCheck, Bell, ChevronDown, LogOut,
   LayoutDashboard, Package, Archive, ShoppingBag,
-  DollarSign, Star, User, PlusSquare, TrendingUp, BarChart3,
+  DollarSign, Star, User, PlusSquare, TrendingUp, BarChart3, RotateCcw,
 } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -34,19 +34,97 @@ const SELLER_NAV = [
   { label: 'Add Product',    icon: PlusSquare,      path: ROUTES.SELLER_ADD_PRODUCT },
   { label: 'Inventory',      icon: Archive,         path: ROUTES.SELLER_INVENTORY },
   { label: 'Orders',         icon: ShoppingBag,     path: ROUTES.SELLER_ORDERS },
+  { label: 'Refund Requests',icon: RotateCcw,       path: ROUTES.SELLER_REFUNDS },
   { label: 'Analytics',      icon: BarChart3,       path: ROUTES.SELLER_ANALYTICS },
   { label: 'Reviews',        icon: Star,            path: ROUTES.SELLER_REVIEWS },
   { label: 'Login Activity', icon: ShieldCheck,     path: ROUTES.SELLER_LOGIN_ACTIVITY },
 ]
 
-// ─── Logo ─────────────────────────────────────────────────────
-const Logo = () => (
-  <BrandLogo
-    size="md"
-    subtitle="Seller Portal"
-    to={ROUTES.SELLER_DASHBOARD}
-    ariaLabel="Shopivo Seller Dashboard"
-  />
+// ─── Sidebar Toggle Icons ─────────────────────────────────────
+const SidebarCollapseIcon = ({ size = 18, className = '' }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M8 9L5 12L8 15" />
+    <line x1="5" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+)
+
+const SidebarExpandIcon = ({ size = 18, className = '' }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 9L19 12L16 15" />
+    <line x1="3" y1="12" x2="19" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+)
+
+// ─── Logo & Sidebar Toggle ────────────────────────────────────
+const Logo = ({ isSidebarCollapsed, onToggleSidebar }) => (
+  <div
+    className={`app-sidebar-brand-header ${isSidebarCollapsed ? 'is-collapsed' : ''}`}
+    style={{
+      width: isSidebarCollapsed ? '74px' : '260px',
+    }}
+  >
+    {!isSidebarCollapsed && (
+      <div className="app-brand-logo-container">
+        <BrandLogo
+          size="md"
+          subtitle="Seller Portal"
+          showWordmark={true}
+          to={ROUTES.SELLER_DASHBOARD}
+          ariaLabel="Shopivo Seller Dashboard"
+        />
+      </div>
+    )}
+    <button
+      type="button"
+      onClick={onToggleSidebar}
+      className="customer-sidebar-brand-toggle"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '32px',
+        height: '32px',
+        borderRadius: 'var(--radius-md)',
+        border: '1px solid var(--color-sidebar-border, var(--color-border))',
+        backgroundColor: 'var(--color-sidebar-hover-bg, var(--color-surface))',
+        color: 'var(--color-sidebar-icon, var(--color-text-secondary))',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        flexShrink: 0,
+        margin: isSidebarCollapsed ? '0 auto' : undefined,
+      }}
+      title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+    >
+      {isSidebarCollapsed ? <SidebarExpandIcon size={18} /> : <SidebarCollapseIcon size={18} />}
+    </button>
+  </div>
 )
 
 // ─── Right Actions ────────────────────────────────────────────
@@ -121,6 +199,24 @@ const SellerLayout = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('sc_seller_sidebar_collapsed') === 'true'
+    } catch {
+      return false
+    }
+  })
+
+  const handleSidebarToggle = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev
+      try {
+        localStorage.setItem('sc_seller_sidebar_collapsed', String(next))
+      } catch {}
+      return next
+    })
+  }
+
   const handleLogout = () => {
     dispatch(logout())
     navigate(ROUTES.LOGIN)
@@ -129,14 +225,20 @@ const SellerLayout = () => {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-bg)' }}>
       <Navbar
-        logo={<Logo />}
+        flush
+        logo={<Logo isSidebarCollapsed={isSidebarCollapsed} onToggleSidebar={handleSidebarToggle} />}
         actions={<SellerActions user={user} onLogout={handleLogout} />}
       />
 
       <div style={{ display: 'flex', flex: 1 }}>
-        <Sidebar navItems={SELLER_NAV} />
+        <Sidebar navItems={SELLER_NAV} width={260} isCollapsed={isSidebarCollapsed} />
 
-        <main className="fade-in" style={{ flex: 1, padding: '2rem', overflowY: 'auto', minHeight: 'calc(100vh - 64px)' }}>
+        <main className="fade-in" style={{
+          flex: 1, padding: '2rem', overflowY: 'auto',
+          minHeight: 'calc(100vh - 64px)',
+          minWidth: 0,
+          transition: 'width 0.2s ease, margin 0.2s ease',
+        }}>
           <Outlet />
         </main>
       </div>

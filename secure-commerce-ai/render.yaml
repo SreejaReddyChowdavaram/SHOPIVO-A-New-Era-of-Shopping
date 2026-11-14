@@ -43,7 +43,7 @@ services:
         value: "86400000"
       # CORS: Set to your actual frontend Render URL
       - key: CORS_ORIGINS
-        value: https://shopivo-frontend.onrender.com
+        value: https://shopivo-a-new-era-of-shopping-znib.onrender.com
       # Razorpay Gateway Configuration (Secrets should be entered via Render Dashboard)
       - key: RAZORPAY_MODE
         value: TEST
@@ -69,7 +69,7 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://shopivo-backend.onrender.com/api
+        value: https://shopivo-a-new-era-of-shopping.onrender.com/api
 
 databases:
   # ─────────────────────────────────────────────────────────────

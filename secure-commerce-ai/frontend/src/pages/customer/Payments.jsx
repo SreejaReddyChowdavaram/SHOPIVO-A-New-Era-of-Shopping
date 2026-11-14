@@ -138,13 +138,9 @@ const CustomerPayments = () => {
             Payment History &amp; Transactions
           </h1>
           <p style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)', margin: '0.25rem 0 0 0' }}>
-            Real-time ledger of your Razorpay online payments and Cash on Delivery orders.
+            Real-time ledger of your online payments and Cash on Delivery orders.
           </p>
         </div>
-
-        <span className="badge badge-neutral" style={{ fontSize: '0.725rem', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-          <ShieldCheck size={14} color="var(--color-primary)" /> Razorpay Secured
-        </span>
       </div>
 
       {/* Error alert */}

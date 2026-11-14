@@ -6,7 +6,10 @@ package com.securecommerce.platform.user.dto;
 public record AdminUserSummaryMetricsResponse(
         long totalUsers,
         long totalCustomers,
+        long activeCustomers,
+        long suspendedCustomers,
         long totalSellers,
         long activeSellers,
+        long suspendedSellers,
         long suspendedUsers
 ) {}

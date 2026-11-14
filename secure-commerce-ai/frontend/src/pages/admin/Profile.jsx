@@ -266,22 +266,6 @@ const AdminProfile = () => {
                 <Shield size={12} />
                 SYSTEM ADMINISTRATOR
               </span>
-              <span
-                style={{
-                  fontSize: '0.7rem',
-                  fontWeight: '700',
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '999px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                  color: '#10b981',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
-              >
-                <ShieldCheck size={13} />
-                Full Platform Authority
-              </span>
               <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
                 Administrator since {formatDate(activeUser?.createdAt)}
               </span>
@@ -960,15 +944,11 @@ const AdminProfile = () => {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
               <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--color-text-primary)', display: 'block' }}>
-                Root Administrative Password
+                Administrative Password
               </span>
               <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                Protected with high-cost BCrypt salt hashing. Changing password re-authenticates API access tokens.
+                Changing password will invalidate active sessions and require re-authentication.
               </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981', fontSize: '0.8125rem', fontWeight: '600' }}>
-              <ShieldCheck size={16} />
-              BCrypt-12 Salted &amp; Sealed
             </div>
           </div>
         )}

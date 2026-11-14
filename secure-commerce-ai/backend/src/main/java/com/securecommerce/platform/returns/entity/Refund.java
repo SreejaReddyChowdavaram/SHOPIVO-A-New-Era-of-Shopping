@@ -52,6 +52,15 @@ public class Refund {
     @Column(name = "refund_transaction_id", nullable = false, unique = true, length = 100)
     private String refundTransactionId;
 
+    @Column(name = "provider_refund_id", length = 100)
+    private String providerRefundId;
+
+    @Column(name = "failure_reason", columnDefinition = "TEXT")
+    private String failureReason;
+
+    @Column(name = "destination")
+    private String destination;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false, length = 30)
     private PaymentMethod paymentMethod;

@@ -41,6 +41,38 @@ export const cancelReturn = async (id) => {
   return res.data.data
 }
 
+// ─── SELLER REFUND WORKFLOW ────────────────────────────────
+export const getSellerRefunds = async (params) => {
+  const res = await api.get('/seller/refunds', { params })
+  return res.data.data
+}
+
+export const getSellerRefundById = async (id) => {
+  const res = await api.get(`/seller/refunds/${id}`)
+  return res.data.data
+}
+
+export const approveSellerRefund = async (id) => {
+  const res = await api.post(`/seller/refunds/${id}/approve`)
+  return res.data.data
+}
+
+export const rejectSellerRefund = async (id, reason) => {
+  const res = await api.post(`/seller/refunds/${id}/reject`, { reason })
+  return res.data.data
+}
+
+// ─── ADMIN REFUND MONITORING ────────────────────────────────
+export const getAdminRefunds = async (params) => {
+  const res = await api.get('/admin/refunds', { params })
+  return res.data.data
+}
+
+export const getAdminRefundById = async (id) => {
+  const res = await api.get(`/admin/refunds/${id}`)
+  return res.data.data
+}
+
 export default {
   checkReturnEligibility,
   requestReturn,
@@ -49,4 +81,10 @@ export default {
   getMyRefunds,
   getReturnById,
   cancelReturn,
+  getSellerRefunds,
+  getSellerRefundById,
+  approveSellerRefund,
+  rejectSellerRefund,
+  getAdminRefunds,
+  getAdminRefundById,
 }

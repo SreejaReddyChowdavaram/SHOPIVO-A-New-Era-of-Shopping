@@ -31,6 +31,7 @@ import {
   suspendUser,
   activateUser,
   getAdminUserDetail,
+  getAdminUserMetrics,
 } from '@/services/userService'
 
 const STATUS_FILTERS = [
@@ -58,12 +59,27 @@ const Customers = () => {
   const [confirmModal, setConfirmModal] = useState({ open: false, user: null, action: null })
   const [detailModal, setDetailModal] = useState({ open: false, user: null, loading: false })
 
-  // Summary stats
+  // Summary stats (Authoritative global metrics from backend)
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
     suspended: 0,
   })
+
+  const fetchMetrics = async () => {
+    try {
+      const data = await getAdminUserMetrics()
+      if (data) {
+        setStats({
+          total: data.totalCustomers ?? 0,
+          active: data.activeCustomers ?? 0,
+          suspended: data.suspendedCustomers ?? 0,
+        })
+      }
+    } catch (err) {
+      console.warn('Failed to load user metrics:', err)
+    }
+  }
 
   const fetchCustomers = async () => {
     try {
@@ -77,25 +93,23 @@ const Customers = () => {
         search: searchQuery || undefined,
       }
       const data = await getAdminUsersPaged(params)
-      const items = data.content || []
+      const items = data?.content || []
+      const totalP = data?.page?.totalPages ?? data?.totalPages ?? 1
+      const totalE = data?.page?.totalElements ?? data?.totalElements ?? items.length
+
       setCustomers(items)
-      setTotalPages(data.totalPages || 1)
-      setTotalElements(data.totalElements || 0)
-
-      const activeCount = items.filter((c) => c.enabled).length
-      const suspendedCount = items.filter((c) => !c.enabled).length
-
-      setStats({
-        total: data.totalElements || items.length,
-        active: selectedStatus === 'ACTIVE' ? data.totalElements : (selectedStatus === 'SUSPENDED' ? 0 : activeCount),
-        suspended: selectedStatus === 'SUSPENDED' ? data.totalElements : (selectedStatus === 'ACTIVE' ? 0 : suspendedCount),
-      })
+      setTotalPages(totalP)
+      setTotalElements(totalE)
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load customer accounts.')
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchMetrics()
+  }, [])
 
   useEffect(() => {
     fetchCustomers()

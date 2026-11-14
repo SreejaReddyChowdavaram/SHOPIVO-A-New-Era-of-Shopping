@@ -6,22 +6,35 @@ import {
   ShoppingBag,
   PackageCheck,
   Clock,
-  XCircle,
   RotateCcw,
   DollarSign,
   AlertCircle,
   Loader2,
   RefreshCw,
-  UserCheck,
+  TrendingUp,
+  CreditCard,
+  Building2,
+  Scale,
 } from 'lucide-react'
-import AnalyticsDateFilter from '@/components/analytics/AnalyticsDateFilter'
-import AnalyticsSummaryCard from '@/components/analytics/AnalyticsSummaryCard'
-import AnalyticsSecondaryStat from '@/components/analytics/AnalyticsSecondaryStat'
-import AnalyticsLineChart from '@/components/analytics/AnalyticsLineChart'
-import AnalyticsDonutChart from '@/components/analytics/AnalyticsDonutChart'
-import AnalyticsBarChart from '@/components/analytics/AnalyticsBarChart'
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from 'recharts'
+import { useTheme } from '@/context/ThemeContext'
+import CustomerDateFilter from '@/components/customer/analytics/CustomerDateFilter'
+import CustomerMetricCard from '@/components/customer/analytics/CustomerMetricCard'
+import CustomerStatusDonut from '@/components/customer/analytics/CustomerStatusDonut'
+import CustomerAnalyticsSkeleton from '@/components/customer/analytics/CustomerAnalyticsSkeleton'
 import RecentOrdersTable from '@/components/analytics/RecentOrdersTable'
 import RecentReturnsTable from '@/components/analytics/RecentReturnsTable'
+import TopProductsList from '@/components/analytics/TopProductsList'
 import {
   getAdminOverview,
   getAdminCharts,
@@ -30,6 +43,9 @@ import {
 import { ROUTES } from '@/constants/routes'
 
 export default function AdminAnalyticsDashboard() {
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
+
   const [range, setRange] = useState('all')
   const [customStart, setCustomStart] = useState(null)
   const [customEnd, setCustomEnd] = useState(null)
@@ -63,7 +79,7 @@ export default function AdminAnalyticsDashboard() {
     paymentDistribution: [],
   })
 
-  const [recentActivity, setRecentActivity] = useState({
+  const [activity, setActivity] = useState({
     recentOrders: [],
     newCustomers: [],
     newSellers: [],
@@ -89,11 +105,29 @@ export default function AdminAnalyticsDashboard() {
       ])
 
       if (ovData) setOverview(ovData)
-      if (chData) setCharts(chData)
-      if (actData) setRecentActivity(actData)
+      if (chData) {
+        setCharts({
+          platformOrderTrends: chData.platformOrderTrends || [],
+          monthlyGmv: chData.monthlyGmv || [],
+          orderStatusDistribution: chData.orderStatusDistribution || [],
+          customerGrowth: chData.customerGrowth || [],
+          sellerPerformance: chData.sellerPerformance || [],
+          productPerformance: chData.productPerformance || [],
+          purchaseVsReturns: chData.purchaseVsReturns || [],
+          paymentDistribution: chData.paymentDistribution || [],
+        })
+      }
+      if (actData) {
+        setActivity({
+          recentOrders: actData.recentOrders || [],
+          newCustomers: actData.newCustomers || [],
+          newSellers: actData.newSellers || [],
+          recentReturns: actData.recentReturns || [],
+        })
+      }
     } catch (err) {
-      console.error('Failed to load admin platform analytics:', err)
-      setError(err.response?.data?.message || err.message || 'Failed to aggregate platform analytics.')
+      console.error('Failed to load admin analytics:', err)
+      setError(err.response?.data?.message || err.message || 'Failed to load platform analytics data.')
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -116,29 +150,85 @@ export default function AdminAnalyticsDashboard() {
   }
 
   const formatCurrency = (val) => {
-    return `₹${Number(val || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    return `₹${Number(val || 0).toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
+  }
+
+  // Custom Chart Tooltips
+  const CurrencyTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-[var(--color-text-primary)]">
+          <p className="font-bold text-[var(--color-text-secondary)] mb-1 border-b border-[var(--color-border)] pb-1">
+            {label}
+          </p>
+          {payload.map((entry, idx) => (
+            <div key={`cur-entry-${idx}`} className="flex items-center justify-between gap-4 py-0.5">
+              <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color || '#0F8F6B' }} />
+                {entry.name}:
+              </span>
+              <span className="font-extrabold text-[var(--color-text-primary)]">
+                {formatCurrency(entry.value)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+    return null
+  }
+
+  const GrowthTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3.5 py-2.5 shadow-xl text-xs text-[var(--color-text-primary)]">
+          <p className="font-bold text-[var(--color-text-secondary)] mb-1 border-b border-[var(--color-border)] pb-1">
+            {label}
+          </p>
+          <div className="flex items-center justify-between gap-4 pt-0.5">
+            <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)]">
+              <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+              New Users:
+            </span>
+            <span className="font-extrabold text-[var(--color-primary)]">
+              {Number(payload[0].value).toLocaleString('en-IN')}
+            </span>
+          </div>
+        </div>
+      )
+    }
+    return null
   }
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-7 pb-12 max-w-[1400px] mx-auto">
-      {/* ── Page Header & Quick Controls ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex flex-col gap-6 sm:gap-7 pb-6 max-w-[1440px] mx-auto w-full">
+      {/* ── Page Header & Quick Controls (Matches Customer Analytics) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 pb-1 border-b border-[var(--color-border)]">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)] flex items-center gap-2.5">
-            <span>Admin Analytics</span>
+            <span>Admin Platform Analytics</span>
             {refreshing && <Loader2 className="w-4 h-4 animate-spin text-[var(--color-primary)]" />}
           </h1>
           <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1">
-            Global marketplace GMV, customer &amp; merchant cohorts, order fulfillment lifecycle, and catalog velocity.
+            Platform-wide commerce intelligence, revenue tracking, customer growth, and merchant performance.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 self-start sm:self-auto flex-wrap sm:flex-nowrap">
+          <CustomerDateFilter
+            currentRange={range}
+            currentLabel={overview.dateRangeLabel}
+            onRangeChange={handleRangeChange}
+          />
           <button
             onClick={() => loadData(true)}
             disabled={loading || refreshing}
             type="button"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors shadow-xs cursor-pointer disabled:opacity-60"
+            className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] transition-colors shadow-xs cursor-pointer disabled:opacity-60 shrink-0"
+            aria-label="Refresh Data"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-[var(--color-primary)]' : ''}`} />
             <span>Refresh Data</span>
@@ -146,332 +236,407 @@ export default function AdminAnalyticsDashboard() {
         </div>
       </div>
 
-      {/* ── Date Filter Bar ── */}
-      <AnalyticsDateFilter
-        currentRange={range}
-        currentLabel={overview.dateRangeLabel}
-        onRangeChange={handleRangeChange}
-      />
-
+      {/* ── Error Banner with Retry ── */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2.5 shadow-xs">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={() => loadData(false)}
+            type="button"
+            className="px-3 py-1 font-semibold rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition-colors shrink-0 cursor-pointer shadow-xs"
+          >
+            Retry
+          </button>
         </div>
       )}
 
+      {/* ── Loading Skeleton vs Content ── */}
       {loading ? (
-        <div className="py-28 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
-          <p className="text-xs font-medium text-[var(--color-text-secondary)]">Aggregating platform intelligence across multi-tenant database...</p>
-        </div>
+        <CustomerAnalyticsSkeleton />
       ) : (
         <div className="flex flex-col gap-6 sm:gap-7">
-          {/* ── 1. Top Section: 4 Primary Summary Cards ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4.5">
-            <AnalyticsSummaryCard
+          {/* ── 1. Unified 8-KPI Metric Grid (Exact CustomerAnalytics Styling) ── */}
+          <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {/* Metric 1: Platform GMV / Total Revenue */}
+            <CustomerMetricCard
               title="Platform GMV"
               value={formatCurrency(overview.totalOrderValue)}
-              subLabel="Total Platform Spend"
-              subValue={overview.dateRangeLabel}
               icon={DollarSign}
-              gradientColor="blue"
+              color="emerald"
             />
 
-            <AnalyticsSummaryCard
+            {/* Metric 2: Total Orders */}
+            <CustomerMetricCard
               title="Total Orders"
               value={overview.totalOrders.toLocaleString()}
-              subLabel="Delivered Fulfillments"
-              subValue={`${overview.deliveredOrders} Delivered`}
               icon={ShoppingBag}
-              gradientColor="emerald"
+              color="blue"
             />
 
-            <AnalyticsSummaryCard
-              title="Registered Customers"
+            {/* Metric 3: Total Customers */}
+            <CustomerMetricCard
+              title="Total Customers"
               value={overview.totalCustomers.toLocaleString()}
-              subLabel="Active Merchants"
-              subValue={`${overview.totalSellers} Onboarded`}
               icon={Users}
-              gradientColor="amber"
+              color="purple"
             />
 
-            <AnalyticsSummaryCard
-              title="Catalog Listings"
+            {/* Metric 4: Total Sellers */}
+            <CustomerMetricCard
+              title="Active Sellers"
+              value={overview.totalSellers.toLocaleString()}
+              icon={Store}
+              color="amber"
+            />
+
+            {/* Metric 5: Active Catalog */}
+            <CustomerMetricCard
+              title="Active Catalog"
               value={overview.totalProducts.toLocaleString()}
-              subLabel="Total Refunded"
-              subValue={formatCurrency(overview.refundAmount)}
               icon={Package}
-              gradientColor="rose"
+              color="violet"
             />
-          </div>
 
-          {/* ── 2. Secondary Metrics (6-stat grid) ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-            <AnalyticsSecondaryStat
-              title="Delivered"
+            {/* Metric 6: Delivered Orders */}
+            <CustomerMetricCard
+              title="Delivered Orders"
               value={overview.deliveredOrders.toLocaleString()}
               icon={PackageCheck}
               color="emerald"
-              subText="Successfully delivered"
             />
 
-            <AnalyticsSecondaryStat
-              title="Pending"
+            {/* Metric 7: Pending Orders */}
+            <CustomerMetricCard
+              title="Pending Orders"
               value={overview.pendingOrders.toLocaleString()}
               icon={Clock}
               color="amber"
-              subText="Active in transit"
             />
 
-            <AnalyticsSecondaryStat
-              title="Cancelled"
-              value={overview.cancelledOrders.toLocaleString()}
-              icon={XCircle}
-              color="rose"
-              subText="Order cancellations"
-            />
-
-            <AnalyticsSecondaryStat
-              title="Returns"
-              value={overview.returnedOrders.toLocaleString()}
-              icon={RotateCcw}
-              color="pink"
-              subText="Customer return requests"
-            />
-
-            <AnalyticsSecondaryStat
-              title="Sellers"
-              value={overview.totalSellers.toLocaleString()}
-              icon={Store}
-              color="blue"
-              subText="Registered vendors"
-            />
-
-            <AnalyticsSecondaryStat
-              title="Refunds"
+            {/* Metric 8: Refund Volume */}
+            <CustomerMetricCard
+              title="Refund Volume"
               value={formatCurrency(overview.refundAmount)}
-              icon={DollarSign}
-              color="slate"
-              subText="Processed returns"
+              icon={RotateCcw}
+              color="rose"
             />
           </div>
 
-          {/* ── 3. Middle Section: Charts ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            {/* Chart 1: Monthly GMV vs Net Revenue */}
-            <div className="lg:col-span-2">
-              <AnalyticsLineChart
-                title="Gross Merchandise Value (GMV) vs Net Revenue"
-                subtitle="Monthly platform transaction value with refund deductions"
-                data={charts.monthlyGmv}
-                series={[
-                  { key: 'gmv', name: 'Gross Merchandise Value (₹)', color: '#0F8F6B' },
-                  { key: 'netRevenue', name: 'Net Revenue (₹)', color: '#0B7A5B' }
-                ]}
-                isCurrency={true}
-                height={320}
-                type="area"
-              />
+          {/* ── 2. Primary Charts Section (Balanced 2-Column Grid) ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            {/* Chart 1: Platform GMV Over Time */}
+            <div className="group relative flex flex-col justify-between rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-primary)] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md">
+              <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-5">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] flex items-center justify-center gap-2">
+                  <TrendingUp className="w-4.5 h-4.5 text-[var(--color-primary)] shrink-0" aria-hidden="true" />
+                  <span>Platform Revenue Over Time</span>
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-1 text-center">
+                  Monthly Gross Merchandise Value (GMV) across all sellers
+                </p>
+              </div>
+
+              <div className="w-full flex-1 flex items-center justify-center" style={{ height: 280 }}>
+                {charts.monthlyGmv && charts.monthlyGmv.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={charts.monthlyGmv}
+                      margin={{ top: 12, right: 16, left: -16, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="adminGmvGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0F8F6B" stopOpacity={isDark ? 0.45 : 0.25} />
+                          <stop offset="95%" stopColor="#0F8F6B" stopOpacity={0.0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
+                      />
+                      <XAxis
+                        dataKey="label"
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={6}
+                      />
+                      <YAxis
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(v) => `₹${v}`}
+                      />
+                      <Tooltip content={<CurrencyTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="gmv"
+                        name="Platform GMV"
+                        stroke="#0F8F6B"
+                        strokeWidth={2.5}
+                        fillOpacity={1}
+                        fill="url(#adminGmvGradient)"
+                        activeDot={{ r: 5, fill: '#0F8F6B', stroke: isDark ? 'var(--color-surface)' : '#ffffff', strokeWidth: 2 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-xs text-slate-400 gap-2">
+                    <DollarSign className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                    <span>No platform GMV recorded for this timeframe</span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Chart 2: Order Status Distribution */}
-            <div>
-              <AnalyticsDonutChart
-                title="Platform Order Status"
-                subtitle="Global fulfillment pipeline breakdown"
-                data={charts.orderStatusDistribution}
-                totalLabel="Orders"
-                height={320}
-              />
+            {/* Chart 2: Order Status Distribution (Exact CustomerStatusDonut) */}
+            <CustomerStatusDonut
+              title="Order Status Distribution"
+              subtitle="Platform-wide order lifecycle states"
+              data={charts.orderStatusDistribution}
+              totalLabel="Orders"
+              height={280}
+            />
+          </div>
+
+          {/* ── 3. Secondary Charts Grid: Customer Growth & Payment Distribution ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            {/* Chart 3: Customer Growth Cohort */}
+            <div className="group relative flex flex-col justify-between rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-primary)] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md">
+              <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-5">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] flex items-center justify-center gap-2">
+                  <Users className="w-4.5 h-4.5 text-[var(--color-primary)] shrink-0" aria-hidden="true" />
+                  <span>Customer Growth</span>
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-1 text-center">
+                  Monthly new registered customer accounts
+                </p>
+              </div>
+
+              <div className="w-full flex-1 flex items-center justify-center" style={{ height: 260 }}>
+                {charts.customerGrowth && charts.customerGrowth.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={charts.customerGrowth}
+                      margin={{ top: 12, right: 16, left: -16, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="adminUserGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0F8F6B" stopOpacity={isDark ? 0.45 : 0.25} />
+                          <stop offset="95%" stopColor="#0F8F6B" stopOpacity={0.0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
+                      />
+                      <XAxis
+                        dataKey="label"
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={6}
+                      />
+                      <YAxis
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        allowDecimals={false}
+                      />
+                      <Tooltip content={<GrowthTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="newUsers"
+                        name="New Customers"
+                        stroke="#0F8F6B"
+                        strokeWidth={2.5}
+                        fillOpacity={1}
+                        fill="url(#adminUserGradient)"
+                        activeDot={{ r: 5, fill: '#0F8F6B', stroke: isDark ? 'var(--color-surface)' : '#ffffff', strokeWidth: 2 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-xs text-slate-400 gap-2">
+                    <Users className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                    <span>No customer registration activity recorded</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Chart 4: Payment Method Distribution */}
+            <CustomerStatusDonut
+              title="Payment Method Breakdown"
+              subtitle="Razorpay Online vs Cash on Delivery"
+              data={charts.paymentDistribution}
+              totalLabel="Payments"
+              height={260}
+            />
+          </div>
+
+          {/* ── 4. Tertiary Charts Grid: Merchant Performance & Purchases vs Returns ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            {/* Chart 5: Top Performing Sellers */}
+            <div className="group relative flex flex-col justify-between rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-primary)] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md">
+              <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-5">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] flex items-center justify-center gap-2">
+                  <Building2 className="w-4.5 h-4.5 text-[var(--color-primary)] shrink-0" aria-hidden="true" />
+                  <span>Top Performing Sellers</span>
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-1 text-center">
+                  Order fulfillment volume by approved merchant
+                </p>
+              </div>
+
+              <div className="w-full flex-1 flex items-center justify-center" style={{ height: 260 }}>
+                {charts.sellerPerformance && charts.sellerPerformance.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={charts.sellerPerformance}
+                      margin={{ top: 12, right: 16, left: -16, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
+                      />
+                      <XAxis
+                        dataKey="sellerName"
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={6}
+                      />
+                      <YAxis
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        allowDecimals={false}
+                      />
+                      <Tooltip content={<GrowthTooltip />} />
+                      <Bar
+                        dataKey="orderCount"
+                        name="Orders Fulfilled"
+                        fill="#0F8F6B"
+                        radius={[6, 6, 0, 0]}
+                        maxBarSize={44}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-xs text-slate-400 gap-2">
+                    <Store className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                    <span>No seller activity in this period</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Chart 6: Platform Purchases vs Returns */}
+            <div className="group relative flex flex-col justify-between rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-primary)] p-5 sm:p-6 shadow-xs transition-all duration-200 hover:shadow-md">
+              <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-5">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] flex items-center justify-center gap-2">
+                  <Scale className="w-4.5 h-4.5 text-[var(--color-primary)] shrink-0" aria-hidden="true" />
+                  <span>Purchases vs Returns</span>
+                </h3>
+                <p className="text-xs text-[var(--color-text-secondary)] mt-1 text-center">
+                  Total purchase amounts compared against return values
+                </p>
+              </div>
+
+              <div className="w-full flex-1 flex items-center justify-center" style={{ height: 260 }}>
+                {charts.purchaseVsReturns && charts.purchaseVsReturns.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={charts.purchaseVsReturns}
+                      margin={{ top: 12, right: 16, left: -16, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke={isDark ? 'var(--color-border)' : '#D8EBE4'}
+                      />
+                      <XAxis
+                        dataKey="label"
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        dy={6}
+                      />
+                      <YAxis
+                        stroke={isDark ? 'var(--color-text-secondary)' : '#667B72'}
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(v) => `₹${v}`}
+                      />
+                      <Tooltip content={<CurrencyTooltip />} />
+                      <Bar
+                        dataKey="purchaseAmount"
+                        name="Purchases"
+                        fill="#0F8F6B"
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={28}
+                      />
+                      <Bar
+                        dataKey="returnAmount"
+                        name="Returns"
+                        fill="#DC5555"
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={28}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-xs text-slate-400 gap-2">
+                    <Scale className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                    <span>No purchase vs return data available</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Chart 3: Order Trends */}
-            <AnalyticsLineChart
-              title="Platform Order Trends"
-              subtitle="Completed deliveries vs cancelled orders"
-              data={charts.platformOrderTrends}
-              series={[
-                { key: 'totalOrders', name: 'Total Placed', color: '#0F8F6B' },
-                { key: 'completedOrders', name: 'Delivered', color: '#0B7A5B' },
-                { key: 'cancelledOrders', name: 'Cancelled', color: '#ef4444' },
-              ]}
-              height={320}
-              type="line"
+          {/* ── 5. Bottom Detail Sections: Top Products & Recent Orders & Returns ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+            {/* Top Platform Products */}
+            <TopProductsList
+              title="Top Platform Products"
+              subtitle="Marketplace-wide bestsellers by units sold"
+              products={charts.productPerformance}
+              role="admin"
             />
 
-            {/* Chart 4: Customer Growth */}
-            <AnalyticsLineChart
-              title="User Cohort Growth"
-              subtitle="New customer accounts and verified seller onboarding"
-              data={charts.customerGrowth}
-              series={[
-                { key: 'newCustomers', name: 'New Customers', color: '#0F8F6B' },
-                { key: 'newSellers', name: 'New Sellers', color: '#f59e0b' },
-              ]}
-              height={320}
-              type="area"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Chart 5: Seller Performance */}
-            <AnalyticsBarChart
-              title="Top Performing Sellers"
-              subtitle="Ranked by total gross merchandise sales (₹)"
-              data={charts.sellerPerformance}
-              series={[
-                { key: 'grossSales', name: 'Gross Sales (₹)', color: '#0F8F6B' }
-              ]}
-              layout="vertical"
-              xKey="sellerName"
-              isCurrency={true}
-              height={320}
-            />
-
-            {/* Chart 6: Product Performance */}
-            <AnalyticsBarChart
-              title="Platform Top Products"
-              subtitle="Ranked by total unit volume sold"
-              data={charts.productPerformance}
-              series={[
-                { key: 'unitsSold', name: 'Units Sold', color: '#0F8F6B' }
-              ]}
-              layout="vertical"
-              xKey="productName"
-              height={320}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div className="lg:col-span-2">
-              <AnalyticsBarChart
-                title="Purchases vs. Return Requests"
-                subtitle="Orders placed compared against return and refund frequency"
-                data={charts.purchaseVsReturns}
-                series={[
-                  { key: 'ordersPlaced', name: 'Orders Placed', color: '#0F8F6B' },
-                  { key: 'ordersReturned', name: 'Orders Returned', color: '#f87171' },
-                ]}
-                xKey="month"
-                height={320}
-              />
-            </div>
-
-            <div>
-              <AnalyticsDonutChart
-                title="Payment Method Breakdown"
-                subtitle="Distribution across payment rails"
-                data={charts.paymentDistribution}
-                totalLabel="Transactions"
-                height={320}
-              />
-            </div>
-          </div>
-
-          {/* ── 4. Bottom Section: Recent Activity & Onboarding ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* Recent Platform Orders */}
             <RecentOrdersTable
               title="Recent Platform Orders"
-              subtitle="Latest orders across all merchants"
-              orders={recentActivity.recentOrders}
+              subtitle="Latest marketplace-wide order transactions"
+              orders={activity.recentOrders}
               role="admin"
               viewAllLink={ROUTES.ADMIN_ORDERS}
             />
-
-            <RecentReturnsTable
-              title="Recent Return Requests"
-              subtitle="Customer return requests awaiting resolution"
-              returns={recentActivity.recentReturns}
-              role="admin"
-              viewAllLink={ROUTES.ADMIN_RETURNS || ROUTES.ADMIN_ORDERS}
-            />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* New Customers List */}
-            <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5.5 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
-                    Newly Registered Customers
-                  </h4>
-                  <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-                    Most recent user sign-ups
-                  </p>
-                </div>
-                <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-primary-subtle)] border border-[var(--color-border)] px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span>Customers</span>
-                </span>
-              </div>
-              <div className="divide-y divide-[var(--color-border)] text-xs">
-                {recentActivity.newCustomers && recentActivity.newCustomers.length > 0 ? (
-                  recentActivity.newCustomers.map((cust) => (
-                    <div key={`cust-${cust.id}`} className="py-3 flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-[var(--color-text-primary)]">
-                          {cust.name || 'Anonymous Customer'}
-                        </p>
-                        <p className="text-[11px] text-[var(--color-text-muted)]">
-                          {cust.email}
-                        </p>
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
-                        {cust.enabled ? 'Active' : 'Disabled'}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="py-8 text-center text-slate-400 text-xs">
-                    No recent customer registrations
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* New Sellers List */}
-            <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] p-5.5 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
-                    Newly Onboarded Sellers
-                  </h4>
-                  <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-                    Most recent merchant registrations
-                  </p>
-                </div>
-                <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/60 px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <Store className="w-3.5 h-3.5" />
-                  <span>Vendors</span>
-                </span>
-              </div>
-              <div className="divide-y divide-[var(--color-border)] text-xs">
-                {recentActivity.newSellers && recentActivity.newSellers.length > 0 ? (
-                  recentActivity.newSellers.map((seller) => (
-                    <div key={`seller-${seller.id}`} className="py-3 flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-[var(--color-text-primary)]">
-                          {seller.name || 'Merchant'}
-                        </p>
-                        <p className="text-[11px] text-[var(--color-text-muted)]">
-                          {seller.email}
-                        </p>
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--color-primary-subtle)] text-[var(--color-primary)] border border-[var(--color-border)]">
-                        {seller.enabled ? 'Approved' : 'Pending'}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="py-8 text-center text-slate-400 text-xs">
-                    No recent seller registrations
-                  </p>
-                )}
-              </div>
-            </div>
+          {/* ── 6. Recent Platform Returns & Disputes ── */}
+          <div>
+            <RecentReturnsTable
+              title="Recent Platform Returns"
+              subtitle="Latest return requests and refund resolutions"
+              returns={activity.recentReturns}
+              viewAllLink={ROUTES.ADMIN_REPORTS}
+            />
           </div>
         </div>
       )}

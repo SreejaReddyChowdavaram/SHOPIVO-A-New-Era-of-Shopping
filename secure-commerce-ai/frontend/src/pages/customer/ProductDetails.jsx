@@ -619,57 +619,6 @@ const ProductDetails = () => {
               />
             </button>
           </div>
-
-          {/* Secure Platform Indicators */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '0.5rem',
-              marginTop: '1rem',
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: 'var(--color-surface-raised)',
-                padding: '0.65rem 0.35rem',
-                borderRadius: 'var(--radius-xs)',
-                border: '1px solid var(--color-border-subtle)',
-              }}
-            >
-              <ShieldCheck size={18} color="var(--color-primary)" style={{ margin: '0 auto 0.25rem' }} />
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--color-text-primary)', display: 'block' }}>
-                Verified Seller
-              </span>
-            </div>
-            <div
-              style={{
-                backgroundColor: 'var(--color-surface-raised)',
-                padding: '0.65rem 0.35rem',
-                borderRadius: 'var(--radius-xs)',
-                border: '1px solid var(--color-border-subtle)',
-              }}
-            >
-              <Truck size={18} color="var(--color-discount)" style={{ margin: '0 auto 0.25rem' }} />
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--color-text-primary)', display: 'block' }}>
-                Secure Delivery
-              </span>
-            </div>
-            <div
-              style={{
-                backgroundColor: 'var(--color-surface-raised)',
-                padding: '0.65rem 0.35rem',
-                borderRadius: 'var(--radius-xs)',
-                border: '1px solid var(--color-border-subtle)',
-              }}
-            >
-              <RotateCcw size={18} color="var(--color-deal)" style={{ margin: '0 auto 0.25rem' }} />
-              <span style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--color-text-primary)', display: 'block' }}>
-                Support Assistance
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* ── Right Column: Product Info, Pricing & Actions ── */}
@@ -1083,7 +1032,7 @@ const ProductDetails = () => {
               </>
             )
           ) : (
-            'Standard verified marketplace item with verified seller fulfillment and secure checkout guarantee.'
+            'No product description provided.'
           )}
         </div>
       </div>

@@ -45,6 +45,9 @@ public class ProductImageStorageService {
     @Value("${app.upload.dir:./data/uploads/products}")
     private String configuredUploadDir;
 
+    @Value("${app.upload.seed-dir:}")
+    private String configuredSeedDir;
+
     private Path resolvedUploadPath;
 
     @PostConstruct
@@ -53,9 +56,49 @@ public class ProductImageStorageService {
             resolvedUploadPath = Paths.get(configuredUploadDir).toAbsolutePath().normalize();
             Files.createDirectories(resolvedUploadPath);
             log.info("Product image upload directory initialized at: {}", resolvedUploadPath);
+
+            initializeSeedImagesIfPresent();
         } catch (IOException e) {
             log.error("Could not create product image upload directory: {}", configuredUploadDir, e);
             throw new IllegalStateException("Failed to initialize upload directory", e);
+        }
+    }
+
+    /**
+     * Initializes bundled/seed product images into the upload directory if missing.
+     * Prevents empty persistent disk mounts from hiding pre-existing catalog images
+     * while guaranteeing existing seller uploads are NEVER overwritten.
+     */
+    private void initializeSeedImagesIfPresent() {
+        try {
+            Path seedPath = null;
+            if (configuredSeedDir != null && !configuredSeedDir.isBlank()) {
+                seedPath = Paths.get(configuredSeedDir).toAbsolutePath().normalize();
+            } else {
+                Path defaultDockerSeed = Paths.get("/app/data/seed-uploads/products");
+                if (Files.exists(defaultDockerSeed)) {
+                    seedPath = defaultDockerSeed;
+                }
+            }
+
+            if (seedPath != null && Files.exists(seedPath) && Files.isDirectory(seedPath)) {
+                log.info("Checking seed catalog images from: {}", seedPath);
+                int copiedCount = 0;
+                try (var stream = Files.list(seedPath)) {
+                    for (Path file : stream.toList()) {
+                        if (Files.isRegularFile(file)) {
+                            Path targetFile = resolvedUploadPath.resolve(file.getFileName());
+                            if (Files.notExists(targetFile)) {
+                                Files.copy(file, targetFile, StandardCopyOption.COPY_ATTRIBUTES);
+                                copiedCount++;
+                            }
+                        }
+                    }
+                }
+                log.info("Seed image check complete. Seeded {} missing product images into upload directory.", copiedCount);
+            }
+        } catch (Exception e) {
+            log.warn("Non-fatal: Failed to copy seed product images: {}", e.getMessage());
         }
     }
 

@@ -971,12 +971,8 @@ const SellerProfile = () => {
                 Account Password
               </span>
               <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
-                Last updated or verified during initial registration. Strong passwords protect your store revenues.
+                Manage and update your merchant account password.
               </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#10b981', fontSize: '0.8125rem', fontWeight: '600' }}>
-              <ShieldCheck size={16} />
-              Secured with BCrypt-12
             </div>
           </div>
         )}

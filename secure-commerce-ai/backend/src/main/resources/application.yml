@@ -170,6 +170,7 @@ app:
   # Product Image Upload Configuration
   upload:
     dir: ${SHOPIVO_UPLOAD_DIR:./data/uploads/products}
+    seed-dir: ${SHOPIVO_SEED_UPLOAD_DIR:}
 
   # Email Delivery & Password Reset OTP Configuration
   mail:

@@ -19,7 +19,10 @@ import com.securecommerce.platform.payment.repository.PaymentRepository;
 import com.securecommerce.platform.payment.repository.PaymentWebhookEventRepository;
 import com.securecommerce.platform.returns.entity.Refund;
 import com.securecommerce.platform.returns.entity.RefundStatus;
+import com.securecommerce.platform.returns.entity.ReturnRequest;
+import com.securecommerce.platform.returns.entity.ReturnStatus;
 import com.securecommerce.platform.returns.repository.RefundRepository;
+import com.securecommerce.platform.returns.repository.ReturnRequestRepository;
 import com.securecommerce.platform.user.entity.User;
 import com.securecommerce.platform.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final ObjectMapper objectMapper;
     private final EventLoggingService eventLoggingService;
     private final RefundRepository refundRepository;
+    private final ReturnRequestRepository returnRequestRepository;
 
     @Value("${app.razorpay.key-id:}")
     private String razorpayKeyId;
@@ -103,7 +107,9 @@ public class PaymentServiceImpl implements PaymentService {
         Optional<Payment> activePaymentOpt = paymentRepository.findFirstByOrderIdAndProviderOrderByCreatedAtDesc(order.getId(), "RAZORPAY");
         if (activePaymentOpt.isPresent()) {
             Payment activePayment = activePaymentOpt.get();
-            if (activePayment.getPaymentStatus() == PaymentStatus.INITIATED && activePayment.getProviderOrderId() != null) {
+            if (activePayment.getPaymentStatus() == PaymentStatus.INITIATED 
+                    && activePayment.getProviderOrderId() != null 
+                    && activePayment.getProviderOrderId().startsWith("order_")) {
                 log.info("Idempotent hit: Reusing active gateway order {} for Shopivo order {}",
                         activePayment.getProviderOrderId(), orderRef);
                 return new GatewayOrderDto(
@@ -576,6 +582,36 @@ public class PaymentServiceImpl implements PaymentService {
                             paymentRepository.save(payment);
                             log.info("Webhook updated payment {} to REFUNDED via refund.processed", payment.getId());
                         }
+
+                        // Authoritatively update Refund and ReturnRequest entities
+                        Optional<Refund> refundOpt = Optional.empty();
+                        if (refundId != null) {
+                            refundOpt = refundRepository.findByProviderRefundId(refundId);
+                        }
+                        if (refundOpt.isEmpty() && payment.getOrder() != null) {
+                            refundOpt = refundRepository.findByOrderId(payment.getOrder().getId());
+                        }
+                        refundOpt.ifPresent(refund -> {
+                            if (refund.getRefundStatus() != RefundStatus.REFUNDED) {
+                                refund.setRefundStatus(RefundStatus.REFUNDED);
+                                if (refundId != null) {
+                                    refund.setProviderRefundId(refundId);
+                                }
+                                refund.setProcessedAt(Instant.now());
+                                refundRepository.save(refund);
+                                log.info("Webhook updated Refund #{} to REFUNDED", refund.getId());
+
+                                ReturnRequest returnReq = refund.getReturnRequest();
+                                if (returnReq != null && returnReq.getStatus() != ReturnStatus.COMPLETED) {
+                                    returnReq.setStatus(ReturnStatus.COMPLETED);
+                                    returnReq.setCompletedAt(Instant.now());
+                                    returnRequestRepository.save(returnReq);
+                                    log.info("Webhook marked ReturnRequest #{} as COMPLETED", returnReq.getId());
+                                }
+                            } else {
+                                log.info("Webhook: Refund #{} is already REFUNDED (idempotent duplicate event)", refund.getId());
+                            }
+                        });
                     });
                 }
             } else if ("refund.failed".equalsIgnoreCase(eventType)) {

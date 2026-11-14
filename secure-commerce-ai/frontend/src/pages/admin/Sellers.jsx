@@ -68,9 +68,9 @@ const Sellers = () => {
         search: searchQuery || undefined,
       }
       const data = await getAdminSellersPaged(params)
-      setSellers(data.content || [])
-      setTotalPages(data.totalPages || 1)
-      setTotalElements(data.totalElements || 0)
+      setSellers(data?.content || [])
+      setTotalPages(data?.page?.totalPages ?? data?.totalPages ?? 1)
+      setTotalElements(data?.page?.totalElements ?? data?.totalElements ?? (data?.content?.length || 0))
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load platform sellers')
     } finally {

@@ -27,8 +27,8 @@ WORKDIR /app
 # Run as non-root user for security
 RUN groupadd -r shopivo && useradd -r -g shopivo -m -u 1001 shopivo
 
-# Create upload directory and set ownership
-RUN mkdir -p /app/data/uploads/products && \
+# Create seed directory and upload directory with non-root ownership
+RUN mkdir -p /app/data/seed-uploads/products /app/data/uploads/products && \
     chown -R shopivo:shopivo /app
 
 USER shopivo
@@ -36,10 +36,16 @@ USER shopivo
 # Copy built artifact from build stage
 COPY --from=build --chown=shopivo:shopivo /app/target/*.jar /app/app.jar
 
+# Pre-seed existing product catalog images into an immutable seed location
+# and into the runtime image directory
+COPY --chown=shopivo:shopivo data/uploads/products/ /app/data/seed-uploads/products/
+COPY --chown=shopivo:shopivo data/uploads/products/ /app/data/uploads/products/
+
 # Render dynamic port and production profile defaults
 ENV SPRING_PROFILES_ACTIVE=prod \
     PORT=8080 \
-    SHOPIVO_UPLOAD_DIR=/app/data/uploads/products
+    SHOPIVO_UPLOAD_DIR=/app/data/uploads/products \
+    SHOPIVO_SEED_UPLOAD_DIR=/app/data/seed-uploads/products
 
 EXPOSE ${PORT}
 

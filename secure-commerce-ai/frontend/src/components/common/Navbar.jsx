@@ -2,7 +2,7 @@
  * Navbar.jsx — Universal Marketplace Top Navigation Bar
  */
 
-const Navbar = ({ logo, location, center, actions, borderless = false }) => {
+const Navbar = ({ logo, location, center, actions, borderless = false, flush = false }) => {
   return (
     <header
       style={{
@@ -12,17 +12,17 @@ const Navbar = ({ logo, location, center, actions, borderless = false }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 1.5rem',
+        padding: flush ? '0 1.5rem 0 0' : '0 1.5rem',
         position: 'sticky',
         top: 0,
         zIndex: 100,
         boxShadow: 'var(--shadow-xs)',
-        gap: '1.25rem',
+        gap: flush ? '0.75rem' : '1.25rem',
         transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
       }}
     >
       {/* Left — Brand / Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: flush ? 0 : '1.25rem', flexShrink: 0 }}>
         {logo}
         {location && <div className="navbar-location-widget">{location}</div>}
       </div>

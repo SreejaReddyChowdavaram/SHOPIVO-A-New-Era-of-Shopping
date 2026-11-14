@@ -540,36 +540,6 @@ export default function PortalSelection() {
             )
           })}
         </div>
-
-        {/* Security and Trust Footer */}
-        <div
-          style={{
-            marginTop: '3.5rem',
-            textAlign: 'center',
-            fontSize: '0.8125rem',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-              padding: '0.75rem 1.25rem',
-              borderRadius: '9999px',
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Lock size={13} color="var(--color-primary)" /> 256-Bit SSL Encrypted
-            </span>
-            <span style={{ color: 'var(--color-border)' }}>|</span>
-            <span>Role-Enforced JWT Authentication</span>
-            <span style={{ color: 'var(--color-border)' }}>|</span>
-            <span>PCI-DSS Compliant Payments</span>
-          </div>
-        </div>
       </main>
     </div>
   )

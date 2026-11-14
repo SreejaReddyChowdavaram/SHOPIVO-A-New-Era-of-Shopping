@@ -1,0 +1,8 @@
+# Local scratch and temporary tools
+scratch/
+tools/
+*.tmp
+*.temp
+*.log
+.DS_Store
+Thumbs.db

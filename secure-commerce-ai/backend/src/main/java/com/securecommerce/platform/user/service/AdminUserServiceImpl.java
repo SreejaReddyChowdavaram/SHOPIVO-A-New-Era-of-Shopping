@@ -180,15 +180,23 @@ public class AdminUserServiceImpl implements AdminUserService {
     public AdminUserSummaryMetricsResponse getUserMetrics() {
         long totalUsers = userRepository.count();
         long totalCustomers = userRepository.countByRole(User.Role.CUSTOMER);
+        long activeCustomers = userRepository.countByRoleAndEnabled(User.Role.CUSTOMER, true);
+        long suspendedCustomers = userRepository.countByRoleAndEnabled(User.Role.CUSTOMER, false);
+
         long totalSellers = userRepository.countByRole(User.Role.SELLER);
         long activeSellers = userRepository.countByRoleAndEnabled(User.Role.SELLER, true);
+        long suspendedSellers = userRepository.countByRoleAndEnabled(User.Role.SELLER, false);
+
         long suspendedUsers = userRepository.countByEnabled(false);
 
         return new AdminUserSummaryMetricsResponse(
                 totalUsers,
                 totalCustomers,
+                activeCustomers,
+                suspendedCustomers,
                 totalSellers,
                 activeSellers,
+                suspendedSellers,
                 suspendedUsers
         );
     }

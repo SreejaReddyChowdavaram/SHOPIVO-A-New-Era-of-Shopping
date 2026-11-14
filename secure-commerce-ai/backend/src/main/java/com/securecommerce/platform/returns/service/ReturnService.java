@@ -24,4 +24,12 @@ public interface ReturnService {
     ReturnResponse getReturnById(Long id, User customer);
 
     ReturnResponse cancelReturn(Long id, User customer);
+
+    SellerRefundSummaryDto getSellerRefunds(User seller, String status, String search);
+
+    ReturnResponse approveRefundAsSeller(Long returnId, User seller);
+
+    ReturnResponse rejectRefundAsSeller(Long returnId, RejectReturnRequest request, User seller);
+
+    SellerRefundSummaryDto getAdminRefunds(String status, String search);
 }

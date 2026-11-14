@@ -518,18 +518,20 @@ const CustomerLayout = () => {
               <Menu size={22} />
             </button>
 
-            {/* SHOPIVO Brand Logo (Icon + Wordmark) */}
-            <div className="customer-brand-logo-container">
-              <BrandLogo
-                size="md"
-                showWordmark={!isSidebarCollapsed}
-                to={ROUTES.CUSTOMER_DASHBOARD}
-                imgStyle={{ width: '28px', height: '28px' }}
-                textStyle={{ fontSize: '1.15rem' }}
-              />
-            </div>
+            {/* SHOPIVO Brand Logo (Icon + Wordmark) — Hidden completely when collapsed */}
+            {!isSidebarCollapsed && (
+              <div className="customer-brand-logo-container">
+                <BrandLogo
+                  size="md"
+                  showWordmark={true}
+                  to={ROUTES.CUSTOMER_DASHBOARD}
+                  imgStyle={{ width: '28px', height: '28px' }}
+                  textStyle={{ fontSize: '1.15rem' }}
+                />
+              </div>
+            )}
 
-            {/* Desktop Modern Sidebar Toggle Button (at far-right of brand header) */}
+            {/* Desktop Modern Sidebar Toggle Button (centered in collapsed strip, right-aligned when expanded) */}
             <button
               type="button"
               onClick={handleSidebarToggle}
