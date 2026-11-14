@@ -42,6 +42,8 @@ public class ProductImageStorageService {
             "image/x-png"
     );
 
+    private static final String SEED_MARKER_FILE = ".catalog_seed_completed";
+
     @Value("${app.upload.dir:./data/uploads/products}")
     private String configuredUploadDir;
 
@@ -54,52 +56,96 @@ public class ProductImageStorageService {
     public void init() {
         try {
             resolvedUploadPath = Paths.get(configuredUploadDir).toAbsolutePath().normalize();
-            Files.createDirectories(resolvedUploadPath);
-            log.info("Product image upload directory initialized at: {}", resolvedUploadPath);
-
-            initializeSeedImagesIfPresent();
-        } catch (IOException e) {
-            log.error("Could not create product image upload directory: {}", configuredUploadDir, e);
-            throw new IllegalStateException("Failed to initialize upload directory", e);
+            if (Files.notExists(resolvedUploadPath)) {
+                Files.createDirectories(resolvedUploadPath);
+            }
+            log.info("[STARTUP] Product image storage directory ready: {}", resolvedUploadPath);
+        } catch (Exception e) {
+            log.warn("[STARTUP] Non-fatal: could not pre-create upload directory (will retry on write): {}", e.getMessage());
         }
     }
 
     /**
-     * Initializes bundled/seed product images into the upload directory if missing.
-     * Prevents empty persistent disk mounts from hiding pre-existing catalog images
-     * while guaranteeing existing seller uploads are NEVER overwritten.
+     * Initializes bundled/seed product images into the upload directory asynchronously.
+     * Runs in the background AFTER the web server is listening so it NEVER blocks
+     * Tomcat startup, port binding, or cloud health checks.
+     *
+     * Guarantees:
+     * - Never overwrites or deletes existing files or seller uploads.
+     * - Skips re-copying if the seed marker file or populated directory exists.
+     * - Uses standard copy (no COPY_ATTRIBUTES) to prevent POSIX attribute stalls on network disks.
      */
-    private void initializeSeedImagesIfPresent() {
-        try {
-            Path seedPath = null;
-            if (configuredSeedDir != null && !configuredSeedDir.isBlank()) {
-                seedPath = Paths.get(configuredSeedDir).toAbsolutePath().normalize();
-            } else {
-                Path defaultDockerSeed = Paths.get("/app/data/seed-uploads/products");
-                if (Files.exists(defaultDockerSeed)) {
-                    seedPath = defaultDockerSeed;
+    public java.util.concurrent.CompletableFuture<Void> initializeSeedImagesAsync() {
+        return java.util.concurrent.CompletableFuture.runAsync(() -> {
+            long startTime = System.currentTimeMillis();
+            try {
+                if (resolvedUploadPath == null) {
+                    resolvedUploadPath = Paths.get(configuredUploadDir).toAbsolutePath().normalize();
                 }
-            }
 
-            if (seedPath != null && Files.exists(seedPath) && Files.isDirectory(seedPath)) {
-                log.info("Checking seed catalog images from: {}", seedPath);
-                int copiedCount = 0;
-                try (var stream = Files.list(seedPath)) {
-                    for (Path file : stream.toList()) {
-                        if (Files.isRegularFile(file)) {
-                            Path targetFile = resolvedUploadPath.resolve(file.getFileName());
-                            if (Files.notExists(targetFile)) {
-                                Files.copy(file, targetFile, StandardCopyOption.COPY_ATTRIBUTES);
-                                copiedCount++;
-                            }
-                        }
+                if (Files.notExists(resolvedUploadPath)) {
+                    Files.createDirectories(resolvedUploadPath);
+                }
+
+                Path markerPath = resolvedUploadPath.resolve(SEED_MARKER_FILE);
+                if (Files.exists(markerPath)) {
+                    log.info("[STARTUP-ASYNC] Product catalog seed images already initialized in {}. Skipping copy.", resolvedUploadPath);
+                    return;
+                }
+
+                Path seedPath = null;
+                if (configuredSeedDir != null && !configuredSeedDir.isBlank()) {
+                    seedPath = Paths.get(configuredSeedDir).toAbsolutePath().normalize();
+                } else {
+                    Path defaultDockerSeed = Paths.get("/app/data/seed-uploads/products");
+                    if (Files.exists(defaultDockerSeed)) {
+                        seedPath = defaultDockerSeed;
                     }
                 }
-                log.info("Seed image check complete. Seeded {} missing product images into upload directory.", copiedCount);
+
+                if (seedPath != null && Files.exists(seedPath) && Files.isDirectory(seedPath)) {
+                    log.info("[STARTUP-ASYNC] Beginning asynchronous catalog seed copy from: {} to: {}", seedPath, resolvedUploadPath);
+                    int copiedCount = 0;
+                    int skippedCount = 0;
+                    boolean fullyCompleted = false;
+
+                    try (var stream = Files.list(seedPath)) {
+                        for (Path file : stream.toList()) {
+                            if (Files.isRegularFile(file)) {
+                                Path targetFile = resolvedUploadPath.resolve(file.getFileName());
+                                if (Files.notExists(targetFile)) {
+                                    Files.copy(file, targetFile);
+                                    copiedCount++;
+                                } else {
+                                    skippedCount++;
+                                }
+                            }
+                        }
+                        fullyCompleted = true;
+                    } catch (Exception loopEx) {
+                        log.warn("[STARTUP-ASYNC] Interrupted while seeding catalog images after {} copied, {} existing: {}",
+                                copiedCount, skippedCount, loopEx.getMessage());
+                    }
+
+                    // Create marker file ONLY when the entire directory scan completed without error
+                    if (fullyCompleted) {
+                        try {
+                            Files.writeString(markerPath, "catalog_seed_completed_at=" + java.time.Instant.now() + "\nseeded=" + copiedCount + "\npreserved=" + skippedCount);
+                        } catch (Exception markerEx) {
+                            log.debug("Could not write seed marker file: {}", markerEx.getMessage());
+                        }
+
+                        long durationMs = System.currentTimeMillis() - startTime;
+                        log.info("[STARTUP-ASYNC] Product image seeding completed: {} new images copied, {} existing preserved in {} ms.",
+                                copiedCount, skippedCount, durationMs);
+                    }
+                } else {
+                    log.info("[STARTUP-ASYNC] No external seed image directory found at {}. Upload directory is ready.", seedPath);
+                }
+            } catch (Exception e) {
+                log.warn("[STARTUP-ASYNC] Non-fatal issue during background image seeding: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            log.warn("Non-fatal: Failed to copy seed product images: {}", e.getMessage());
-        }
+        });
     }
 
     /**

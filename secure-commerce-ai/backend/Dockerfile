@@ -27,19 +27,26 @@ WORKDIR /app
 # Run as non-root user for security
 RUN groupadd -r shopivo && useradd -r -g shopivo -m -u 1001 shopivo
 
-# Create seed directory and upload directory with non-root ownership
-RUN mkdir -p /app/data/seed-uploads/products /app/data/uploads/products && \
-    chown -R shopivo:shopivo /app
-
-USER shopivo
-
-# Copy built artifact from build stage
-COPY --from=build --chown=shopivo:shopivo /app/target/*.jar /app/app.jar
+# Create seed directory and upload directory
+RUN mkdir -p /app/data/seed-uploads/products /app/data/uploads/products
 
 # Pre-seed existing product catalog images into an immutable seed location
 # and into the runtime image directory
-COPY --chown=shopivo:shopivo data/uploads/products/ /app/data/seed-uploads/products/
-COPY --chown=shopivo:shopivo data/uploads/products/ /app/data/uploads/products/
+COPY data/uploads/products/ /app/data/seed-uploads/products/
+COPY data/uploads/products/ /app/data/uploads/products/
+
+# Copy built artifact from build stage
+COPY --from=build /app/target/*.jar /app/app.jar
+
+# Enforce non-root ownership and separate permissions:
+# - Directories: 755 (rwxr-xr-x) allows owner write, traverse for others
+# - Files: 644 (rw-r--r--) avoids unnecessary executable bits
+RUN chown -R shopivo:shopivo /app && \
+    find /app/data -type d -exec chmod 755 {} + && \
+    find /app/data -type f -exec chmod 644 {} + && \
+    chmod 644 /app/app.jar
+
+USER shopivo
 
 # Render dynamic port and production profile defaults
 ENV SPRING_PROFILES_ACTIVE=prod \
