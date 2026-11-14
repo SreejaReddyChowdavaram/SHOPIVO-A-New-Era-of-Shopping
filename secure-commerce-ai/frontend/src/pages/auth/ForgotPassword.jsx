@@ -134,12 +134,7 @@ export default function ForgotPassword() {
       setSuccessNotice(data?.message || 'A 6-digit verification code has been sent to your email address.')
       setCurrentStep(2)
     } catch (err) {
-      const isNetwork = err.code === 'ERR_NETWORK' || err.isNetworkError || (err.status === 0)
-      if (isNetwork) {
-        setError('Network error. Unable to reach SHOPIVO authentication server.')
-      } else {
-        setError(err.response?.data?.message || err.message || 'Failed to dispatch verification code. Please try again.')
-      }
+      setError(err.message || err.response?.data?.message || 'Failed to dispatch verification code. Please try again.')
     } finally {
       setLoading(false)
     }

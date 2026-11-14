@@ -64,7 +64,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,  // 15 seconds — fail fast if the backend is unreachable
+  timeout: 60000,  // 60 seconds — allows adequate buffer for cloud backend cold starts (Render free tier)
 })
 
 // ─── Request Interceptor ─────────────────────────────────────
@@ -104,33 +104,50 @@ api.interceptors.response.use(
       const { data, status } = error.response
 
       // Build a rich error object from the backend's ApiError shape
-      const enhancedError = new Error(
-        data?.message || 'An unexpected error occurred'
-      )
+      let message = data?.message || 'An unexpected error occurred'
+      if (status === 401) {
+        message = data?.message || 'Invalid email or password. Please check your credentials.'
+        localStorage.removeItem(TOKEN_KEY)
+      } else if (status === 403) {
+        message = data?.message || 'Access denied. Your account may be suspended or lacks required permissions.'
+      } else if (status === 409) {
+        message = data?.message || 'Account conflict. Please verify your portal selection or registered role.'
+      } else if (status === 429) {
+        message = data?.message || 'Too many login attempts. Please wait a minute before trying again.'
+      } else if (status >= 500) {
+        message = 'Authentication server encountered an unexpected error. Please try again shortly.'
+      }
+
+      const enhancedError = new Error(message)
       enhancedError.status = status
       enhancedError.details = data?.details || []
       enhancedError.apiError = data    // Full ApiError body, for debugging
-      enhancedError.response = error.response // Preserve original Axios response structure for downstream catch handlers
+      enhancedError.response = error.response // Preserve original Axios response structure
       enhancedError.isNetworkError = false
-
-      // 401 → token expired or invalid — clear it and let ProtectedRoute redirect
-      if (status === 401) {
-        localStorage.removeItem(TOKEN_KEY)
-        // Don't navigate here — ProtectedRoute reacts to Redux state change
-      }
 
       return Promise.reject(enhancedError)
     }
 
     if (error.request) {
-      // Request was made but no response received (network error, CORS, server down)
-      const networkError = new Error(
-        'Cannot reach the server. Please check your connection.'
-      )
+      // Request was made but no response received (network error, CORS, server timeout, or server down)
+      const isTimeout = error.code === 'ECONNABORTED' || (error.message && error.message.toLowerCase().includes('timeout'))
+      const isLocalHost = typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location?.hostname)
+
+      let friendlyMessage = 'Unable to reach authentication server. Please check your network connection.'
+      if (isTimeout) {
+        friendlyMessage = 'Server is taking longer than expected to respond (it may be waking up from standby). Please wait a moment and try again.'
+      } else if (isLocalHost) {
+        friendlyMessage = 'Cannot reach local backend at http://localhost:8080. Please ensure the Spring Boot server is started.'
+      } else {
+        friendlyMessage = 'Cannot reach SHOPIVO cloud server. The backend may be spinning up. Please try again in a few moments.'
+      }
+
+      const networkError = new Error(friendlyMessage)
       networkError.status = 0
       networkError.details = []
       networkError.isNetworkError = true
-      networkError.code = 'ERR_NETWORK'
+      networkError.isTimeout = isTimeout
+      networkError.code = isTimeout ? 'ECONNABORTED' : (error.code || 'ERR_NETWORK')
       return Promise.reject(networkError)
     }
 

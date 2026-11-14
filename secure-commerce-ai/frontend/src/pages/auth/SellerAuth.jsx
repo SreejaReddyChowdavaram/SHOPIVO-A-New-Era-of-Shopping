@@ -217,12 +217,7 @@ export default function SellerAuth() {
         navigate(ROUTES.CUSTOMER_DASHBOARD, { replace: true })
       }
     } catch (err) {
-      const isNetwork = err.code === 'ERR_NETWORK' || err.isNetworkError || (err.status === 0)
-      if (isNetwork) {
-        setError('Network connection error. Unable to reach authentication server.')
-      } else {
-        setError(err.response?.data?.message || err.message || 'Google sign-in failed. Please try again.')
-      }
+      setError(err.message || err.response?.data?.message || 'Google sign-in failed. Please try again.')
     } finally {
       setLoading(false)
     }
